@@ -1,4 +1,5 @@
-import { Table, Column, Model, DataType, PrimaryKey, Default } from 'sequelize-typescript'
+import { Table, Column, Model, DataType, PrimaryKey, Default, ForeignKey, BelongsTo } from 'sequelize-typescript'
+import { User } from 'src/User/user.entity';
 
 @Table
 export class Post extends Model {
@@ -19,13 +20,17 @@ export class Post extends Model {
         type: DataType.TEXT,
         allowNull: false
     })
-    content:string;
+    content:Text;
 
+    @ForeignKey(() => User)
     @Column({
         type: DataType.STRING,
         allowNull: false
     })
-    author:string;
+    authorId:string;
+
+    @BelongsTo(() => User)
+    author: User
 
     @Default(0)
     @Column({

@@ -1,9 +1,9 @@
 import { Post } from "./post.entity";
-
+import { postsRepositoryToken } from "src/constants";
 
 export const postsProviders = [
     {
-        provide: 'POSTS_REPOSITORY',
+        provide: postsRepositoryToken,
         useValue: Post
     }
 ]

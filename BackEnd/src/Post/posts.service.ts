@@ -1,11 +1,12 @@
 import { Injectable, Inject } from "@nestjs/common";
 import { Post } from "./post.entity";
 import { createPostDto } from "src/dtos/post.dto";
+import { postsRepositoryToken } from "src/constants";
 
 @Injectable()
 export class PostsService {
     constructor(
-        @Inject('POSTS_REPOSITORY')
+        @Inject(postsRepositoryToken)
         private postsRepository:typeof Post
     ) {}
 
