@@ -1,5 +1,5 @@
 import { Table, Column, Model, DataType, PrimaryKey, Default, ForeignKey, BelongsTo } from 'sequelize-typescript'
-import { User } from 'src/User/user.entity';
+import { User } from '../User/user.entity';
 
 @Table
 export class Post extends Model {
@@ -20,7 +20,7 @@ export class Post extends Model {
         type: DataType.TEXT,
         allowNull: false
     })
-    content:Text;
+    content:string;
 
     @ForeignKey(() => User)
     @Column({

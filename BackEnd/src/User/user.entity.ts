@@ -10,7 +10,6 @@ export class User extends Model {
         allowNull: false
     })
     @Default(UUIDV4())
-    id:string;
 
     @Column({
         type: DataType.STRING,
