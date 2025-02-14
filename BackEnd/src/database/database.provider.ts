@@ -1,5 +1,6 @@
 import { Sequelize } from 'sequelize-typescript';
 import { Post } from '../Post/post.entity';
+import { User } from 'src/User/user.entity';
 
 export const databaseProviders = [
     {
@@ -13,7 +14,7 @@ export const databaseProviders = [
                 password: process.env.POSTGRES_PASSWORD,
                 database: process.env.POSTGRES_DB
             })
-            sequelize.addModels([Post])
+            sequelize.addModels([Post, User])
             await sequelize.sync()
             return sequelize
         }
