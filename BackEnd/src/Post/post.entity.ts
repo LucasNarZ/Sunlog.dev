@@ -1,14 +1,15 @@
-import { Table, Column, Model, DataType, PrimaryKey, Default, ForeignKey, BelongsTo } from 'sequelize-typescript'
+import { Table, Column, Model, DataType, Default, ForeignKey, BelongsTo } from 'sequelize-typescript'
 import { User } from '../User/user.entity';
 
 @Table
 export class Post extends Model {
-    @PrimaryKey
-    @Default(DataType.UUIDV4)
     @Column({
-        type: DataType.STRING,
-        allowNull: false
+        type: DataType.UUID,
+        defaultValue: DataType.UUIDV4,
+        allowNull: false,
+        primaryKey: true,
     })
+    id:string;
 
     @Column({
         type: DataType.STRING,
@@ -24,13 +25,13 @@ export class Post extends Model {
 
     @ForeignKey(() => User)
     @Column({
-        type: DataType.STRING,
+        type: DataType.UUID,
         allowNull: false
     })
-    authorId:string;
+    userId:string;
 
     @BelongsTo(() => User)
-    author: User
+    user: User
 
     @Default(0)
     @Column({

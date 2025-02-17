@@ -1,22 +1,24 @@
 import { Post } from "src/Post/post.entity";
-import { UUIDV4 } from "sequelize";
-import { DataType, Model, PrimaryKey, Table, Column, Default, HasMany } from "sequelize-typescript";
+import { DataType, Model, PrimaryKey, Table, Column, Default, HasMany, Unique } from "sequelize-typescript";
 
 @Table
 export class User extends Model {
-    @PrimaryKey
     @Column({
-        type: DataType.STRING,
-        allowNull: false
+        type: DataType.UUID,
+        defaultValue: DataType.UUIDV4,
+        allowNull: false,
+        primaryKey: true,
     })
-    @Default(UUIDV4())
+    id:string;
 
+    @Unique
     @Column({
         type: DataType.STRING,
         allowNull: false
     })
     name:string;
 
+    @Unique
     @Column({
         type: DataType.STRING,
         allowNull: false
