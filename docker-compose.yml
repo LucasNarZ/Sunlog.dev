@@ -1,4 +1,12 @@
 services:
+  front-end:
+    build:
+      context: ./FrontEnd
+      dockerfile: Dockerfile
+    environment:
+      - VITE_ENV=${NODE_ENV}
+    ports:
+      - "5173:5173"
   api: 
     build:
       context: ./BackEnd
