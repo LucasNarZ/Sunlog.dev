@@ -44,7 +44,7 @@ export class UsersController {
             }
             const passwordRight = await argon2.verify(user.password, password)
             if(!passwordRight){
-                throw new InvalidPasswordEamilException()
+                throw new InvalidPasswordEmailException()
             }
             req.session.user = {email}
 
