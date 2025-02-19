@@ -4,7 +4,7 @@ import { createUserDto } from "src/dtos/user.dto";
 import * as argon2 from "argon2"
 import { UniqueConstraintException } from "src/exceptions/uniqueContraint.exception";
 import { LoginDto } from "src/dtos/login.dto";
-import { InvalidPasswordEamilException } from "src/exceptions/InvalidPasswordEmail.exception";
+import { InvalidPasswordEmailException } from "src/exceptions/InvalidPasswordEmail.exception";
 import { Request } from "express";
 
 @Controller("user")
@@ -40,7 +40,7 @@ export class UsersController {
             const { email, password } = body
             const user = await this.usersService.getUserByEmail(email)
             if(!user){
-                throw new InvalidPasswordEamilException()
+                throw new InvalidPasswordEmailException()
             }
             const passwordRight = await argon2.verify(user.password, password)
             if(!passwordRight){
