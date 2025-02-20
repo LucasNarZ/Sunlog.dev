@@ -18,4 +18,12 @@ export class UsersService {
         return await this.usersRepository.create({name, email, password})
     }
 
+    async getUserByEmail(email:string) {
+        return await this.usersRepository.findOne({where:{email}})
+    }
+
+    async findUser(id:string) {
+        return await this.usersRepository.findOne({where:{id}})
+    }
+
 }

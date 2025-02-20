@@ -27,9 +27,13 @@
     "argon2": "^0.41.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "connect-redis": "^8.0.1",
+    "express-session": "^1.18.1",
     "helmet": "^8.0.0",
+    "ioredis": "^5.5.0",
     "pg": "^8.13.1",
     "pg-hstore": "^2.3.4",
+    "redis": "^4.7.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "sequelize": "^6.37.5",
@@ -44,6 +48,7 @@
     "@swc/cli": "^0.6.0",
     "@swc/core": "^1.10.7",
     "@types/express": "^5.0.0",
+    "@types/express-session": "^1.18.1",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.7",
     "@types/sequelize": "^4.28.20",
@@ -78,6 +83,10 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+
+    "moduleNameMapper": {
+      "^src/(.*)$": "<rootDir>/$1"
+    }
   }
 }
