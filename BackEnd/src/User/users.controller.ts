@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Req } from "@nestjs/common";
+import { Controller, Get, Post, Body, Req, Put } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { createUserDto } from "src/dtos/user.dto";
 import * as argon2 from "argon2"
@@ -6,6 +6,8 @@ import { UniqueConstraintException } from "src/exceptions/uniqueContraint.except
 import { LoginDto } from "src/dtos/login.dto";
 import { InvalidPasswordEmailException } from "src/exceptions/InvalidPasswordEmail.exception";
 import { Request } from "express";
+import { updateUserDto } from "src/dtos/updateUser.dto";
+import { UserNotFoundException } from "src/exceptions/UserNotFound.exception";
 
 @Controller("user")
 export class UsersController {
@@ -13,7 +15,7 @@ export class UsersController {
         private readonly usersService: UsersService
     ) {}
 
-    @Get("user")
+    @Get("/")
     async findUsers() {  
         return await this.usersService.findAll()
     }
@@ -48,6 +50,21 @@ export class UsersController {
             }
             req.session.user = {email}
 
+            return user
+        }catch(err){
+            throw err
+        }
+    }
+
+    @Put(":id")
+    async updateUser(@Req() req:Request, @Body() body:updateUserDto) {
+        try{
+            const { id } = req.params
+            let user = await this.usersService.findUser(id)
+            if(!user){
+                throw new UserNotFoundException(`user with id ${id} not found`)
+            }
+            user = await user.update(body)
             return user
         }catch(err){
             throw err
