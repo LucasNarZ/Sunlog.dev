@@ -20,6 +20,16 @@ export class UsersController {
         return await this.usersService.findAll()
     }
 
+    @Get(":id")
+    async findUser(@Req() req:Request) {
+        const { id } = req.params
+        const user = await this.usersService.findUser(id)
+        if(!user){
+            throw new UserNotFoundException(`user with id ${id} not found`)
+        }
+        return user
+    }
+
     @Post("register")
     async createUser(@Body() body:createUserDto) {
         try{
