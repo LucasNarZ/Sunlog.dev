@@ -4,7 +4,6 @@ import { PostsService } from "../posts.service";
 
 describe("PostsController", () => {
   let postsController: PostsController;
-  let postsService: PostsService;
 
   const mockPostsService = {
     findAll: jest.fn(() => Promise.resolve([{ id: 1, title: "Test Post", content: "This is a test post" }])),
@@ -18,7 +17,6 @@ describe("PostsController", () => {
     }).compile();
 
     postsController = module.get<PostsController>(PostsController);
-    postsService = module.get<PostsService>(PostsService);
   });
 
   it("should return all posts", async () => {
