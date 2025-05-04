@@ -5,6 +5,9 @@ services:
       dockerfile: Dockerfile
     environment:
       - VITE_ENV=${NODE_ENV}
+      - VITE_API_URL=${VITE_API_URL}
+    volumes:
+      - /home/lucas/Documentos/repositorios/Endless-Learning/FrontEnd/src:/app/src
     ports:
       - "5173:5173"
   api: 
@@ -47,6 +50,16 @@ services:
       - redis_data:/data
     ports:
       - "6379:6379"
+  nginx:
+    image: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf 
+    depends_on:
+      - api
+    ports:
+      - "80:80"
+      - "443:443"
 volumes:
   postgres:
   redis_data:
+  front-end:
