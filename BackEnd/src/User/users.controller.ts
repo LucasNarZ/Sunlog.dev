@@ -15,7 +15,7 @@ export class UsersController {
         private readonly usersService: UsersService
     ) {}
 
-    @Get("/")
+    @Get()
     async findUsers() {  
         return await this.usersService.findAll()
     }
@@ -29,7 +29,7 @@ export class UsersController {
                 password: await argon2.hash(data.password)
             }
             return await this.usersService.createUser(data)
-        }catch(err){
+        }catch(err:any){
             if(err.name == 'SequelizeUniqueConstraintError'){
                 throw new UniqueConstraintException(err.errors[0].message)
             }
@@ -38,36 +38,30 @@ export class UsersController {
 
     @Post("login")
     async loginUser(@Req() req: Request, @Body() body:LoginDto) {
-        try {
-            const { email, password } = body
-            const user = await this.usersService.getUserByEmail(email)
-            if(!user){
-                throw new InvalidPasswordEmailException()
-            }
-            const passwordRight = await argon2.verify(user.password, password)
-            if(!passwordRight){
-                throw new InvalidPasswordEmailException()
-            }
-            req.session.user = {email}
 
-            return user
-        }catch(err){
-            throw err
+        const { email, password } = body
+        const user = await this.usersService.getUserByEmail(email)
+        if(!user){
+            throw new InvalidPasswordEmailException()
         }
+        const passwordRight = await argon2.verify(user.password, password)
+        if(!passwordRight){
+            throw new InvalidPasswordEmailException()
+        }
+        req.session.user = {email}
+
+        return user
+
     }
 
     @Put(":id")
     async updateUser(@Req() req:Request, @Body() body:updateUserDto) {
-        try{
-            const { id } = req.params
-            let user = await this.usersService.findUser(id)
-            if(!user){
-                throw new UserNotFoundException(`user with id ${id} not found`)
-            }
-            user = await user.update(body)
-            return user
-        }catch(err){
-            throw err
+        const { id } = req.params
+        let user = await this.usersService.findUser(id)
+        if(!user){
+            throw new UserNotFoundException(`user with id ${id} not found`)
         }
+        user = await user.update(body)
+        return user
     }
 }
