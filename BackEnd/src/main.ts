@@ -19,14 +19,15 @@ const redisSessionClient = new Redis({
 })
 
 redisSessionClient.connect().catch(console.error)
-let redisStore = new RedisStore({
+const redisStore = new RedisStore({
   client: redisSessionClient,
   prefix: "myapp:"
 })
 
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule)
+  app.setGlobalPrefix('api')
   app.use(helmet())
   app.use(
     session({
