@@ -1,4 +1,4 @@
-import { IsArray, IsNotEmpty, IsString } from "class-validator"
+import { IsArray, IsNotEmpty, IsString, IsOptional } from "class-validator"
 
 export class createPostDto {
     @IsString()
@@ -9,13 +9,13 @@ export class createPostDto {
     readonly content: string;
     @IsString()
     @IsNotEmpty()
-    readonly author:string;
+    readonly authorId:string;
     @IsArray()
-    @IsNotEmpty()
+    @IsOptional()
     @IsString({each:true})
     readonly categorys?:string[];
     @IsArray()
-    @IsNotEmpty()
+    @IsOptional()
     @IsString({each:true})
     readonly tags?:string[];
 }
