@@ -1,5 +1,4 @@
-import { ArgumentsHost, BadRequestException, Catch, ExceptionFilter, HttpException } from "@nestjs/common";
-import { ValidationError } from "sequelize";
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from "@nestjs/common";
 import { Response, Request } from "express";
 
 @Catch(HttpException)
