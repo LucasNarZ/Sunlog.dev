@@ -7,19 +7,21 @@ const Header = () => {
                 <div className="flex items-center ml-10">
                     <h1 className="">Endless Learning</h1>
                 </div>
-                <div>
-                    <input
-                        type="text"
-                        placeholder="Search..."
-                        className="border border-gray-300 rounded px-4 py-2 w-1/2" />
-                    <SearchIcon />
+                <div className="w-full">
+                    <div className='relative w-2/3 md:opacity-100 opacity-0'>
+                        <input
+                            type="text"
+                            placeholder="Search..."
+                            className="border border-gray-300 rounded px-4 py-2 w-full" />
+                        <SearchIcon className='absolute right-5 top-1/2 translate-y-[-50%] cursor-pointer'/>
+                    </div>
+
                 </div>
             </div>
-            <div className="flex justify-between w-36 justify-self-end mr-10">
-                <button className="">Sign Up</button>
-                <button className="">Sign In</button>
+            <div className="flex justify-between w-36 justify-self-end mr-16">
+                <button className="cursor-pointer">Sign Up</button>
+                <button className="cursor-pointer">Sign In</button>
             </div>
-
         </header>
     )
 }
