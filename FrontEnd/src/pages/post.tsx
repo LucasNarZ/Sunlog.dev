@@ -1,21 +1,44 @@
-import React from 'react';
 import Header from '../components/header';
 import { useParams } from 'react-router-dom';
 import usePost from '../hooks/getPost';
 import type { Post } from '../types/post';
+import useAuthor from '../hooks/getAuthor';
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+import rehypeRaw from 'rehype-raw'
 
 const Post = () => {
     const { postId } = useParams<{ postId: string }>()
-    const [ post, error ] = usePost(postId as string)
-    if(error){
-        console.error(error)   
+    const [ post, postError ] = usePost(postId as string)
+    const [ author, authorError ] = useAuthor(post?.userId as string);
+    if(postError){
+        console.error(postError)   
     }
-    console.log(post)
+    if(authorError){
+        console.error(authorError)
+    }
     return (
-        <React.Fragment>
+        <div className='w-[100vw] flex flex-col items-center'>
             <Header />
-            {post ? <div>{post.title}</div> : <div>Loading...</div>}
-        </React.Fragment>
+            {post ? 
+            <div className="flex flex-col max-w-3xl w-[90vw] pt-32">
+                <h1 className='text-3xl font-bold'>{post.title}</h1>
+                <div className="flex gap-4 h-20 items-center">   
+                    <div>
+                        <p>{author?.name}</p>
+                    </div>
+                </div>
+                <div className='prose'>
+                    <ReactMarkdown
+                        children={post?.content}
+                        remarkPlugins={[remarkGfm]}
+                        rehypePlugins={[rehypeRaw]} // necessário para suportar HTML embutido no Markdown
+                    />
+                </div>
+            </div>
+            
+            : <div>Loading...</div>}
+        </div>
     );
 }
 
