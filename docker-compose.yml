@@ -7,7 +7,7 @@ services:
       - VITE_ENV=${NODE_ENV}
       - VITE_API_URL=${VITE_API_URL}
     volumes:
-      - /home/lucas/Documentos/repositorios/Endless-Learning/FrontEnd/src:/app/src
+      - ./FrontEnd/src:/app/src
     ports:
       - "5173:5173"
   api: 
