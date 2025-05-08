@@ -32,7 +32,7 @@ const Post = () => {
                     <ReactMarkdown
                         children={post?.content}
                         remarkPlugins={[remarkGfm]}
-                        rehypePlugins={[rehypeRaw]} // necessário para suportar HTML embutido no Markdown
+                        rehypePlugins={[rehypeRaw]} 
                     />
                 </div>
             </div>
