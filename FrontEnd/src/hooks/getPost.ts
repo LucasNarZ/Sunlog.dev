@@ -9,10 +9,8 @@ const usePost = (postId: string):[Post | null, unknown] => {
         (async () => {
             try{
                 const response = await apiClient.get(`/post/${postId}`)
-                console.log(response.data)
                 setResponse(response.data)
             }catch(err){
-                console.log(err)
                 setError(err)
             }
         })()
