@@ -5,7 +5,7 @@ const Header = () => {
         <header className="h-16 w-full flex justify-between items-center">
             <div className="flex items-center justify-start gap-16 w-2/3">
                 <div className="flex items-center ml-10">
-                    <h1 className="">Endless Learning</h1>
+                    <h1 className="">The Learning Experience</h1>
                 </div>
                 <div className="w-full">
                     <div className='relative w-2/3 md:opacity-100 opacity-0'>
