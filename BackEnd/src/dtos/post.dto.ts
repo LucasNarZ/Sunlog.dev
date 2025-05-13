@@ -7,6 +7,14 @@ export class createPostDto {
     @IsString()
     @IsNotEmpty()
     readonly content: string;
+    @IsOptional()
+    @IsNotEmpty()
+    @IsString()
+    readonly description?: string;
+    @IsOptional()
+    @IsNotEmpty()
+    @IsString()
+    readonly previewImgUrl?: string;
     @IsString()
     @IsNotEmpty()
     readonly authorId:string;
