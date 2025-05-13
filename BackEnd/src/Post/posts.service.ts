@@ -14,8 +14,8 @@ export class PostsService {
         return await this.postsRepository.findAll<Post>()
     }
 
-    async createPost({title, content, authorId, tags, categorys}:createPostDto) {
-        return await this.postsRepository.create({title, content, userId: authorId, tags, categorys})
+    async createPost({title, content, authorId, tags, categorys, previewImgUrl, description}:createPostDto) {
+        return await this.postsRepository.create({title, content, userId: authorId, tags, categorys, previewImgUrl, description})
     }
     async findPost(postId:string) {
         return await this.postsRepository.findOne<Post>({
