@@ -1,5 +1,5 @@
 import { Post } from "src/Post/post.entity";
-import { DataType, Model, PrimaryKey, Table, Column, Default, HasMany, Unique } from "sequelize-typescript";
+import { DataType, Model, PrimaryKey, Table, Column, Default, HasMany, Unique, AllowNull } from "sequelize-typescript";
 
 @Table
 export class User extends Model {
@@ -30,6 +30,20 @@ export class User extends Model {
         allowNull: false
     })
     password:string;
+
+    @Default("https://thumbs.dreamstime.com/b/default-profile-picture-icon-high-resolution-high-resolution-default-profile-picture-icon-symbolizing-no-display-picture-360167031.jpg")
+    @Column({
+        type: DataType.TEXT,
+        allowNull: false
+    })
+    profileImgUrl:string;
+
+    @Default(0)
+    @Column({
+        type: DataType.INTEGER,
+        allowNull: false
+    })
+    followers: number;
 
     @HasMany(() => Post)  
     posts: Post[];  
