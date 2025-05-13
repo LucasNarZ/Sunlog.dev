@@ -23,6 +23,20 @@ export class Post extends Model {
     })
     content:string;
 
+    @Default("")
+    @Column({
+        type: DataType.STRING,
+        allowNull: false
+    })
+    description: string;
+
+    @Default("")
+    @Column({
+        type: DataType.TEXT,
+        allowNull: false
+    })
+    previewImgUrl:string;
+
     @ForeignKey(() => User)
     @Column({
         type: DataType.UUID,
