@@ -2,11 +2,10 @@ import { useEffect, useState } from "react"
 import { apiClient } from "../apiClient"
 import type { Post } from "../types/post";
 
-
-export const usePostsByTag = (tags:string[] | null):[Post[] | null, unknown] => {
+export const usePostsByTag = (tags:string[]):[Post[] | null, unknown] => {
     const [ posts, setPosts ] = useState<Post[] | null>(null);
     const [ error, setError ] = useState<unknown>(null);
-    const endpoint = !tags ? "/post" : "/post?" + "&tag=" + tags.join("&tag=")
+    const endpoint = tags?.length == 0 ? "/post" : "/post?" + "&tag=" + tags.join("&tag=")
     useEffect(() => {
         (async () => {
             try{                
@@ -17,7 +16,7 @@ export const usePostsByTag = (tags:string[] | null):[Post[] | null, unknown] => 
                 setError(err)
             }
         })()
-    }, [tags, endpoint])
+    }, [endpoint])
 
     return [ posts, error ]
 }
