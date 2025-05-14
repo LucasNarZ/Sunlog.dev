@@ -16,6 +16,7 @@ const Home = () => {
     <div>
       <Header />
       <div className='w-full flex flex-col items-center pt-12'>
+          <h1 className='text-3xl font-Garamont'>Welcome to The Leaning Experience</h1>
           {posts ? posts.map((post:Post, index:number) => {
             return (
               <CardPost key={index} post={post} />
