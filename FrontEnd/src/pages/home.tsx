@@ -16,12 +16,15 @@ const Home = () => {
     <div>
       <Header />
       <div className='w-full flex flex-col items-center pt-12'>
-          <h1 className='text-3xl font-Garamont'>Welcome to The Leaning Experience</h1>
+          <h1 style={{ fontFamily: "'EB Garamond', serif" }} className='text-5xl font-garamond text-center'>Welcome to The Leaning Experience</h1>
+          <div className='grid grid-cols-1 lg:grid-cols-2 gap-1 w-10/12 max-w-4xl pt-12'>
           {posts ? posts.map((post:Post, index:number) => {
             return (
               <CardPost key={index} post={post} />
             )
           }): <div>Loading...</div>}
+
+          </div>
       </div>
     </div>
   )
