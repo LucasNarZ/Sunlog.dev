@@ -4,8 +4,8 @@ const Header = () => {
     return (
         <header className="h-16 w-full flex justify-between items-center">
             <div className="flex items-center justify-start gap-16 w-2/3">
-                <div className="flex items-center ml-10">
-                    <h1 className="">The Learning Experience</h1>
+                <div className="flex items-center ml-10 w-16">
+                    <h1  style={{ fontFamily: "'EB Garamond', serif" }} >The Learning Experience</h1>
                 </div>
                 <div className="w-full">
                     <div className='relative w-2/3 md:opacity-100 opacity-0'>
@@ -18,7 +18,7 @@ const Header = () => {
 
                 </div>
             </div>
-            <div className="flex justify-between w-36 justify-self-end mr-16">
+            <div className="flex justify-between w-36 justify-self-end lg:mr-16 mr-5">
                 <button className="cursor-pointer">Sign Up</button>
                 <button className="cursor-pointer">Sign In</button>
             </div>
