@@ -12,7 +12,7 @@ const CardPost = ({ post }:CardPostProps) => {
         console.error(error)
     }
     return (
-        <div className="w-10/12 max-w-[510px] flex justify-between border-1 p-6 rounded-3xl border-gray-100">
+        <div className="w-11/12 max-w-[550px] flex justify-between border-1 p-6 rounded-3xl border-gray-100">
             <div className="flex flex-col">
                 <div className="flex items-center gap-5">
                     <img className="w-7 aspect-auto" src={author?.profileImgUrl} alt="profilePic" />
