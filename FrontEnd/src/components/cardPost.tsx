@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom"
 import useAuthor from "../hooks/getAuthor"
 import { Post } from "../types/post"
 
@@ -7,12 +8,18 @@ interface CardPostProps {
 
 const CardPost = ({ post }:CardPostProps) => {
     const creationData = new Date(post.createdAt)
+    const navigate = useNavigate()
     const [ author, error ] = useAuthor(post.userId)
     if(error){
         console.error(error)
     }
+
+    const handleCardClick = () => {
+        navigate("/post/" + post.id)
+    }
+
     return (
-        <div className="w-11/12 max-w-[550px] flex justify-between border-1 p-6 rounded-3xl border-gray-100">
+        <div className="w-11/12 max-w-[550px] flex justify-between border-1 p-6 rounded-3xl border-gray-100 cursor-pointer" onClick={handleCardClick}>
             <div className="flex flex-col">
                 <div className="flex items-center gap-5">
                     <img className="w-7 aspect-auto" src={author?.profileImgUrl} alt="profilePic" />
