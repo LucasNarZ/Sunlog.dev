@@ -3,6 +3,7 @@ import Home from './pages/home'
 import Post from './pages/post'
 import SignIn from './pages/SignIn'
 import SignUp from './pages/signUp'
+import Profile from './pages/profile'
 
 function App() {
   return (
@@ -10,9 +11,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/post/:postId" element={<Post />} />
-        <Route path='/SignIn' element={<SignIn />}/>
-        <Route path='/SignUp' element={<SignUp />}/>
-
+        <Route path='/signIn' element={<SignIn />}/>
+        <Route path='/signUp' element={<SignUp />}/>
+        <Route path='/profile' element={<Profile />}/>
       </Routes>
     </BrowserRouter>
   )
