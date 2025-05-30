@@ -24,7 +24,8 @@ const Post = () => {
             <div className="flex flex-col max-w-3xl w-[90vw] pt-32">
                 <h1 className='text-3xl font-bold'>{post.title}</h1>
                 <div className="flex gap-4 h-20 items-center">   
-                    <div>
+                    <div className='flex items-center gap-3'>
+                        <img className='w-9 rounded-4xl' src={author?.profileImgUrl} alt="author profile image" />
                         <p>{author?.name}</p>
                     </div>
                 </div>
