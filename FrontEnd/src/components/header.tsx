@@ -1,8 +1,10 @@
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom';
+import useGetProfile from '../hooks/getProfile';
 
 const Header = () => {
     const navigate = useNavigate()
+    const [ userData, errorProfile ] = useGetProfile()
 
     return (
         <header className="h-16 w-full flex justify-between items-center">
@@ -21,9 +23,18 @@ const Header = () => {
                 </div>
             </div>
             <div className="flex justify-between w-36 justify-self-end lg:mr-16 mr-5">
-                <button className="cursor-pointer" onClick={() => navigate("/signUp")}>Sign Up</button>
-                <button className="cursor-pointer" onClick={() => navigate("/signIn")}>Sign In</button>
-            </div>
+                {errorProfile ? 
+                <>
+                    <button className="cursor-pointer" onClick={() => navigate("/signUp")}>Sign Up</button>
+                    <button className="cursor-pointer" onClick={() => navigate("/signIn")}>Sign In</button>
+                </>:
+                <div className='flex items-center gap-3'>
+                    <img className="w-9 rounded-4xl" src={userData?.profileImageUrl} alt="profile image" />
+                    <p>{userData?.username}</p>
+                </div>
+                }
+            </div> 
+            
         </header>
     )
 }
