@@ -10,12 +10,14 @@ import { UsersController } from './User/users.controller';
 import { UsersModule } from './User/users.module';
 import { UsersService } from './User/users.service';
 import { usersProviders } from './User/users.providers';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     DatabaseModule,
     PostsModule,
-    UsersModule
+    UsersModule,
+    AuthModule
   ],
   controllers: [
     AppController,
