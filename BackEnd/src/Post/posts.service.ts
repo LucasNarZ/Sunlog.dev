@@ -2,6 +2,7 @@ import { Injectable, Inject } from "@nestjs/common";
 import { Post } from "./post.entity";
 import { createPostDto } from "src/dtos/post.dto";
 import { postsRepositoryToken } from "src/constants";
+import { EditPostDto } from "src/dtos/editPost.dto";
 
 @Injectable()
 export class PostsService {
@@ -23,6 +24,24 @@ export class PostsService {
                 id: postId
             }
         })
+    }
+
+    async updatePost(postId:string, title:string, content:string) {
+        let update = {};
+        if(title) {
+            Object.defineProperty(update, "title", {value:title})
+        }
+        if(content) {
+            Object.defineProperty(update, "content", {value:content})
+        } 
+
+        return await this.postsRepository.update(
+            update, 
+            {where: {
+                id: postId
+            }
+            }
+        )
     }
 
 }
