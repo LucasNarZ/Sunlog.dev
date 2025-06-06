@@ -40,4 +40,11 @@ export class UsersController {
         return user
     }
 
+    @Get(":id/posts")
+    async getUserPosts(@Req() req:Request) {
+        const { id } = req.params;
+        const posts = await this.usersService.getPostByUser(id)
+        
+    }
+
 }
