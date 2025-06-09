@@ -1,5 +1,5 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { usersRepositoryToken } from "src/constants";
+import { postsRepositoryToken, usersRepositoryToken } from "src/constants";
 import { User } from "./user.entity";
 import { createUserDto } from "src/dtos/user.dto";
 import { Post } from "src/Post/post.entity";
@@ -9,6 +9,7 @@ export class UsersService {
     constructor(
         @Inject(usersRepositoryToken)
         private usersRepository: typeof User,
+        @Inject(postsRepositoryToken)
         private postsRepository: typeof Post
     ) {}
 
