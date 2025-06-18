@@ -1,10 +1,10 @@
 import SearchIcon from '@mui/icons-material/Search';
-import { useNavigate } from 'react-router-dom';
-import useGetProfile from '../hooks/getProfile';
+import { useNavigate, Link } from 'react-router-dom';
+import useAuthor from '../hooks/getAuthor';
 
 const Header = () => {
     const navigate = useNavigate()
-    const [ userData, errorProfile ] = useGetProfile()
+    const [ userData, errorProfile ] = useAuthor()
 
     const handleClick = () => {
         navigate("/profile")
@@ -14,7 +14,7 @@ const Header = () => {
         <header className="h-16 w-full flex justify-between items-center">
             <div className="flex items-center justify-start gap-16 w-2/3">
                 <div className="flex items-center ml-10 w-40">
-                    <h1  style={{ fontFamily: "'EB Garamond', serif" }} className='w-full'>The Learning Experience</h1>
+                    <h1 style={{ fontFamily: "'EB Garamond', serif" }} className='w-full text-center cursor-pointer'> <Link to="/">The Learning Experience</Link></h1>
                 </div>
                 <div className="w-full">
                     <div className='relative w-2/3 md:opacity-100 opacity-0'>
@@ -33,8 +33,8 @@ const Header = () => {
                     <button className="cursor-pointer" onClick={() => navigate("/signIn")}>Sign In</button>
                 </>:
                 <div className='flex items-center gap-3 cursor-pointer' onClick={handleClick}>
-                    <img className="w-9 rounded-4xl" src={userData?.profileImageUrl} alt="profile image" />
-                    <p>{userData?.username}</p>
+                    <img className="w-9 rounded-4xl" src={userData?.profileImgUrl} alt="profile image" />
+                    <p>{userData?.name}</p>
                 </div>
                 }
             </div> 
