@@ -1,4 +1,5 @@
-import { Controller, Get, Body, Req, Put, BadRequestException } from "@nestjs/common";
+import { Controller, Get, Body, Req, Put, BadRequestException, UseGuards, UnauthorizedException } from "@nestjs/common";
+import { AuthGuard } from "src/auth/auth.guard";
 import { UsersService } from "./users.service";
 import { Request } from "express";
 import { updateUserDto } from "src/dtos/updateUser.dto";
@@ -11,16 +12,14 @@ export class UsersController {
         private readonly usersService: UsersService
     ) {}
 
-    @Get()
-    async findUsers() {  
-        return await this.usersService.findAll()
-    }
-
-    @Get(":id")
-    async findUser(@Req() req:Request) {
-        const { id } = req.params
-        if(!isUuid(id)){
-            throw new BadRequestException("Invalid userId")
+    @UseGuards(AuthGuard)
+    @Get("id")
+    async findUser(@Req() req) {
+        
+        const id = req?.user?.userId
+        console.log(id)
+        if(!id){
+            throw new UnauthorizedException("User is not logged")
         }
         const user = await this.usersService.findUser(id)
         if(!user){
@@ -29,22 +28,11 @@ export class UsersController {
         return user
     }
 
-    @Put(":id")
-    async updateUser(@Req() req:Request, @Body() body:updateUserDto) {
-        const { id } = req.params
-        let user = await this.usersService.findUser(id)
-        if(!user){
-            throw new UserNotFoundException(`user with id ${id} not found`)
-        }
-        user = await user.update(body)
-        return user
-    }
-
     @Get(":id/posts")
     async getUserPosts(@Req() req:Request) {
         const { id } = req.params;
         const posts = await this.usersService.getPostByUser(id)
-        
+        return posts
     }
 
 }

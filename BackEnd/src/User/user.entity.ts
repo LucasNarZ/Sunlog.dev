@@ -45,6 +45,13 @@ export class User extends Model {
     })
     followers: number;
 
+    @Default("")
+    @Column({
+        type: DataType.TEXT,
+        allowNull: false
+    })
+    bio: string;
+
     @HasMany(() => Post)  
     posts: Post[];  
 }

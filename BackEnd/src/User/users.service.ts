@@ -13,10 +13,6 @@ export class UsersService {
         private postsRepository: typeof Post
     ) {}
 
-    async findAll(){
-        return await this.usersRepository.findAll();
-    }
-
     async createUser({name, email, password}:createUserDto) {
         return await this.usersRepository.create({name, email, password});
     }
@@ -36,7 +32,7 @@ export class UsersService {
             }
         })
         if(posts.length == 0){
-            throw new NotFoundException("User has no posts");
+            throw new NotFoundException("User don't have posts");
         }
         return posts;
     }

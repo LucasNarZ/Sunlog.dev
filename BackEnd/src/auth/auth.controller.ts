@@ -3,7 +3,6 @@ import { Post, Body, Get, Req, HttpCode, HttpStatus } from '@nestjs/common';
 import { createUserDto } from 'src/dtos/user.dto';
 import { LoginDto } from 'src/dtos/login.dto';
 import { AuthService } from './auth.service';
-import { AuthGuard } from './auth.guard';
 import { Response } from 'express';
 
 @Controller('auth')
@@ -28,11 +27,5 @@ export class AuthController {
             maxAge: 1000 * 60 * 60, 
         })
         return data
-    }
-
-    @UseGuards(AuthGuard)
-    @Get("profile")
-    getUserProfile(@Req() req) {
-        return req.user;
     }
 }
