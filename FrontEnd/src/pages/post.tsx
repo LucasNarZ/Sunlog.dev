@@ -10,7 +10,7 @@ import rehypeRaw from 'rehype-raw'
 const Post = () => {
     const { postId } = useParams<{ postId: string }>()
     const [ post, postError ] = usePost(postId as string)
-    const [ author, authorError ] = useAuthor(post?.userId as string);
+    const [ author, authorError ] = useAuthor();
     if(postError){
         console.error(postError)   
     }
