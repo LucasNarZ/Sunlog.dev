@@ -1,13 +1,15 @@
-import { IsString, IsOptional, IsNotEmpty } from "class-validator";
+import { IsString, IsNotEmpty } from "class-validator";
 
 export class EditPostDto {
     @IsString()
-    @IsOptional()
     @IsNotEmpty()
-    title?: string;
+    readonly title: string;
 
     @IsString()
-    @IsOptional()
     @IsNotEmpty()
-    content?: string;
+    readonly description: string;
+
+    @IsString()
+    @IsNotEmpty()
+    readonly content: string;
 }
