@@ -8,8 +8,8 @@ import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
 
 const Post = () => {
-    const { postId } = useParams<{ postId: string }>()
-    const [ post, postError ] = usePost(postId as string)
+    const { slug } = useParams<{ slug: string }>()
+    const [ post, postError ] = usePost(slug as string)
     const [ author, authorError ] = useAuthor();
     if(postError){
         console.error(postError)   
