@@ -1,4 +1,4 @@
-import { Table, Column, Model, DataType, Default, ForeignKey, BelongsTo } from 'sequelize-typescript'
+import { Table, Column, Model, DataType, Default, ForeignKey, BelongsTo, Unique } from 'sequelize-typescript'
 import { User } from '../User/user.entity';
 
 @Table
@@ -61,10 +61,10 @@ export class Post extends Model {
     })
     likes:number;
 
-    @Default("")
     @Column({
         type: DataType.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     })
     slug:string;
 
