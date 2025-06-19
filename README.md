@@ -20,7 +20,7 @@
 ## 🧠 Tech Stack
 
 - **Frontend**: React + Tailwind CSS
-- **Backend**: NestJS + TypeORM (PostgreSQL)
+- **Backend**: NestJS + Sequelize (PostgreSQL)
 - **Authentication**: JWT
-- **Markdown & Code Rendering**: `react-markdown`, `highlight.js`, live preview engine
+- **Markdown & Code Rendering**: `react-markdown`
 - **Deployment**: Docker-ready
