@@ -1,46 +1,74 @@
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate, Link } from 'react-router-dom';
 import useAuthor from '../hooks/getAuthor';
+import { useState } from 'react';
 
 const Header = () => {
-    const navigate = useNavigate()
-    const [ userData, errorProfile ] = useAuthor()
+  const navigate = useNavigate();
+  const [userData, errorProfile] = useAuthor();
+  const [isFocused, setIsFocused] = useState(false);
 
-    const handleClick = () => {
-        navigate("/profile")
-    }
+  const handleClick = () => navigate('/profile');
 
-    return (
-        <header className="h-16 w-full flex justify-between items-center">
-            <div className="flex items-center justify-start gap-16 w-2/3">
-                <div className="flex items-center ml-10 w-40">
-                    <h1 style={{ fontFamily: "'EB Garamond', serif" }} className='w-full text-center cursor-pointer'> <Link to="/">The Learning Experience</Link></h1>
-                </div>
-                <div className="w-full">
-                    <div className='relative w-2/3 md:opacity-100 opacity-0'>
-                        <input
-                            type="text"
-                            placeholder="Search..."
-                            className="border border-gray-300 rounded px-4 py-2 w-full" />
-                        <SearchIcon className='absolute right-5 top-1/2 translate-y-[-50%] cursor-pointer'/>
-                    </div>
-                </div>
-            </div>
-            <div className="flex justify-between w-36 justify-self-end lg:mr-16 mr-5">
-                {errorProfile ? 
-                <>
-                    <button className="cursor-pointer" onClick={() => navigate("/signUp")}>Sign Up</button>
-                    <button className="cursor-pointer" onClick={() => navigate("/signIn")}>Sign In</button>
-                </>:
-                <div className='flex items-center gap-3 cursor-pointer' onClick={handleClick}>
-                    <img className="w-9 rounded-4xl" src={userData?.profileImgUrl} alt="profile image" />
-                    <p>{userData?.name}</p>
-                </div>
-                }
-            </div> 
-            
-        </header>
-    )
-}
+  return (
+    <header className="h-20 w-full bg-white shadow-md px-6 lg:px-16 flex items-center justify-between">
+
+      <div className="flex items-center space-x-4">
+        <Link
+          to="/"
+          className="text-lg lg:text-xl font-family-garamond font-semibold text-gray-800 hover:text-secondary transition"
+        >
+          The Learning Experience
+        </Link>
+      </div>
+
+      <div
+        className={`hidden md:flex items-center bg-gray-100 border border-gray-300 rounded-full px-4 py-2 shadow-inner
+          transition-all duration-300 ease-in-out
+          ${isFocused ? 'w-96' : 'w-64'}`}
+      >
+        <SearchIcon className="text-gray-500" />
+        <input
+          type="text"
+          placeholder="Search posts, topics..."
+          className="ml-2 bg-transparent outline-none w-full text-sm"
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+        />
+      </div>
+
+      <div className="flex items-center space-x-6">
+        {errorProfile ? (
+          <>
+            <button
+              onClick={() => navigate('/signUp')}
+              className="text-sm font-semibold text-primary hover:text-secondary transition"
+            >
+              Sign Up
+            </button>
+            <button
+              onClick={() => navigate('/signIn')}
+              className="bg-primary text-white px-4 py-2 rounded-xl text-sm hover:bg-secondary transition font-semibold"
+            >
+              Sign In
+            </button>
+          </>
+        ) : (
+          <div
+            onClick={handleClick}
+            className="flex items-center gap-3 cursor-pointer hover:opacity-90 transition"
+          >
+            <img
+              src={userData?.profileImgUrl}
+              alt="Profile"
+              className="w-10 h-10 rounded-full object-cover border border-gray-300 shadow"
+            />
+            <span className="text-sm font-semibold text-gray-700">{userData?.name}</span>
+          </div>
+        )}
+      </div>
+    </header>
+  );
+};
 
 export default Header;
