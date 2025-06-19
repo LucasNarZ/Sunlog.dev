@@ -8,11 +8,11 @@ export class createPostDto {
     @IsNotEmpty()
     readonly content: string;
     @IsOptional()
-    @IsNotEmpty()
     @IsString()
     readonly description?: string;
+    @IsString()
+    readonly slug: string;
     @IsOptional()
-    @IsNotEmpty()
     @IsString()
     readonly previewImgUrl?: string;
     @IsString()
