@@ -1,5 +1,5 @@
 import { Post } from "src/Post/post.entity";
-import { DataType, Model, PrimaryKey, Table, Column, Default, HasMany, Unique, AllowNull } from "sequelize-typescript";
+import { DataType, Model, Table, Column, Default, HasMany, Unique } from "sequelize-typescript";
 
 @Table
 export class User extends Model {
@@ -31,7 +31,7 @@ export class User extends Model {
     })
     password:string;
 
-    @Default("https://thumbs.dreamstime.com/b/default-profile-picture-icon-high-resolution-high-resolution-default-profile-picture-icon-symbolizing-no-display-picture-360167031.jpg")
+    @Default("https://deepgrouplondon.com/wp-content/uploads/2019/06/person-placeholder-5.png")
     @Column({
         type: DataType.TEXT,
         allowNull: false
