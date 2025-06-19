@@ -1,4 +1,4 @@
-import { Injectable, Inject } from "@nestjs/common";
+import { Injectable, Inject, UnauthorizedException, NotFoundException } from "@nestjs/common";
 import { Post } from "./post.entity";
 import { createPostDto } from "src/dtos/post.dto";
 import { postsRepositoryToken } from "src/constants";
@@ -15,9 +15,13 @@ export class PostsService {
         return await this.postsRepository.findAll<Post>()
     }
 
-    async createPost({title, content, authorId, tags, categorys, previewImgUrl, description}:createPostDto) {
-        return await this.postsRepository.create({title, content, userId: authorId, tags, categorys, previewImgUrl, description})
+    async createPost(userId:string, {title, content, authorId, tags, categorys, previewImgUrl, description, slug}:createPostDto) {
+        if(userId !== authorId){
+            throw new UnauthorizedException("Permission Denied.")
+        }
+        return await this.postsRepository.create({title, content, userId: authorId, tags, categorys, previewImgUrl, description, slug})
     }
+    
     async findPost(postId:string) {
         return await this.postsRepository.findOne<Post>({
             where: {
@@ -26,20 +30,34 @@ export class PostsService {
         })
     }
 
-    async updatePost(postId:string, title:string, content:string) {
-        let update = {};
-        if(title) {
-            Object.defineProperty(update, "title", {value:title})
-        }
-        if(content) {
-            Object.defineProperty(update, "content", {value:content})
-        } 
-
-        return await this.postsRepository.update(
-            update, 
-            {where: {
-                id: postId
+    async findPostSlug(slug:string) {
+        return await this.postsRepository.findOne<Post>({
+            where: {
+                slug
             }
+        })
+    }
+
+    async updatePost(postId:string, userId:string, data:EditPostDto) {
+        const post = await this.postsRepository.findOne({
+            where:{
+                postId
+            }
+        })
+
+        if(!post) {
+            throw new NotFoundException("Post not found.")
+        }
+
+        if(post.userId !== userId) {
+            throw new UnauthorizedException("You are not the author of this post.")
+        }
+
+        return await this.postsRepository.update(data, 
+            {
+                where: {
+                    id: postId
+                }
             }
         )
     }
