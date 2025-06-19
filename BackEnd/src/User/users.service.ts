@@ -3,6 +3,7 @@ import { postsRepositoryToken, usersRepositoryToken } from "src/constants";
 import { User } from "./user.entity";
 import { createUserDto } from "src/dtos/user.dto";
 import { Post } from "src/Post/post.entity";
+import { updateUserDto } from "src/dtos/updateUser.dto";
 
 @Injectable()
 export class UsersService {
@@ -35,6 +36,16 @@ export class UsersService {
             throw new NotFoundException("User don't have posts");
         }
         return posts;
+    }
+
+    async updateUser(id:string, data:updateUserDto) {
+        return this.usersRepository.update(data,
+            {
+                where: {
+                    id
+                }
+            }
+        )
     }
 
 }
