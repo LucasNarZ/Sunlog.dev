@@ -1,4 +1,16 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --font-family-garamond: 'EB Garamond', serif;
+
+  --color-primary: #0C3DFF;
+  --color-secondary: #6E69FF;
+  --color-danger: #DC2626;
+  --color-muted: #6B7280;
+  --color-background: #F2F2F2;
+}
+
 
 body {
     font-family: "Inter", "sans-serif";
