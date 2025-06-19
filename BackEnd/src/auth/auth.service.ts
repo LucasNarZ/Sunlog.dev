@@ -6,6 +6,8 @@ import * as argon2 from "argon2";
 import { UniqueConstraintException } from 'src/exceptions/uniqueContraint.exception';
 import { InvalidPasswordEmailException } from 'src/exceptions/InvalidPasswordEmail.exception';
 import { JwtService } from '@nestjs/jwt';
+import { SequelizeScopeError } from 'sequelize';
+
 
 @Injectable()
 export class AuthService {
@@ -22,9 +24,9 @@ export class AuthService {
                 password: await argon2.hash(data.password)
             }
             return await this.usersService.createUser(data)
-        }catch(err:any){
-            if(err.name == 'SequelizeUniqueConstraintError'){
-                throw new UniqueConstraintException(err.errors[0].message)
+        }catch(err){
+            if(err instanceof SequelizeScopeError && err.name == 'SequelizeUniqueConstraintError'){
+                throw new UniqueConstraintException("Email already registered.")
             }
         }
     }
@@ -33,10 +35,12 @@ export class AuthService {
         const { email, password } = body
         const user = await this.usersService.getUserByEmail(email)
         if(!user){
+            console.log("user not found")
             throw new InvalidPasswordEmailException()
         }
         const passwordRight = await argon2.verify(user.password, password)
         if(!passwordRight){
+            console.log("password not right")
             throw new InvalidPasswordEmailException()
         }
         const payload = {
