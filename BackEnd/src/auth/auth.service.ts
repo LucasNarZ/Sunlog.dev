@@ -17,6 +17,7 @@ export class AuthService {
     ) {}
 
     async register(body:createUserDto) {
+        console.log(body.password)
         try{
             let data = body
             data = {
@@ -25,7 +26,7 @@ export class AuthService {
             }
             return await this.usersService.createUser(data)
         }catch(err){
-            if(err instanceof SequelizeScopeError && err.name == 'SequelizeUniqueConstraintError'){
+            if(err.name == 'SequelizeUniqueConstraintError'){
                 throw new UniqueConstraintException("Email already registered.")
             }
         }
@@ -40,6 +41,7 @@ export class AuthService {
         }
         const passwordRight = await argon2.verify(user.password, password)
         if(!passwordRight){
+            console.log(password)
             console.log("password not right")
             throw new InvalidPasswordEmailException()
         }
