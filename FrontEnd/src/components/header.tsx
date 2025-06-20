@@ -42,13 +42,13 @@ const Header = () => {
           <>
             <button
               onClick={() => navigate('/signUp')}
-              className="text-sm font-semibold text-primary hover:text-secondary transition"
+              className="cursor-pointer text-sm font-semibold text-primary hover:text-secondary transition"
             >
               Sign Up
             </button>
             <button
               onClick={() => navigate('/signIn')}
-              className="bg-primary text-white px-4 py-2 rounded-xl text-sm hover:bg-secondary transition font-semibold"
+              className="cursor-pointer bg-primary text-white px-4 py-2 rounded-xl text-sm hover:bg-secondary transition font-semibold"
             >
               Sign In
             </button>
