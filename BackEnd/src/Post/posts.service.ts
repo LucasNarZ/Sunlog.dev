@@ -31,11 +31,17 @@ export class PostsService {
     }
 
     async findPostSlug(slug:string) {
-        return await this.postsRepository.findOne<Post>({
+        const post = await this.postsRepository.findOne<Post>({
             where: {
                 slug
             }
         })
+
+        if(!post){
+            throw new NotFoundException("Post Not Found.")
+        }
+
+        return post
     }
 
     async updatePost(postId:string, userId:string, data:EditPostDto) {

@@ -30,7 +30,7 @@ export class Post extends Model {
     })
     description: string;
 
-    @Default("")
+    @Default("https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/330px-Placeholder_view_vector.svg.png")
     @Column({
         type: DataType.TEXT,
         allowNull: false

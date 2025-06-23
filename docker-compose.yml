@@ -36,20 +36,6 @@ services:
       - postgres:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-  redis-sessions:
-    image: redis
-    restart: on-failure
-    hostname: redis-sessions
-    healthcheck:
-      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
-      interval: 1s
-      timeout: 3s
-      retries: 5
-    command: redis-server --save "" --appendonly no --maxclients 20000
-    volumes:
-      - redis_data:/data
-    ports:
-      - "6379:6379"
   nginx:
     image: nginx
     volumes:
@@ -61,5 +47,4 @@ services:
       - "443:443"
 volumes:
   postgres:
-  redis_data:
   front-end:

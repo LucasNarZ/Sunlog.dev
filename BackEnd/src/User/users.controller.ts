@@ -1,4 +1,4 @@
-import { Controller, Get, Body, Req, Put, UseGuards, UnauthorizedException } from "@nestjs/common";
+import { Controller, Get, Body, Req, Put, UseGuards, UnauthorizedException, Param } from "@nestjs/common";
 import { AuthGuard } from "src/auth/auth.guard";
 import { UsersService } from "./users.service";
 import { Request } from "express";
@@ -12,12 +12,16 @@ export class UsersController {
         private readonly usersService: UsersService
     ) {}
 
+    @Get("basic/:userId")
+    async findUserBasicInfo(@Param("userId") userId:string) {
+        return await this.usersService.findUserBasic(userId)
+    }
+
+
     @UseGuards(AuthGuard)
-    @Get("id")
+    @Get("profile")
     async findUser(@Req() req:AuthRequest) {
-        
         const id = req.user.userId
-        console.log(id)
         if(!id){
             throw new UnauthorizedException("User is not logged")
         }
@@ -26,6 +30,11 @@ export class UsersController {
             throw new UserNotFoundException(`user with id ${id} not found`)
         }
         return user
+    }
+
+    @Get(":userId")
+    async findUserPublic(@Param("userId") userId:string){
+        return await this.usersService.findUserPublic(userId)
     }
 
     @Get(":id/posts")

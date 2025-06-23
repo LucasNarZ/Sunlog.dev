@@ -37,7 +37,7 @@ const Post = () => {
   }
 
   const handleAuthorClick = () => {
-    if (author?.id) navigate(`/user/${author.id}`)
+    if (author?.id) navigate(`/profile/${author.id}`)
   }
 
   return (
@@ -50,13 +50,14 @@ const Post = () => {
             <img src={author?.profileImgUrl} alt="author profile" className="w-12 h-12 rounded-full object-cover border" />
             <div>
               <p className="font-semibold">{author?.name}</p>
+              <p className="text-sm text-gray-600">Author bio or short description here</p>
             </div>
             <button onClick={(e) => { e.stopPropagation(); handleFollow(); }} className={`ml-auto px-4 py-1 rounded-full font-semibold text-white transition cursor-pointer ${following ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-600 hover:bg-blue-700'}`}>
               {following ? 'Following' : 'Follow'}
             </button>
           </div>
           <div className="flex gap-6 items-center mb-6 text-gray-700">
-            <div><strong>Category:</strong> {post.categorys.join(", ") || 'General'}</div>
+            <div><strong>Category:</strong> {post.category || 'General'}</div>
             {post.tags && post.tags.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {post.tags.map((tag) => (

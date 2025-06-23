@@ -18,6 +18,7 @@ function App() {
         <Route path='/profile' element={<Profile />}/>
         <Route path='/createPost' element={<CreatePost />}/>
         <Route path='/editPost/:postId' element={<EditPost />}/>
+        <Route path='/user/:id' ele/>
       </Routes>
     </BrowserRouter>
   )

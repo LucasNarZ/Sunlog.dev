@@ -22,8 +22,35 @@ export class UsersService {
         return await this.usersRepository.findOne({where:{email}});
     }
 
+    async findUserBasic(id:string) {
+        return await this.usersRepository.findOne({
+            attributes:["name", "profileImgUrl", "followers"],
+            where:{
+                id
+            }
+        });
+    }
+
     async findUser(id:string) {
-        return await this.usersRepository.findOne({where:{id}});
+        return await this.usersRepository.findOne({
+            where:{
+                id
+            }
+        });
+    }
+
+    async findUserPublic(id:string) {
+        const user = await this.usersRepository.findOne({
+            attributes:["name", "profileImgUrl", "bio", "followers"],
+            where:{
+                id
+            }
+        });
+        if(!user){
+            throw new NotFoundException("User not found!")
+        }
+
+        return user
     }
 
     async getPostByUser(id:string) {
