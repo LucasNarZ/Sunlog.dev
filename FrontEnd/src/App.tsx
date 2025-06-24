@@ -6,6 +6,7 @@ import SignUp from './pages/signUp'
 import Profile from './pages/profile'
 import CreatePost from './pages/createPost'
 import EditPost from './pages/editPost'
+import PublicUser from './pages/publicUser'
 
 function App() {
   return (
@@ -18,7 +19,7 @@ function App() {
         <Route path='/profile' element={<Profile />}/>
         <Route path='/createPost' element={<CreatePost />}/>
         <Route path='/editPost/:postId' element={<EditPost />}/>
-        <Route path='/user/:id' ele/>
+        <Route path='/user/:id' element={<PublicUser />}/>
       </Routes>
     </BrowserRouter>
   )
