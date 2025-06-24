@@ -1,8 +1,8 @@
 import { Injectable, Inject, UnauthorizedException, NotFoundException } from "@nestjs/common";
 import { Post } from "./post.entity";
-import { createPostDto } from "src/dtos/post.dto";
+import { createPostDto } from "src/Post/dtos/post.dto";
 import { postsRepositoryToken } from "src/constants";
-import { EditPostDto } from "src/dtos/editPost.dto";
+import { EditPostDto } from "src/Post/dtos/editPost.dto";
 
 @Injectable()
 export class PostsService {
