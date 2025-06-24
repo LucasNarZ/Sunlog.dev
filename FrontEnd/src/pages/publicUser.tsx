@@ -1,89 +1,59 @@
-import Header from '../components/header'
-import { useParams, useNavigate } from 'react-router-dom'
-import usePost from '../hooks/getPost'
-import useAuthor from '../hooks/getAuthor'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import rehypeRaw from 'rehype-raw'
-import { useState, useEffect } from 'react'
+import { useParams } from "react-router-dom"
+import { useState, useEffect } from "react"
+import Header from "../components/header"
+import useUser from "../hooks/getUser"
+import usePostsByAuthor from "../hooks/getUserPosts"
+import CardPost from "../components/cardPost"
 
-const Post = () => {
-  const { slug } = useParams()
-  const navigate = useNavigate()
-  const [post, postError] = usePost(slug)
-  const [author, authorError] = useAuthor()
-  const [liked, setLiked] = useState(false)
-  const [likesCount, setLikesCount] = useState(post?.likes || 0)
+const PublicUser = () => {
+  const { id } = useParams()
+  const [user, errorUser] = useUser(id ?? "")
+  const [posts] = usePostsByAuthor(id ?? "")
   const [following, setFollowing] = useState(false)
 
   useEffect(() => {
-    if (post) setLikesCount(post.likes || 0)
-  }, [post])
-
-  if (postError) console.error(postError)
-  if (authorError) console.error(authorError)
-
-  const handleLike = () => {
-    if (liked) {
-      setLikesCount((c) => c - 1)
-    } else {
-      setLikesCount((c) => c + 1)
-    }
-    setLiked(!liked)
-  }
+    if (errorUser) console.error(errorUser)
+  }, [errorUser])
 
   const handleFollow = () => {
     setFollowing(!following)
   }
 
-  const handleAuthorClick = () => {
-    if (author?.id) navigate(`/profile/${author.id}`)
-  }
-
   return (
-    <div className="min-h-screen w-full bg-white text-gray-900 flex flex-col items-center">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center w-full">
       <Header />
-      {post ? (
-        <article className="max-w-3xl w-full px-6 sm:px-10 py-16 mt-20 mb-20">
-          <h1 className="text-4xl font-extrabold mb-4 leading-tight">{post.title}</h1>
-          <div className="flex items-center gap-4 mb-2 cursor-pointer" onClick={handleAuthorClick}>
-            <img src={author?.profileImgUrl} alt="author profile" className="w-12 h-12 rounded-full object-cover border" />
-            <div>
-              <p className="font-semibold">{author?.name}</p>
-              <p className="text-sm text-gray-600">Author bio or short description here</p>
-            </div>
-            <button onClick={(e) => { e.stopPropagation(); handleFollow(); }} className={`ml-auto px-4 py-1 rounded-full font-semibold text-white transition cursor-pointer ${following ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-600 hover:bg-blue-700'}`}>
+      <div className="w-full max-w-5xl mt-12 px-6">
+        <div className="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-10 mb-6">
+          <img className="w-32 h-32 rounded-full object-cover shadow-md" src={user?.profileImgUrl} alt="Profile" />
+          <div className="text-center md:text-left w-full">
+            <h2 className="text-3xl font-semibold">{user?.name}</h2>
+            <p className="text-sm text-gray-500 mt-1">Joined on {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : "Unknown date"}</p>
+            <p className="text-sm text-gray-500">{user?.followers} follower{user?.followers === 1 ? "" : "s"}</p>
+            <p className="text-gray-700 mt-3 italic max-w-xl whitespace-pre-line">{user?.bio?.trim() !== "" ? user?.bio : "No bio provided yet."}</p>
+            <button onClick={handleFollow} className={`cursor-pointer mt-4 px-5 py-2 text-white rounded transition ${following ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-600 hover:bg-blue-700'}`}>
               {following ? 'Following' : 'Follow'}
             </button>
           </div>
-          <div className="flex gap-6 items-center mb-6 text-gray-700">
-            <div><strong>Category:</strong> {post.category || 'General'}</div>
-            {post.tags && post.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {post.tags.map((tag) => (
-                  <span key={tag} className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full text-sm">{tag}</span>
+        </div>
+        <div className="w-full">
+          {posts && posts.length > 0 ? (
+            <>
+              <h3 className="text-xl font-medium mb-4">Posts by {user?.name}</h3>
+              <div className="grid gap-6">
+                {posts.map((post, index) => (
+                  <CardPost key={index} post={post} />
                 ))}
               </div>
-            )}
-          </div>
-          <div className="mb-6 flex items-center gap-4">
-            <button onClick={handleLike} className={`flex items-center gap-2 px-3 py-1 rounded-full font-semibold transition cursor-pointer ${liked ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-gray-300 text-gray-800 hover:bg-gray-400'}`}>
-              <svg xmlns="http://www.w3.org/2000/svg" fill={liked ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" className="w-5 h-5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 21C12 21 7 17 5 13a4 4 0 118 0 4 4 0 018 0c-2 4-7 8-7 8z" />
-              </svg>
-              {likesCount}
-            </button>
-            <div className="text-sm text-gray-500">Published: {new Date(post.createdAt).toLocaleDateString()}</div>
-          </div>
-          <div className="prose prose-lg max-w-none leading-relaxed">
-            <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>{post.content}</ReactMarkdown>
-          </div>
-        </article>
-      ) : (
-        <div className="mt-40 text-xl font-medium text-gray-600">Loading...</div>
-      )}
+            </>
+          ) : (
+            <div className="flex flex-col items-center justify-center text-center mt-10 gap-4">
+              <p className="text-lg font-medium">This user hasn’t published any posts yet</p>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   )
 }
 
-export default Post
+export default PublicUser
