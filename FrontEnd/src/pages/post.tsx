@@ -1,20 +1,23 @@
 import Header from '../components/header'
 import { useParams, useNavigate } from 'react-router-dom'
 import usePost from '../hooks/getPost'
-import useAuthor from '../hooks/getAuthor'
+import useUser from '../hooks/getUser'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
 import { useState, useEffect } from 'react'
+import { apiClient } from '../apiClient'
+import useFollow from '../hooks/getFollow'
 
 const Post = () => {
   const { slug } = useParams()
   const navigate = useNavigate()
-  const [post, postError] = usePost(slug)
-  const [author, authorError] = useAuthor()
+  const [post, postError] = usePost(slug || "")
+  console.log(post?.userId)
+  const [author, authorError] = useUser(post?.userId ?? "a")
   const [liked, setLiked] = useState(false)
   const [likesCount, setLikesCount] = useState(post?.likes || 0)
-  const [following, setFollowing] = useState(false)
+  const [following, setFollowing, followError] = useFollow(author?.id || "a")
 
   useEffect(() => {
     if (post) setLikesCount(post.likes || 0)
@@ -22,6 +25,7 @@ const Post = () => {
 
   if (postError) console.error(postError)
   if (authorError) console.error(authorError)
+  if (followError) console.error(followError)
 
   const handleLike = () => {
     if (liked) {
@@ -32,7 +36,21 @@ const Post = () => {
     setLiked(!liked)
   }
 
-  const handleFollow = () => {
+  const handleFollow = async () => {
+    try{
+      if(following){
+        await apiClient.post("/user/unfollow", {
+          followedId: author?.id
+        })
+      }else{
+        await apiClient.post("/user/follow", {
+          followedId: author?.id
+        })
+      }
+    }catch(err){
+      console.log(err)
+      alert("Error on follow user")
+    }
     setFollowing(!following)
   }
 
