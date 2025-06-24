@@ -54,4 +54,10 @@ export class User extends Model {
 
     @HasMany(() => Post)  
     posts: Post[];  
+
+    @Column({
+        type: DataType.DATE,
+        allowNull: false
+    })
+    createdAt: Date;
 }
