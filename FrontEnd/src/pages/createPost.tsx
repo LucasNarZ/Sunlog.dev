@@ -93,13 +93,13 @@ function CreatePostPage() {
         navigate(`/post/${post.slug}`)
       } else alert("Failed to create post. Please try again.")
     } catch (error) {
-      alert(error?.response?.data?.message || "An unexpected error occurred.")
+      alert((error as AxiosError)?.response?.data || "An unexpected error occurred.")
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  const handleMouseMove = (e) => {
+  const handleMouseMove = (e:any) => {
     if (!isResizingRef.current || !containerRef.current) return
     const rect = containerRef.current.getBoundingClientRect()
     const width = ((e.clientX - rect.left) / rect.width) * 100

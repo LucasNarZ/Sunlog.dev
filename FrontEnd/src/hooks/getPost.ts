@@ -2,11 +2,12 @@ import { useEffect, useState } from "react"
 import { apiClient } from "../apiClient"
 import type { Post } from "../types/post"
 
-const usePost = (slug: string):[Post | null, unknown] => {
+const usePost = (slug: string | undefined):[Post | null, unknown] => {
     const [ error, setError ] = useState<unknown>(null);
     const [ response, setResponse ] = useState<Post | null>(null);
     useEffect(() => {
         (async () => {
+            if(!slug) return
             try{
                 const response = await apiClient.get(`/post/${slug}`);
                 setResponse(response.data);

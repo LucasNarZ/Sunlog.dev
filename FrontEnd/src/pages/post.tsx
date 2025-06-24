@@ -12,12 +12,12 @@ import useFollow from '../hooks/getFollow'
 const Post = () => {
   const { slug } = useParams()
   const navigate = useNavigate()
-  const [post, postError] = usePost(slug || "")
+  const [post, postError] = usePost(slug)
   console.log(post?.userId)
-  const [author, authorError] = useUser(post?.userId ?? "a")
+  const [author, authorError] = useUser(post?.userId)
   const [liked, setLiked] = useState(false)
   const [likesCount, setLikesCount] = useState(post?.likes || 0)
-  const [following, setFollowing, followError] = useFollow(author?.id || "a")
+  const [following, setFollowing, followError] = useFollow(author?.id)
 
   useEffect(() => {
     if (post) setLikesCount(post.likes || 0)
@@ -47,11 +47,12 @@ const Post = () => {
           followedId: author?.id
         })
       }
+      setFollowing(!following)
     }catch(err){
       console.log(err)
       alert("Error on follow user")
     }
-    setFollowing(!following)
+    
   }
 
   const handleAuthorClick = () => {

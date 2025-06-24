@@ -9,7 +9,7 @@ import { apiClient } from "../apiClient";
 const Profile = () => {
   const navigate = useNavigate();
   const [user, errorUser] = useAuthor();
-  const [posts] = usePostsByAuthor(user?.id ?? "");
+  const [posts] = usePostsByAuthor(user?.id);
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState("");
   const [editedBio, setEditedBio] = useState("");

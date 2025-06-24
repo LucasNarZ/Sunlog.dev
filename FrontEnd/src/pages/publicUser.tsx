@@ -7,8 +7,8 @@ import CardPost from "../components/cardPost"
 
 const PublicUser = () => {
   const { id } = useParams()
-  const [user, errorUser] = useUser(id ?? "")
-  const [posts] = usePostsByAuthor(id ?? "")
+  const [user, errorUser] = useUser(id)
+  const [posts] = usePostsByAuthor(id)
   const [following, setFollowing] = useState(false)
 
   useEffect(() => {
