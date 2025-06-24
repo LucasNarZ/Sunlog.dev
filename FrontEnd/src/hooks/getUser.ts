@@ -15,7 +15,7 @@ const useUser = (userId:string):[User | null, unknown] => {
                 setError(err)
             }
         })()
-    }, [])
+    }, [userId])
 
     return [ response, error ]
 }
