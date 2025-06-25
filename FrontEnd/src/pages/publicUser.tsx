@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useState, useEffect } from "react"
 import Header from "../components/header"
 import useUser from "../hooks/getUser"
@@ -6,9 +6,12 @@ import usePostsByAuthor from "../hooks/getUserPosts"
 import CardPost from "../components/cardPost"
 import useFollow from "../hooks/getFollow"
 import { apiClient } from "../apiClient"
+import { AxiosError } from "axios"
 
 const PublicUser = () => {
   const { id } = useParams()
+  const navigate = useNavigate()
+
   const [posts] = usePostsByAuthor(id)
   const [following, setFollowing] = useFollow(id)
   const [refreshUserKey, setRefreshUserKey] = useState(0)
@@ -33,8 +36,11 @@ const PublicUser = () => {
       setFollowing(!following)
       setRefreshUserKey(prev => prev + 1)
     }catch(err){
-      console.log(err)
-      alert("Error on follow user")
+      if((err as AxiosError).status == 401){
+        navigate("/signIn")
+      }else{
+        alert("Error on follow/unfollow user")
+      }
     }
   }
 

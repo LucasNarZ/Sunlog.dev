@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react'
 import { apiClient } from '../apiClient'
 import useFollow from '../hooks/getFollow'
 import useLike from '../hooks/getLike'
+import { AxiosError } from 'axios'
 
 const Post = () => {
   const { slug } = useParams()
@@ -45,8 +46,11 @@ const Post = () => {
       }
       setLiked(!liked)
     }catch(err){
-      console.log(err)
-      alert("Error on like/unlike post")
+      if((err as AxiosError).status == 401){
+        navigate("/signIn")
+      }else{
+        alert("Error on like/unlike post")
+      }
     }
   }
 
@@ -64,8 +68,11 @@ const Post = () => {
       }
       setFollowing(!following)
     }catch(err){
-      console.log(err)
-      alert("Error on follow/unfollow user")
+      if((err as AxiosError).status == 401){
+        navigate("/signIn")
+      }else{
+        alert("Error on follow/unfollow user")
+      }
     }
     
   }
