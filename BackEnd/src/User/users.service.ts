@@ -5,13 +5,10 @@ import { createUserDto } from "src/User/dtos/user.dto";
 import { Post } from "src/Post/post.entity";
 import { updateUserDto } from "src/User/dtos/updateUser.dto";
 import { Follow } from "./follow.entity";
-import { Sequelize } from "sequelize";
 
 @Injectable()
 export class UsersService {
     constructor(
-        @Inject(sequelizeToken)
-        private readonly sequelize: Sequelize,
         @Inject(usersRepositoryToken)
         private usersRepository: typeof User,
         @Inject(postsRepositoryToken)
@@ -47,7 +44,7 @@ export class UsersService {
 
     async findUserPublic(id:string) {
         const user = await this.usersRepository.findOne({
-            attributes:["name", "profileImgUrl", "bio", "followers", "createdAt"],
+            attributes:["id", "name", "profileImgUrl", "bio", "followers", "createdAt"],
             where:{
                 id
             }
@@ -85,78 +82,65 @@ export class UsersService {
         if(followedId === followerId){
             throw new BadRequestException("You can't follow yourself.")
         }
-        return await this.sequelize.transaction(async (t) => {
-            const relation = await this.followsRepository.findOne({
-                where:{
-                    followerId,
-                    followedId,
-                    lock: t.LOCK.UPDATE
-                },
-                transaction: t
-            })
-
-            if(relation){
-                throw new ConflictException("You already follow this user.")
+        const relation = await this.followsRepository.findOne({
+            where:{
+                followerId,
+                followedId
             }
+        })
+        console.log(relation)
+        if(relation){
+            throw new ConflictException("You already follow this user.")
+        }
 
-            await this.usersRepository.increment(1, {
-                where:{
-                    userId: followedId
-                },
-                transaction: t
-            })
-
-            await this.followsRepository.create(
-                {
-                    followerId,
-                    followedId
-                },
-                {transaction: t}
-            )
-
-            return { message: 'Followed successfully' };
+        await this.usersRepository.increment(1, {
+            where:{
+                id: followedId
+            }
         })
 
+        await this.followsRepository.create(
+            {
+                followerId,
+                followedId
+            }
+        )
+
+        return { message: 'Followed successfully' };
     }
 
     async unfollowUser(followerId:string, followedId:string){
         if(followedId === followerId){
             throw new BadRequestException("You can't unfollow yourself.")
         }
-        return await this.sequelize.transaction(async (t) => {
-            const relation = await this.followsRepository.findOne({
-                where:{
-                    followerId,
-                    followedId,
-                    lock: t.LOCK.UPDATE
-                },
-                transaction: t
-            })
 
-            if(!relation){
-                throw new NotFoundException("You don't follow this user.")
+        const relation = await this.followsRepository.findOne({
+            where:{
+                followerId,
+                followedId
             }
-
-            await this.usersRepository.decrement(1, {
-                where:{
-                    userId: followedId
-                },
-                transaction: t
-            })
-
-            await this.followsRepository.destroy(
-                {
-                    where:{
-                        followerId,
-                        followedId
-                    },
-                    transaction: t
-                }
-            )
-
-            return { message: 'Unfollowed successfully' };
         })
 
+        if(!relation){
+            throw new NotFoundException("You don't follow this user.")
+        }
+
+        await this.usersRepository.decrement(1, {
+            where:{
+                id: followedId
+            }
+        })
+
+        await this.followsRepository.destroy(
+            {
+                where:{
+                    followerId,
+                    followedId
+                }
+            }
+        )
+
+        return { message: 'Unfollowed successfully' };
     }
 
     async getFollowUser(followerId:string, followedId:string) {

@@ -38,14 +38,15 @@ const Post = () => {
 
   const handleFollow = async () => {
     try{
+      console.log(author)
       if(following){
         await apiClient.post("/user/unfollow", {
           followedId: author?.id
-        })
+        }, {withCredentials:true})
       }else{
         await apiClient.post("/user/follow", {
           followedId: author?.id
-        })
+        }, {withCredentials:true})
       }
       setFollowing(!following)
     }catch(err){
@@ -70,8 +71,8 @@ const Post = () => {
             <div>
               <p className="font-semibold">{author?.name}</p>
             </div>
-            <button onClick={(e) => { e.stopPropagation(); handleFollow(); }} className={`ml-auto px-4 py-1 rounded-full font-semibold text-white transition cursor-pointer ${following ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-600 hover:bg-blue-700'}`}>
-              {following ? 'Following' : 'Follow'}
+            <button onClick={(e) => { e.stopPropagation(); handleFollow(); }} className={`ml-auto px-4 py-1 rounded-full font-semibold text-white transition cursor-pointer ${following ? 'bg-gray-500 hover:bg-gray-600' : 'bg-blue-600 hover:bg-blue-700'}`}>
+              {following ? 'Unfollow' : 'Follow'}
             </button>
           </div>
           <div className="flex gap-6 items-center mb-6 text-gray-700">

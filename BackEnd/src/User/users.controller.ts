@@ -56,16 +56,16 @@ export class UsersController {
 
     @UseGuards(AuthGuard)
     @Post("/follow")
-    async followUser(@Req() req:AuthRequest, @Body() body:FollowUserDto){
+    async followUser(@Req() req:AuthRequest, @Body() body:any){
         const followerId = req?.user?.userId;
-        return this.usersService.followUser(followerId, body.followedId);
+        return await this.usersService.followUser(followerId, body.followedId);
     }
 
     @UseGuards(AuthGuard)
     @Post("/unfollow")
     async unfollowUser(@Req() req:AuthRequest, @Body() body:FollowUserDto){
         const followerId = req?.user?.userId;
-        return this.usersService.unfollowUser(followerId, body.followedId);
+        return await this.usersService.unfollowUser(followerId, body.followedId);
     }
 
     @UseGuards(AuthGuard)

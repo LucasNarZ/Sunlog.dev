@@ -2,7 +2,7 @@ import { followsRepositoryToken, postsRepositoryToken, usersRepositoryToken, seq
 import { User } from "./user.entity";
 import { Post } from "src/Post/post.entity";
 import { Follow } from "./follow.entity";
-import { Sequelize } from "sequelize";
+import { Sequelize } from "sequelize-typescript"
 
 export const usersProviders = [
     {
