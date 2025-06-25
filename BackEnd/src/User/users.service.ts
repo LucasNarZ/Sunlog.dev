@@ -1,5 +1,5 @@
 import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { followsRepositoryToken, postsRepositoryToken, sequelizeToken, usersRepositoryToken } from "src/constants";
+import { followsRepositoryToken, postsRepositoryToken, usersRepositoryToken } from "src/constants";
 import { User } from "./user.entity";
 import { createUserDto } from "src/User/dtos/user.dto";
 import { Post } from "src/Post/post.entity";
@@ -125,7 +125,7 @@ export class UsersService {
             throw new NotFoundException("You don't follow this user.")
         }
 
-        await this.usersRepository.decrement(1, {
+        await this.usersRepository.decrement("followers", {
             where:{
                 id: followedId
             }
