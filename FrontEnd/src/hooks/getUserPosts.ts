@@ -16,7 +16,7 @@ const usePostsByAuthor = (userId:string | undefined):[ Post[] | null, unknown | 
                 setError(err)
             }
         })()
-    }, [])
+    }, [userId])
 
     return [ posts, error ]
 }
