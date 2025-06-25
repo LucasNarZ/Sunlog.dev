@@ -9,6 +9,7 @@ interface CardPostProps {
 }
 
 const CardPost = ({ post }: CardPostProps) => {
+    console.log(post)
     const creationDate = new Date(post.createdAt)
     const navigate = useNavigate()
     const [author, setAuthor] = useState<Author | null>(null)

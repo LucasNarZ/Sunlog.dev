@@ -1,4 +1,4 @@
-import { Table, Column, Model, DataType, Default, ForeignKey, BelongsTo, Unique } from 'sequelize-typescript'
+import { Table, Column, Model, DataType, Default, ForeignKey, BelongsTo} from 'sequelize-typescript'
 import { User } from '../User/user.entity';
 
 @Table

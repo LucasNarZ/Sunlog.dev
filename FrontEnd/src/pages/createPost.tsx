@@ -79,7 +79,7 @@ function CreatePostPage() {
     const post = {
       title: title.trim(),
       slug: slug.trim(),
-      previewImgUrl: previewImgUrl.trim(),
+      previewImgUrl: previewImgUrl.trim() === "" ? undefined : previewImgUrl.trim(),
       description: description.trim(),
       tags: tags.split(",").map(tag => tag.trim()).filter(tag => tag),
       category: category.trim(),
