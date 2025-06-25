@@ -56,7 +56,7 @@ export class UsersController {
 
     @UseGuards(AuthGuard)
     @Post("/follow")
-    async followUser(@Req() req:AuthRequest, @Body() body:any){
+    async followUser(@Req() req:AuthRequest, @Body() body:FollowUserDto){
         const followerId = req?.user?.userId;
         return await this.usersService.followUser(followerId, body.followedId);
     }

@@ -1,14 +1,17 @@
-import { Injectable, Inject, UnauthorizedException, NotFoundException } from "@nestjs/common";
+import { Injectable, Inject, UnauthorizedException, NotFoundException, ConflictException } from "@nestjs/common";
 import { Post } from "./post.entity";
 import { createPostDto } from "src/Post/dtos/post.dto";
-import { postsRepositoryToken } from "src/constants";
+import { likesRepositoryToken, postsRepositoryToken } from "src/constants";
 import { EditPostDto } from "src/Post/dtos/editPost.dto";
+import { Like } from "./like.entity";
 
 @Injectable()
 export class PostsService {
     constructor(
         @Inject(postsRepositoryToken)
-        private postsRepository:typeof Post
+        private postsRepository: typeof Post,
+        @Inject(likesRepositoryToken)
+        private likesRepository: typeof Like
     ) {}
 
     async findAll(): Promise<Post[]>{
@@ -66,6 +69,73 @@ export class PostsService {
                 }
             }
         )
+    }
+
+    async likePost(likerId:string, likedId:string){
+        const relation = await this.likesRepository.findOne({
+            where:{
+                likerId,
+                likedId
+            }
+        })
+
+        if(relation){
+            throw new ConflictException("You already liked this.")
+        }
+
+        await this.postsRepository.increment("likes", {
+            where:{
+                id: likedId
+            }
+        })
+
+        await this.likesRepository.create(
+            {
+                likerId,
+                likedId
+            }
+        )
+
+        return { message: 'Followed successfully' };
+    }
+
+    async unlikePost(likerId:string, likedId:string){
+        const relation = await this.likesRepository.findOne({
+            where:{
+                likerId,
+                likedId
+            }
+        })
+
+        if(!relation){
+            throw new ConflictException("You don't liked this post.")
+        }
+
+        await this.postsRepository.decrement("likes", {
+            where:{
+                id: likedId
+            }
+        })
+
+        await this.likesRepository.destroy(
+            {
+                where:{
+                    likerId,
+                    likedId
+                }
+            }
+        )
+
+        return { message: 'Followed successfully' };
+    }
+
+    async getLikePost(likerId:string, likedId:string) {
+        return !!(await this.likesRepository.findOne({
+            where:{
+                likerId,
+                likedId
+            }
+        }))
     }
 
 }

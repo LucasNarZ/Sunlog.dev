@@ -2,6 +2,7 @@ import { Sequelize } from 'sequelize-typescript';
 import { Post } from '../Post/post.entity';
 import { User } from 'src/User/user.entity';
 import { Follow } from 'src/User/follow.entity';
+import { Like } from 'src/Post/like.entity';
 
 export const databaseProviders = [
     {
@@ -15,7 +16,7 @@ export const databaseProviders = [
                 password: process.env.POSTGRES_PASSWORD,
                 database: process.env.POSTGRES_DB
             })
-            sequelize.addModels([Post, User, Follow])
+            sequelize.addModels([Post, User, Follow, Like])
             await sequelize.sync()
             return sequelize
         }

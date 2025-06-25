@@ -8,6 +8,7 @@ import rehypeRaw from 'rehype-raw'
 import { useState, useEffect } from 'react'
 import { apiClient } from '../apiClient'
 import useFollow from '../hooks/getFollow'
+import useLike from '../hooks/getLike'
 
 const Post = () => {
   const { slug } = useParams()
@@ -15,7 +16,7 @@ const Post = () => {
   const [post, postError] = usePost(slug)
   console.log(post?.userId)
   const [author, authorError] = useUser(post?.userId)
-  const [liked, setLiked] = useState(false)
+  const [liked, setLiked] = useLike(post?.id)
   const [likesCount, setLikesCount] = useState(post?.likes || 0)
   const [following, setFollowing, followError] = useFollow(author?.id)
 
@@ -27,13 +28,26 @@ const Post = () => {
   if (authorError) console.error(authorError)
   if (followError) console.error(followError)
 
-  const handleLike = () => {
-    if (liked) {
-      setLikesCount((c) => c - 1)
-    } else {
-      setLikesCount((c) => c + 1)
+  const handleLike = async () => {
+    try{
+      if(liked){
+        await apiClient.post("/post/unlike", {
+          likedId: post?.id
+        }, {withCredentials:true})
+
+        setLikesCount((c) => c - 1)
+      }else{
+        await apiClient.post("/post/like", {
+          likedId: post?.id
+        }, {withCredentials:true})
+
+        setLikesCount((c) => c + 1)
+      }
+      setLiked(!liked)
+    }catch(err){
+      console.log(err)
+      alert("Error on like/unlike post")
     }
-    setLiked(!liked)
   }
 
   const handleFollow = async () => {
@@ -51,7 +65,7 @@ const Post = () => {
       setFollowing(!following)
     }catch(err){
       console.log(err)
-      alert("Error on follow user")
+      alert("Error on follow/unfollow user")
     }
     
   }
