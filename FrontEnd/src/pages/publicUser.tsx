@@ -4,19 +4,38 @@ import Header from "../components/header"
 import useUser from "../hooks/getUser"
 import usePostsByAuthor from "../hooks/getUserPosts"
 import CardPost from "../components/cardPost"
+import useFollow from "../hooks/getFollow"
+import { apiClient } from "../apiClient"
 
 const PublicUser = () => {
   const { id } = useParams()
-  const [user, errorUser] = useUser(id)
   const [posts] = usePostsByAuthor(id)
-  const [following, setFollowing] = useState(false)
+  const [following, setFollowing] = useFollow(id)
+  const [refreshUserKey, setRefreshUserKey] = useState(0)
+
+  const [user, errorUser] = useUser(id, refreshUserKey)
 
   useEffect(() => {
     if (errorUser) console.error(errorUser)
   }, [errorUser])
 
-  const handleFollow = () => {
-    setFollowing(!following)
+  const handleFollow = async () => {
+    try{
+      if(following){
+        await apiClient.post("/user/unfollow", {
+          followedId: id
+        }, {withCredentials:true})
+      }else{
+        await apiClient.post("/user/follow", {
+          followedId: id
+        }, {withCredentials:true})
+      }
+      setFollowing(!following)
+      setRefreshUserKey(prev => prev + 1)
+    }catch(err){
+      console.log(err)
+      alert("Error on follow user")
+    }
   }
 
   return (
@@ -30,8 +49,8 @@ const PublicUser = () => {
             <p className="text-sm text-gray-500 mt-1">Joined on {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : "Unknown date"}</p>
             <p className="text-sm text-gray-500">{user?.followers} follower{user?.followers === 1 ? "" : "s"}</p>
             <p className="text-gray-700 mt-3 italic max-w-xl whitespace-pre-line">{user?.bio?.trim() !== "" ? user?.bio : "No bio provided yet."}</p>
-            <button onClick={handleFollow} className={`cursor-pointer mt-4 px-5 py-2 text-white rounded transition ${following ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-600 hover:bg-blue-700'}`}>
-              {following ? 'Following' : 'Follow'}
+            <button onClick={handleFollow} className={`cursor-pointer mt-4 px-5 py-2 text-white rounded transition ${following ? 'bg-gray-500 hover:bg-gray-600' : 'bg-blue-600 hover:bg-blue-700'}`}>
+              {following ? 'Unfollow' : 'Follow'}
             </button>
           </div>
         </div>

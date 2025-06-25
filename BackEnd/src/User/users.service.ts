@@ -88,12 +88,12 @@ export class UsersService {
                 followedId
             }
         })
-        console.log(relation)
+
         if(relation){
             throw new ConflictException("You already follow this user.")
         }
 
-        await this.usersRepository.increment(1, {
+        await this.usersRepository.increment("followers", {
             where:{
                 id: followedId
             }
