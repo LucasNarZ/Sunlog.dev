@@ -17,8 +17,8 @@ function App() {
         <Route path='/signIn' element={<SignIn />}/>
         <Route path='/signUp' element={<SignUp />}/>
         <Route path='/profile' element={<Profile />}/>
-        <Route path='/createPost' element={<CreatePost />}/>
-        <Route path='/editPost/:postId' element={<EditPost />}/>
+        <Route path='/create-post' element={<CreatePost />}/>
+        <Route path='/edit-post/:postId' element={<EditPost />}/>
         <Route path='/user/:id' element={<PublicUser />}/>
       </Routes>
     </BrowserRouter>

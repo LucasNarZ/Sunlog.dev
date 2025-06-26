@@ -81,7 +81,7 @@ const Profile = () => {
     }
   };
 
-  const handleClick = () => navigate("/createPost");
+  const handleClick = () => navigate("/create-post");
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center w-full">
@@ -113,7 +113,10 @@ const Profile = () => {
                 <p className="text-gray-600">{user?.email}</p>
                 <p className="text-sm text-gray-500 mt-2">{user?.followers} follower{user?.followers === 1 ? "" : "s"}</p>
                 <p className="text-gray-700 mt-3 italic max-w-xl whitespace-pre-line">{user?.bio?.trim() !== "" ? user?.bio : "No bio provided yet."}</p>
-                <button onClick={toggleEdit} className="cursor-pointer mt-4 px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Edit Profile</button>
+                <div className="flex gap-7">
+                  <button onClick={toggleEdit} className="cursor-pointer mt-4 px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Edit Profile</button>
+                  {posts && posts.length > 0 ? <button onClick={handleClick} className="cursor-pointer mt-4 px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Create A Post</button> : null}
+                </div>
               </>
             )}
           </div>
@@ -125,6 +128,7 @@ const Profile = () => {
               <div className="grid gap-6">
                 {posts.map((post, index) => (<CardPost key={index} post={post} />))}
               </div>
+              
             </>
           ) : (
             <div className="flex flex-col items-center justify-center text-center mt-10 gap-4">
