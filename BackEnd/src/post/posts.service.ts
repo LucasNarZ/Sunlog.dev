@@ -27,7 +27,7 @@ export class PostsService {
 		return Array.isArray(input) ? input : [input];
 	};
 
-	async findPostsByTagAndCategory(tag?: string[], category?: string[]): Promise<Post[]> {
+	async findPostsByTagAndCategory(tag?: string | string[], category?: string | string[]): Promise<Post[]> {
 		const tags = this.normalizeToArray(tag);
 		const categorys = this.normalizeToArray(category);
 		const conditions: any[] = [];
