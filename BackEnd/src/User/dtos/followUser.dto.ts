@@ -1,7 +1,7 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class FollowUserDto {
-    @IsString()
-    @IsNotEmpty()
-    followedId: string;
+	@IsString()
+	@IsNotEmpty()
+	followedId: string;
 }

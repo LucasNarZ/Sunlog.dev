@@ -6,17 +6,17 @@ import helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
-  app.setGlobalPrefix('api')
-  app.use(helmet())
-  app.use(cookieParser())
-  app.enableCors({
-    origin: "http://localhost",
-    credentials: true
-  })
-  app.useGlobalPipes(new ValidationPipe())
-  app.useGlobalFilters(new GlobalFilter())
-  await app.listen(process.env.PORT ?? 3000);
+	const app = await NestFactory.create(AppModule);
+	app.setGlobalPrefix('api');
+	app.use(helmet());
+	app.use(cookieParser());
+	app.enableCors({
+		origin: 'http://localhost',
+		credentials: true,
+	});
+	app.useGlobalPipes(new ValidationPipe());
+	app.useGlobalFilters(new GlobalFilter());
+	await app.listen(process.env.PORT ?? 3000);
 }
 
 bootstrap();

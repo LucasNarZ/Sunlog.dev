@@ -1,14 +1,14 @@
-import { Like } from "./like.entity";
-import { Post } from "./post.entity";
-import { likesRepositoryToken, postsRepositoryToken } from "src/constants";
+import { Like } from './like.entity';
+import { Post } from './post.entity';
+import { likesRepositoryToken, postsRepositoryToken } from 'src/constants';
 
 export const postsProviders = [
-    {
-        provide: postsRepositoryToken,
-        useValue: Post
-    },
-    {
-        provide:likesRepositoryToken,
-        useValue: Like
-    }
-]
+	{
+		provide: postsRepositoryToken,
+		useValue: Post,
+	},
+	{
+		provide: likesRepositoryToken,
+		useValue: Like,
+	},
+];

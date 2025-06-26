@@ -13,23 +13,14 @@ import { usersProviders } from './User/users.providers';
 import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [
-    DatabaseModule,
-    PostsModule,
-    UsersModule,
-    AuthModule
-  ],
-  controllers: [
-    AppController,
-    PostsController,
-    UsersController
-  ],
-  providers: [
-    AppService,
-    PostsService,
-    ...postsProviders,
-    UsersService,
-    ...usersProviders
-  ],
+	imports: [DatabaseModule, PostsModule, UsersModule, AuthModule],
+	controllers: [AppController, PostsController, UsersController],
+	providers: [
+		AppService,
+		PostsService,
+		...postsProviders,
+		UsersService,
+		...usersProviders,
+	],
 })
 export class AppModule {}

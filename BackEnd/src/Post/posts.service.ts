@@ -1,139 +1,160 @@
-import { Injectable, Inject, UnauthorizedException, NotFoundException, ConflictException } from "@nestjs/common";
-import { Post } from "./post.entity";
-import { createPostDto } from "src/Post/dtos/post.dto";
-import { likesRepositoryToken, postsRepositoryToken } from "src/constants";
-import { EditPostDto } from "src/Post/dtos/editPost.dto";
-import { Like } from "./like.entity";
+import {
+	Injectable,
+	Inject,
+	UnauthorizedException,
+	NotFoundException,
+	ConflictException,
+} from '@nestjs/common';
+import { Post } from './post.entity';
+import { createPostDto } from 'src/Post/dtos/post.dto';
+import { likesRepositoryToken, postsRepositoryToken } from 'src/constants';
+import { EditPostDto } from 'src/Post/dtos/editPost.dto';
+import { Like } from './like.entity';
 
 @Injectable()
 export class PostsService {
-    constructor(
-        @Inject(postsRepositoryToken)
-        private postsRepository: typeof Post,
-        @Inject(likesRepositoryToken)
-        private likesRepository: typeof Like
-    ) {}
+	constructor(
+		@Inject(postsRepositoryToken)
+		private postsRepository: typeof Post,
+		@Inject(likesRepositoryToken)
+		private likesRepository: typeof Like,
+	) {}
 
-    async findAll(): Promise<Post[]>{
-        return await this.postsRepository.findAll<Post>()
-    }
+	async findAll(): Promise<Post[]> {
+		return await this.postsRepository.findAll<Post>();
+	}
 
-    async createPost(userId:string, {title, content, tags, categorys, previewImgUrl, description, slug}:createPostDto) {
-        return await this.postsRepository.create({title, content, userId: userId, tags, categorys, previewImgUrl, description, slug})
-    }
-    
-    async findPost(postId:string) {
-        return await this.postsRepository.findOne<Post>({
-            where: {
-                id: postId
-            }
-        })
-    }
+	async createPost(
+		userId: string,
+		{
+			title,
+			content,
+			tags,
+			categorys,
+			previewImgUrl,
+			description,
+			slug,
+		}: createPostDto,
+	) {
+		return await this.postsRepository.create({
+			title,
+			content,
+			userId: userId,
+			tags,
+			categorys,
+			previewImgUrl,
+			description,
+			slug,
+		});
+	}
 
-    async findPostSlug(slug:string) {
-        const post = await this.postsRepository.findOne<Post>({
-            where: {
-                slug
-            }
-        })
+	async findPost(postId: string) {
+		return await this.postsRepository.findOne<Post>({
+			where: {
+				id: postId,
+			},
+		});
+	}
 
-        if(!post){
-            throw new NotFoundException("Post Not Found.")
-        }
+	async findPostSlug(slug: string) {
+		const post = await this.postsRepository.findOne<Post>({
+			where: {
+				slug,
+			},
+		});
 
-        return post
-    }
+		if (!post) {
+			throw new NotFoundException('Post Not Found.');
+		}
 
-    async updatePost(postId:string, userId:string, data:EditPostDto) {
-        const post = await this.postsRepository.findOne({
-            where:{
-                postId
-            }
-        })
+		return post;
+	}
 
-        if(!post) {
-            throw new NotFoundException("Post not found.")
-        }
+	async updatePost(postId: string, userId: string, data: EditPostDto) {
+		const post = await this.postsRepository.findOne({
+			where: {
+				postId,
+			},
+		});
 
-        if(post.userId !== userId) {
-            throw new UnauthorizedException("You are not the author of this post.")
-        }
+		if (!post) {
+			throw new NotFoundException('Post not found.');
+		}
 
-        return await this.postsRepository.update(data, 
-            {
-                where: {
-                    id: postId
-                },
-                returning: true
-            }
-        )
-    }
+		if (post.userId !== userId) {
+			throw new UnauthorizedException(
+				'You are not the author of this post.',
+			);
+		}
 
-    async likePost(likerId:string, likedId:string){
-        const relation = await this.likesRepository.findOne({
-            where:{
-                likerId,
-                likedId
-            }
-        })
+		return await this.postsRepository.update(data, {
+			where: {
+				id: postId,
+			},
+			returning: true,
+		});
+	}
 
-        if(relation){
-            throw new ConflictException("You already liked this.")
-        }
+	async likePost(likerId: string, likedId: string) {
+		const relation = await this.likesRepository.findOne({
+			where: {
+				likerId,
+				likedId,
+			},
+		});
 
-        await this.postsRepository.increment("likes", {
-            where:{
-                id: likedId
-            }
-        })
+		if (relation) {
+			throw new ConflictException('You already liked this.');
+		}
 
-        await this.likesRepository.create(
-            {
-                likerId,
-                likedId
-            }
-        )
+		await this.postsRepository.increment('likes', {
+			where: {
+				id: likedId,
+			},
+		});
 
-        return { message: 'Liked successfully' };
-    }
+		await this.likesRepository.create({
+			likerId,
+			likedId,
+		});
 
-    async unlikePost(likerId:string, likedId:string){
-        const relation = await this.likesRepository.findOne({
-            where:{
-                likerId,
-                likedId
-            }
-        })
+		return { message: 'Liked successfully' };
+	}
 
-        if(!relation){
-            throw new ConflictException("You haven't liked this post.")
-        }
+	async unlikePost(likerId: string, likedId: string) {
+		const relation = await this.likesRepository.findOne({
+			where: {
+				likerId,
+				likedId,
+			},
+		});
 
-        await this.postsRepository.decrement("likes", {
-            where:{
-                id: likedId
-            }
-        })
+		if (!relation) {
+			throw new ConflictException("You haven't liked this post.");
+		}
 
-        await this.likesRepository.destroy(
-            {
-                where:{
-                    likerId,
-                    likedId
-                }
-            }
-        )
+		await this.postsRepository.decrement('likes', {
+			where: {
+				id: likedId,
+			},
+		});
 
-        return { message: 'Unliked successfully' };
-    }
+		await this.likesRepository.destroy({
+			where: {
+				likerId,
+				likedId,
+			},
+		});
 
-    async getLikePost(likerId:string, likedId:string) {
-        return !!(await this.likesRepository.findOne({
-            where:{
-                likerId,
-                likedId
-            }
-        }))
-    }
+		return { message: 'Unliked successfully' };
+	}
 
+	async getLikePost(likerId: string, likedId: string) {
+		return !!(await this.likesRepository.findOne({
+			where: {
+				likerId,
+				likedId,
+			},
+		}));
+	}
 }
