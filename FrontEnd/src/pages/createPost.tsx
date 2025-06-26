@@ -55,10 +55,29 @@ function CreatePostPage() {
     return true
   }
 
-  const validateUrl = (value:string) => {
-    if (value && !/^https?:\/\//.test(value)) return setUrlError("Image URL must start with http or https"), false
-    setUrlError("")
-    return true
+  const validateUrl = (value: string) => {
+    if (value && !/^https?:\/\//.test(value)) {
+      setUrlError("Image URL must start with http or https")
+      return false
+    }
+
+    if (!value) {
+      setUrlError("")
+      return true
+    }
+
+    return new Promise<boolean>((resolve) => {
+      const img = new Image()
+      img.onload = () => {
+        setUrlError("")
+        resolve(true)
+      }
+      img.onerror = () => {
+        setUrlError("The URL does not point to a valid image")
+        resolve(false)
+      }
+      img.src = value
+    })
   }
 
   const handleNext = async () => {
