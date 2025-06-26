@@ -46,15 +46,10 @@ describe('PostsService', () => {
   })
 
   describe('createPost', () => {
-    it('should create a post if userId matches authorId', async () => {
+    it('should create a post', async () => {
       const dto = { title: 't', content: 'c', authorId: '1', tags: [], categorys: [], previewImgUrl: '', description: '', slug: 'test' }
       postsRepository.create.mockResolvedValue(dto)
       await expect(service.createPost('1', dto)).resolves.toEqual(dto)
-    })
-
-    it('should throw if userId does not match authorId', async () => {
-      const dto = { title: 't', content: 'c', authorId: '2', tags: [], categorys: [], previewImgUrl: '', description: '', slug: 'test' }
-      await expect(service.createPost('1', dto)).rejects.toThrow(UnauthorizedException)
     })
   })
 
@@ -109,7 +104,7 @@ describe('PostsService', () => {
       postsRepository.increment.mockResolvedValue(null)
       likesRepository.create.mockResolvedValue(null)
 
-      await expect(service.likePost('uid', 'pid')).resolves.toEqual({ message: 'Followed successfully' })
+      await expect(service.likePost('uid', 'pid')).resolves.toEqual({ message: 'Liked successfully' })
     })
   })
 
@@ -124,7 +119,7 @@ describe('PostsService', () => {
       postsRepository.decrement.mockResolvedValue(null)
       likesRepository.destroy.mockResolvedValue(null)
 
-      await expect(service.unlikePost('uid', 'pid')).resolves.toEqual({ message: 'Followed successfully' })
+      await expect(service.unlikePost('uid', 'pid')).resolves.toEqual({ message: 'Unliked successfully' })
     })
   })
 

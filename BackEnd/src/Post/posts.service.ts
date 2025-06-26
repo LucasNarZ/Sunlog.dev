@@ -18,11 +18,8 @@ export class PostsService {
         return await this.postsRepository.findAll<Post>()
     }
 
-    async createPost(userId:string, {title, content, authorId, tags, categorys, previewImgUrl, description, slug}:createPostDto) {
-        if(userId !== authorId){
-            throw new UnauthorizedException("Permission Denied.")
-        }
-        return await this.postsRepository.create({title, content, userId: authorId, tags, categorys, previewImgUrl, description, slug})
+    async createPost(userId:string, {title, content, tags, categorys, previewImgUrl, description, slug}:createPostDto) {
+        return await this.postsRepository.create({title, content, userId: userId, tags, categorys, previewImgUrl, description, slug})
     }
     
     async findPost(postId:string) {
@@ -66,7 +63,8 @@ export class PostsService {
             {
                 where: {
                     id: postId
-                }
+                },
+                returning: true
             }
         )
     }
@@ -96,7 +94,7 @@ export class PostsService {
             }
         )
 
-        return { message: 'Followed successfully' };
+        return { message: 'Liked successfully' };
     }
 
     async unlikePost(likerId:string, likedId:string){
@@ -108,7 +106,7 @@ export class PostsService {
         })
 
         if(!relation){
-            throw new ConflictException("You don't liked this post.")
+            throw new ConflictException("You haven't liked this post.")
         }
 
         await this.postsRepository.decrement("likes", {
@@ -126,7 +124,7 @@ export class PostsService {
             }
         )
 
-        return { message: 'Followed successfully' };
+        return { message: 'Unliked successfully' };
     }
 
     async getLikePost(likerId:string, likedId:string) {

@@ -80,15 +80,15 @@ describe('PostsController', () => {
   it('should like a post', async () => {
     const req = { user: { userId: 'u1' } } as AuthRequest
     const dto: LikePostDto = { likedId: 'p1' }
-    mockPostsService.likePost.mockResolvedValue({ message: 'Followed successfully' })
-    await expect(controller.followUser(req, dto)).resolves.toEqual({ message: 'Followed successfully' })
+    mockPostsService.likePost.mockResolvedValue({ message: 'Liked successfully' })
+    await expect(controller.followUser(req, dto)).resolves.toEqual({ message: 'Liked successfully' })
   })
 
   it('should unlike a post', async () => {
     const req = { user: { userId: 'u1' } } as AuthRequest
     const dto: LikePostDto = { likedId: 'p1' }
-    mockPostsService.unlikePost.mockResolvedValue({ message: 'Followed successfully' })
-    await expect(controller.unlikePost(req, dto)).resolves.toEqual({ message: 'Followed successfully' })
+    mockPostsService.unlikePost.mockResolvedValue({ message: 'Unliked successfully' })
+    await expect(controller.unlikePost(req, dto)).resolves.toEqual({ message: 'Unliked successfully' })
   })
 
   it('should return true if post is liked', async () => {

@@ -17,6 +17,16 @@ export class UsersService {
         private followsRepository: typeof Follow
     ) {}
 
+    private async getUserById(id: string, attributes?: string[]) {
+        const user = await this.usersRepository.findOne({
+            where: { id },
+            ...(attributes ? { attributes } : {})
+        });
+
+        if (!user) throw new NotFoundException("User not found!");
+        return user;
+    }
+
     async createUser({name, email, password}:createUserDto) {
         return await this.usersRepository.create({name, email, password});
     }
@@ -26,29 +36,15 @@ export class UsersService {
     }
 
     async findUserBasic(id:string) {
-        return await this.usersRepository.findOne({
-            attributes:["name", "profileImgUrl", "followers"],
-            where:{
-                id
-            }
-        });
+        return await this.getUserById(id, ["name", "profileImgUrl", "followers"])
     }
 
     async findUser(id:string) {
-        return await this.usersRepository.findOne({
-            where:{
-                id
-            }
-        });
+        return await this.getUserById(id, ["id", "name", "email", "profileImgUrl", "bio", "followers", "createdAt", "updatedAt"])
     }
 
     async findUserPublic(id:string) {
-        const user = await this.usersRepository.findOne({
-            attributes:["id", "name", "profileImgUrl", "bio", "followers", "createdAt"],
-            where:{
-                id
-            }
-        });
+        const user = await this.getUserById(id, ["id", "name", "profileImgUrl", "bio", "followers", "createdAt"])
         if(!user){
             throw new NotFoundException("User not found!")
         }
@@ -63,7 +59,7 @@ export class UsersService {
             }
         })
         if(posts.length == 0){
-            throw new NotFoundException("User don't have posts");
+            throw new NotFoundException("User doesn't have posts");
         }
         return posts;
     }
@@ -73,7 +69,8 @@ export class UsersService {
             {
                 where: {
                     id
-                }
+                },
+                returning: true
             }
         )
     }
