@@ -10,6 +10,8 @@ import { createPostDto } from 'src/post/dtos/post.dto';
 import { likesRepositoryToken, postsRepositoryToken } from 'src/constants';
 import { EditPostDto } from 'src/post/dtos/editPost.dto';
 import { Like } from './like.entity';
+import { Op } from 'sequelize';
+
 
 @Injectable()
 export class PostsService {
@@ -20,8 +22,35 @@ export class PostsService {
 		private likesRepository: typeof Like,
 	) {}
 
-	async findAll(): Promise<Post[]> {
-		return await this.postsRepository.findAll<Post>();
+	private normalizeToArray(input?: string | string[]): string[]{
+		if (!input) return [];
+		return Array.isArray(input) ? input : [input];
+	};
+
+	async findPostsByTagAndCategory(tag?: string[], category?: string[]): Promise<Post[]> {
+		const tags = this.normalizeToArray(tag);
+		const categorys = this.normalizeToArray(category);
+		const conditions: any[] = [];
+
+		if (tags && tags.length > 0) {
+			conditions.push({
+				tags: {
+					[Op.overlap]: tags
+				}
+			});
+		}
+
+		if (categorys && categorys.length > 0) {
+			conditions.push({
+				categorys: {
+					[Op.overlap]: categorys
+				}
+			});
+		}
+
+		const where = conditions.length > 0 ? { [Op.or]: conditions } : {};
+
+		return this.postsRepository.findAll({ where });
 	}
 
 	async createPost(

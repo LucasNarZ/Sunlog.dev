@@ -2,22 +2,25 @@ import { useEffect, useState } from 'react';
 import { apiClient } from '../../lib/apiClient';
 import type { Post } from '../types/post';
 
-export const usePostsByTag = (tags: string[]): [Post[] | null, unknown] => {
+export const usePostsByTag = (tags: string[], categorys: string[]) => {
 	const [posts, setPosts] = useState<Post[] | null>(null);
 	const [error, setError] = useState<unknown>(null);
-	const endpoint =
-		tags?.length == 0 ? '/post' : '/post?' + '&tag=' + tags.join('&tag=');
+
 	useEffect(() => {
-		(async () => {
+		const fetch = async () => {
 			try {
-				const response = await apiClient.get(endpoint);
-				setPosts(response.data);
+				const params = new URLSearchParams();
+				tags.forEach(tag => params.append('tag', tag));
+				categorys.forEach(cat => params.append('category', cat));
+				const { data } = await apiClient.get(`/post?${params}`);
+				setPosts(data);
+				setError(null);
 			} catch (err) {
-				console.error(err);
 				setError(err);
 			}
-		})();
-	}, [endpoint]);
+		};
+		fetch();
+	}, [tags, categorys]);
 
-	return [posts, error];
+	return [posts, error] as const;
 };

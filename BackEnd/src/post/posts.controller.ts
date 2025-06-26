@@ -8,6 +8,7 @@ import {
 	UseGuards,
 	Param,
 	BadRequestException,
+	Query,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { createPostDto } from 'src/post/dtos/post.dto';
@@ -23,8 +24,8 @@ export class PostsController {
 	constructor(private readonly postsService: PostsService) {}
 
 	@Get()
-	async findPosts() {
-		return await this.postsService.findAll();
+	async findPostsByTagAndCategory(@Query("tag") tag: string[] | undefined, @Query("category") category: string[] | undefined) {
+		return await this.postsService.findPostsByTagAndCategory(tag, category);
 	}
 
 	@UseGuards(AuthGuard)

@@ -11,20 +11,10 @@ const allCategories = ['frontend', 'backend', 'devops', 'design'];
 
 const Home = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
-	const tags = searchParams.getAll('tag');
-	const categories = searchParams.getAll('category');
-	const searchQuery = searchParams.get('search')?.toLowerCase() || '';
+	const tags = useMemo(() => searchParams.getAll('tag'), [searchParams]);
+	const categories = useMemo(() => searchParams.getAll('category'), [searchParams]);
 
-	const [posts, errorPosts] = usePostsByTag([...tags, ...categories]);
-
-	const filteredPosts = useMemo(() => {
-		if (!posts) return [];
-		return posts.filter(
-			(post: Post) =>
-				post.title.toLowerCase().includes(searchQuery) ||
-				post.description.toLowerCase().includes(searchQuery),
-		);
-	}, [posts, searchQuery]);
+	const [posts, errorPosts] = usePostsByTag(tags, categories);
 
 	const toggleParam = (key: string, value: string) => {
 		const current = new Set(searchParams.getAll(key));
@@ -91,8 +81,8 @@ const Home = () => {
 						<div className="text-gray-500 text-center col-span-full">
 							Loading posts...
 						</div>
-					) : filteredPosts.length > 0 ? (
-						filteredPosts.map((post: Post, index: number) => (
+					) : posts.length > 0 ? (
+						posts.map((post: Post, index: number) => (
 							<CardPost key={index} post={post} />
 						))
 					) : (
