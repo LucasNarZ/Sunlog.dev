@@ -7,6 +7,8 @@ import Profile from './pages/profile'
 import CreatePost from './pages/createPost'
 import EditPost from './pages/editPost'
 import PublicUser from './pages/publicUser'
+import NotFound from './pages/notFound'
+import PostNotFound from './pages/postNotFound'
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
         <Route path='/create-post' element={<CreatePost />}/>
         <Route path='/edit-post/:postId' element={<EditPost />}/>
         <Route path='/user/:id' element={<PublicUser />}/>
+        <Route path="/post-not-found" element={<PostNotFound />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   )
