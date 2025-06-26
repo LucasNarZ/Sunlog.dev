@@ -1,14 +1,14 @@
-import Header from '../components/header';
+import Header from '../shared/header';
 import { useParams, useNavigate } from 'react-router-dom';
-import usePost from '../hooks/getPost';
-import useUser from '../hooks/getUser';
+import usePost from './hooks/getPost';
+import useUser from '../user/hooks/getUser';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import { useState, useEffect } from 'react';
-import { apiClient } from '../apiClient';
-import useFollow from '../hooks/getFollow';
-import useLike from '../hooks/getLike';
+import { apiClient } from '../lib/apiClient';
+import useFollow from '../user/hooks/getFollow';
+import useLike from './hooks/getLike';
 import { AxiosError } from 'axios';
 
 const Post = () => {

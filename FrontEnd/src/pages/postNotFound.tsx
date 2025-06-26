@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import Header from '../components/header';
+import Header from '../shared/header';
 
 export default function PostNotFound() {
 	return (

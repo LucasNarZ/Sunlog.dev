@@ -1,11 +1,11 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import Header from '../components/header';
-import useUser from '../hooks/getUser';
-import usePostsByAuthor from '../hooks/getUserPosts';
-import CardPost from '../components/cardPost';
-import useFollow from '../hooks/getFollow';
-import { apiClient } from '../apiClient';
+import Header from '../shared/header';
+import useUser from './hooks/getUser';
+import usePostsByAuthor from './hooks/getUserPosts';
+import CardPost from '../post/components/cardPost';
+import useFollow from './hooks/getFollow';
+import { apiClient } from '../lib/apiClient';
 import { AxiosError } from 'axios';
 
 const PublicUser = () => {

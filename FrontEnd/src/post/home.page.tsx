@@ -1,10 +1,10 @@
-import Header from '../components/header';
-import CardPost from '../components/cardPost';
-import { usePostsByTag } from '../hooks/getFilteredPosts';
+import Header from '../shared/header';
+import CardPost from './components/cardPost';
+import { usePostsByTag } from './hooks/getFilteredPosts';
 import { useSearchParams } from 'react-router-dom';
-import type { Post } from '../types/post';
+import type { Post } from './types/post';
 import { useMemo } from 'react';
-import Footer from '../components/footer';
+import Footer from '../shared/footer';
 
 const allTags = ['react', 'node', 'javascript', 'typescript'];
 const allCategories = ['frontend', 'backend', 'devops', 'design'];

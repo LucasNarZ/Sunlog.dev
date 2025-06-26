@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useNavigate } from 'react-router-dom';
-import Header from '../components/header';
-import { apiClient } from '../apiClient';
-import useAuthor from '../hooks/getAuthor';
+import Header from '../shared/header';
+import { apiClient } from '../lib/apiClient';
+import useAuthor from '../user/hooks/getAuthor';
 import { AxiosError } from 'axios';
 
 function CreatePostPage() {

@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import Header from '../components/header';
-import useAuthor from '../hooks/getAuthor';
-import usePostsByAuthor from '../hooks/getUserPosts';
-import CardPost from '../components/cardPost';
-import { apiClient } from '../apiClient';
+import Header from '../shared/header';
+import useAuthor from './hooks/getAuthor';
+import usePostsByAuthor from './hooks/getUserPosts';
+import CardPost from '../post/components/cardPost';
+import { apiClient } from '../lib/apiClient';
 
 const Profile = () => {
 	const navigate = useNavigate();

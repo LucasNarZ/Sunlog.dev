@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Post } from '../types/post';
-import { apiClient } from '../apiClient';
+import { Post } from '../../post/types/post';
+import { apiClient } from '../../lib/apiClient';
 
 const usePostsByAuthor = (
 	userId: string | undefined,

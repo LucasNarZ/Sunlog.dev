@@ -1,6 +1,6 @@
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate, Link } from 'react-router-dom';
-import useAuthor from '../hooks/getAuthor';
+import useAuthor from '../user/hooks/getAuthor';
 import { useState } from 'react';
 
 const Header = () => {

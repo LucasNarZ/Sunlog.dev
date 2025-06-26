@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './pages/home';
-import Post from './pages/post';
-import SignIn from './pages/signIn';
-import SignUp from './pages/signUp';
-import Profile from './pages/profile';
-import CreatePost from './pages/createPost';
-import EditPost from './pages/editPost';
-import PublicUser from './pages/publicUser';
+import Home from './post/home.page';
+import Post from './post/post.page';
+import SignIn from './user/signIn.page';
+import SignUp from './user/signUp.page';
+import Profile from './user/profile.page';
+import CreatePost from './post/createPost.page';
+import EditPost from './post/editPost.page';
+import PublicUser from './user/publicUser.page';
 import NotFound from './pages/notFound';
 import PostNotFound from './pages/postNotFound';
 

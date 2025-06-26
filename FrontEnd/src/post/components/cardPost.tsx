@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Post } from '../types/post';
 import { useEffect, useState } from 'react';
-import { apiClient } from '../apiClient';
+import { apiClient } from '../../lib/apiClient';
 import { Author } from '../types/author';
 
 interface CardPostProps {

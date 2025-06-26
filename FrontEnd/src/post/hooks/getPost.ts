@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { apiClient } from '../apiClient';
+import { apiClient } from '../../lib/apiClient';
 import type { Post } from '../types/post';
 
 const usePost = (slug: string | undefined): [Post | null, unknown] => {

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { apiClient } from '../apiClient';
+import { apiClient } from '../lib/apiClient';
 import { useNavigate, Link } from 'react-router-dom';
 
 const SignIn = () => {
