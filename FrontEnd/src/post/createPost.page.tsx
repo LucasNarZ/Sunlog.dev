@@ -117,7 +117,7 @@ function CreatePostPage() {
 				.split(',')
 				.map((tag) => tag.trim())
 				.filter((tag) => tag),
-			category: category.trim(),
+			category: [category.trim()],
 			content,
 			authorId: user?.id,
 		};

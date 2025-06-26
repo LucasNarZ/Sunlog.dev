@@ -98,12 +98,15 @@ const Profile = () => {
 			<Header />
 			<div className="w-full max-w-5xl mt-12 px-6">
 				<div className="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-10 mb-6">
-					<img
-						className="w-32 h-32 rounded-full object-cover shadow-md"
-						src={previewImgUrl}
-						alt="Profile"
-					/>
-					<div className="text-center md:text-left w-full">
+					<div className="w-32 h-32 rounded-full shadow-md overflow-hidden">
+						<img
+							className="object-cover w-full h-full"
+							src={previewImgUrl}
+							alt="Profile"
+						/>
+					</div>
+
+					<div className="text-center md:text-left w-80">
 						{isEditing ? (
 							<div className="flex flex-col gap-3">
 								<div>
