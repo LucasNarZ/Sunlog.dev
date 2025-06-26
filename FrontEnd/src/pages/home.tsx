@@ -4,6 +4,7 @@ import { usePostsByTag } from '../hooks/getFilteredPosts'
 import { useSearchParams } from 'react-router-dom'
 import type { Post } from '../types/post'
 import { useMemo } from 'react'
+import Footer from '../components/footer'
 
 const allTags = ["react", "node", "javascript", "typescript"]
 const allCategories = ["frontend", "backend", "devops", "design"]
@@ -36,7 +37,7 @@ const Home = () => {
   return (
     <div>
       <Header />
-      <div className="w-full flex flex-col items-center pt-16 px-4">
+      <div className="min-h-[100vh] w-full flex flex-col items-center pt-16 px-4">
         <h1 className="text-4xl sm:text-5xl text-center font-serif font-semibold tracking-tight">
           Welcome to <span className="text-primary">The Learning Experience</span>
         </h1>
@@ -96,7 +97,9 @@ const Home = () => {
           )}
         </div>
       </div>
+      <Footer />
     </div>
+    
   )
 }
 
