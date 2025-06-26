@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from 'src/User/users.service';
-import { createUserDto } from 'src/User/dtos/user.dto';
-import { LoginDto } from 'src/User/dtos/login.dto';
+import { UsersService } from 'src/user/users.service';
+import { createUserDto } from 'src/user/dtos/user.dto';
+import { LoginDto } from 'src/user/dtos/login.dto';
 import * as argon2 from 'argon2';
 import { UniqueConstraintException } from 'src/exceptions/uniqueContraint.exception';
 import { InvalidPasswordEmailException } from 'src/exceptions/InvalidPasswordEmail.exception';

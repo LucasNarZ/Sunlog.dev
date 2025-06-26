@@ -7,7 +7,7 @@ import {
 	ForeignKey,
 	BelongsTo,
 } from 'sequelize-typescript';
-import { User } from '../User/user.entity';
+import { User } from '../user/user.entity';
 
 @Table
 export class Post extends Model {

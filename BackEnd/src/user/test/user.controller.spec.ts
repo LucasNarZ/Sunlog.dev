@@ -6,7 +6,7 @@ import { UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { UserNotFoundException } from 'src/exceptions/UserNotFound.exception';
 import { AuthRequest } from 'src/interfaces/authRequest.interface';
 import { Request } from 'express';
-import { updateUserDto } from 'src/User/dtos/updateUser.dto';
+import { updateUserDto } from 'src/user/dtos/updateUser.dto';
 import { FollowUserDto } from '../dtos/followUser.dto';
 
 describe('UsersController', () => {

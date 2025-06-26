@@ -10,9 +10,9 @@ import {
 	BadRequestException,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
-import { createPostDto } from 'src/Post/dtos/post.dto';
+import { createPostDto } from 'src/post/dtos/post.dto';
 import { Request } from 'express';
-import { EditPostDto } from 'src/Post/dtos/editPost.dto';
+import { EditPostDto } from 'src/post/dtos/editPost.dto';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { AuthRequest } from 'src/interfaces/authRequest.interface';
 import { LikePostDto } from './dtos/likePost.dto';

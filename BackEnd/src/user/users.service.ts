@@ -11,9 +11,9 @@ import {
 	usersRepositoryToken,
 } from 'src/constants';
 import { User } from './user.entity';
-import { createUserDto } from 'src/User/dtos/user.dto';
-import { Post } from 'src/Post/post.entity';
-import { updateUserDto } from 'src/User/dtos/updateUser.dto';
+import { createUserDto } from 'src/user/dtos/user.dto';
+import { Post } from 'src/post/post.entity';
+import { updateUserDto } from 'src/user/dtos/updateUser.dto';
 import { Follow } from './follow.entity';
 
 @Injectable()

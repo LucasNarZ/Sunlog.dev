@@ -6,9 +6,9 @@ import {
 	ConflictException,
 } from '@nestjs/common';
 import { Post } from './post.entity';
-import { createPostDto } from 'src/Post/dtos/post.dto';
+import { createPostDto } from 'src/post/dtos/post.dto';
 import { likesRepositoryToken, postsRepositoryToken } from 'src/constants';
-import { EditPostDto } from 'src/Post/dtos/editPost.dto';
+import { EditPostDto } from 'src/post/dtos/editPost.dto';
 import { Like } from './like.entity';
 
 @Injectable()

@@ -5,7 +5,7 @@ import {
 	sequelizeToken,
 } from 'src/constants';
 import { User } from './user.entity';
-import { Post } from 'src/Post/post.entity';
+import { Post } from 'src/post/post.entity';
 import { Follow } from './follow.entity';
 import { Sequelize } from 'sequelize-typescript';
 

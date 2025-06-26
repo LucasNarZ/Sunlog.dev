@@ -6,7 +6,7 @@ import {
 	ForeignKey,
 } from 'sequelize-typescript';
 import { Post } from './post.entity';
-import { User } from 'src/User/user.entity';
+import { User } from 'src/user/user.entity';
 
 @Table
 export class Like extends Model {

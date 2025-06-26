@@ -1,8 +1,8 @@
 import { Sequelize } from 'sequelize-typescript';
-import { Post } from '../Post/post.entity';
-import { User } from 'src/User/user.entity';
-import { Follow } from 'src/User/follow.entity';
-import { Like } from 'src/Post/like.entity';
+import { Post } from '../post/post.entity';
+import { User } from 'src/user/user.entity';
+import { Follow } from 'src/user/follow.entity';
+import { Like } from 'src/post/like.entity';
 
 export const databaseProviders = [
 	{
