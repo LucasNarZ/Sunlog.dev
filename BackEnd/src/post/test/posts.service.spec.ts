@@ -6,6 +6,7 @@ import {
 	NotFoundException,
 	ConflictException,
 } from '@nestjs/common';
+import { Op } from 'sequelize';
 
 describe('PostsService', () => {
 	let service: PostsService;
@@ -161,6 +162,76 @@ describe('PostsService', () => {
 			await expect(service.getLikePost('uid', 'pid')).resolves.toBe(
 				false,
 			);
+		});
+	});
+
+	describe('findPostsByTagAndCategory', () => {
+		it('should find posts by array of tags and categories', async () => {
+			const mockPosts = ['post1', 'post2'];
+			postsRepository.findAll.mockResolvedValue(mockPosts);
+
+			const result = await service.findPostsByTagAndCategory(['react'], ['frontend']);
+
+			expect(postsRepository.findAll).toHaveBeenCalledWith({
+				where: {
+					[Op.or]: [
+						{ tags: { [Op.overlap]: ['react'] } },
+						{ categorys: { [Op.overlap]: ['frontend'] } }
+					]
+				}
+			});
+			expect(result).toEqual(mockPosts);
+		});
+
+		it('should convert single string to array and return posts', async () => {
+			const mockPosts = ['post'];
+			postsRepository.findAll.mockResolvedValue(mockPosts);
+
+			const result = await service.findPostsByTagAndCategory('node' as any, 'backend' as any);
+
+			expect(postsRepository.findAll).toHaveBeenCalledWith({
+				where: {
+					[Op.or]: [
+						{ tags: { [Op.overlap]: ['node'] } },
+						{ categorys: { [Op.overlap]: ['backend'] } }
+					]
+				}
+			});
+			expect(result).toEqual(mockPosts);
+		});
+
+		it('should return all posts if both filters are undefined', async () => {
+			const mockPosts = ['allPosts'];
+			postsRepository.findAll.mockResolvedValue(mockPosts);
+
+			const result = await service.findPostsByTagAndCategory(undefined, undefined);
+
+			expect(postsRepository.findAll).toHaveBeenCalledWith({ where: {} });
+			expect(result).toEqual(mockPosts);
+		});
+
+		it('should search only by tags if categories are undefined', async () => {
+			postsRepository.findAll.mockResolvedValue(['tagOnly']);
+
+			await service.findPostsByTagAndCategory(['react'], undefined);
+
+			expect(postsRepository.findAll).toHaveBeenCalledWith({
+				where: {
+					[Op.or]: [{ tags: { [Op.overlap]: ['react'] } }]
+				}
+			});
+		});
+
+		it('should search only by categories if tags are undefined', async () => {
+			postsRepository.findAll.mockResolvedValue(['categoryOnly']);
+
+			await service.findPostsByTagAndCategory(undefined, ['design']);
+
+			expect(postsRepository.findAll).toHaveBeenCalledWith({
+				where: {
+					[Op.or]: [{ categorys: { [Op.overlap]: ['design'] } }]
+				}
+			});
 		});
 	});
 });
