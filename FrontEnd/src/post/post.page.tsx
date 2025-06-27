@@ -92,7 +92,7 @@ const Post = () => {
 		<div className="min-h-screen w-full bg-white text-gray-900 flex flex-col items-center">
 			<Header />
 			{post ? (
-				<article className="max-w-3xl w-full px-6 sm:px-10 pb-20 mt-20">
+				<article className="max-w-3xl w-full px-6 sm:px-10 pb-20 mt-20 break-words">
 					{post.previewImgUrl && (
 						<img
 							src={post.previewImgUrl}
@@ -131,7 +131,7 @@ const Post = () => {
 					<div className="flex gap-4 items-center mb-6 text-gray-700 flex-wrap">
 						<div>
 							<strong>Category:</strong>{' '}
-							{post.category}
+							{post.category || 'General'}
 						</div>
 						{post.tags && post.tags.length > 0 && (
 							<div className="flex flex-wrap gap-2">
