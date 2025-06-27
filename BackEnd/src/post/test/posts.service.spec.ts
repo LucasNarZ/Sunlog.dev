@@ -57,7 +57,7 @@ describe('PostsService', () => {
 				content: 'c',
 				authorId: '1',
 				tags: [],
-				categorys: [],
+				category: "",
 				previewImgUrl: '',
 				description: '',
 				slug: 'test',

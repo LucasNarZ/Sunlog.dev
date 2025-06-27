@@ -27,9 +27,8 @@ export class PostsService {
 		return Array.isArray(input) ? input : [input];
 	};
 
-	async findPostsByTagAndCategory(tag?: string | string[], category?: string | string[]): Promise<Post[]> {
+	async findPostsByTagAndCategory(tag?: string | string[], category?: string): Promise<Post[]> {
 		const tags = this.normalizeToArray(tag);
-		const categorys = this.normalizeToArray(category);
 		const conditions: any[] = [];
 
 		if (tags && tags.length > 0) {
@@ -40,11 +39,9 @@ export class PostsService {
 			});
 		}
 
-		if (categorys && categorys.length > 0) {
+		if (category) {
 			conditions.push({
-				categorys: {
-					[Op.overlap]: categorys
-				}
+				category
 			});
 		}
 

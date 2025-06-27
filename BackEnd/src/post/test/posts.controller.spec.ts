@@ -61,7 +61,7 @@ describe('PostsController', () => {
 			content: 'c',
 			authorId: '123',
 			tags: [],
-			categorys: [],
+			category: "",
 			description: '',
 			slug: '',
 			previewImgUrl: '',

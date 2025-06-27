@@ -24,7 +24,7 @@ export class PostsController {
 	constructor(private readonly postsService: PostsService) {}
 
 	@Get()
-	async findPostsByTagAndCategory(@Query("tag") tag: string | string[] | undefined, @Query("category") category: string | string[] | undefined) {
+	async findPostsByTagAndCategory(@Query("tag") tag: string | string[] | undefined, @Query("category") category: string | undefined) {
 		return await this.postsService.findPostsByTagAndCategory(tag, category);
 	}
 
