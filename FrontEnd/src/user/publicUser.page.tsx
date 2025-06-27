@@ -18,9 +18,11 @@ const PublicUser = () => {
 
 	const [user, errorUser] = useUser(id, refreshUserKey);
 
-	useEffect(() => {
-		if (errorUser) console.error(errorUser);
-	}, [errorUser]);
+	if (errorUser){
+		if(errorUser == 404){
+			navigate("/user-not-found")
+		}
+	}
 
 	const handleFollow = async () => {
 		try {
