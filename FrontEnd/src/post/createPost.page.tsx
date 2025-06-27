@@ -117,7 +117,7 @@ function CreatePostPage() {
 				.split(',')
 				.map((tag) => tag.trim())
 				.filter((tag) => tag),
-			category: category.trim(),
+			category: category.trim() ?? "General",
 			content,
 			authorId: user?.id,
 		};
@@ -275,11 +275,11 @@ function CreatePostPage() {
 								onMouseDown={startResizing}
 								className="w-2 bg-gray-300 cursor-col-resize hover:bg-primary transition duration-300"
 							/>
-							<div className="flex-1 flex flex-col h-full" style={{ width: `${leftWidth}%` }}>
+							<div className="flex-1 flex flex-col h-full" style={{ width: `${100 - leftWidth}%` }}>
 								<div className="bg-gray-100 p-2 text-sm font-semibold text-muted border-b">
 									Preview
 								</div>
-								<div className="flex-1 overflow-y-auto p-6 prose max-w-none">
+								<div className="flex-1 overflow-y-auto p-6 prose max-w-none break-words">
 									{previewImgUrl && (
 										<img
 											src={previewImgUrl}
