@@ -10,6 +10,7 @@ const usePost = (slug: string | undefined): [Post | null, unknown] => {
 			if (!slug) return;
 			try {
 				const response = await apiClient.get(`/post/${slug}`);
+				console.log(response.data)
 				setResponse(response.data);
 			} catch (err) {
 				setError(err);

@@ -18,10 +18,9 @@ export class createPostDto {
 	@IsString()
 	@IsNotEmpty()
 	readonly authorId: string;
-	@IsArray()
-	@IsOptional()
-	@IsString({ each: true })
-	readonly categorys?: string[];
+	@IsString()
+	@IsNotEmpty()
+	readonly category: string;
 	@IsArray()
 	@IsOptional()
 	@IsString({ each: true })

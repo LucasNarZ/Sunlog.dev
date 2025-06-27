@@ -12,6 +12,6 @@ export interface Post {
 	comments: string[];
 	slug: string;
 	userId: string;
-	categorys: string[];
+	category: string;
 	tags: string[];
 }

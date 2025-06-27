@@ -85,12 +85,11 @@ export class Post extends Model {
 	})
 	comments: string[];
 
-	@Default([])
 	@Column({
-		type: DataType.ARRAY(DataType.STRING),
+		type: DataType.STRING,
 		allowNull: false,
 	})
-	categorys: string[];
+	category: string;
 
 	@Default([])
 	@Column({

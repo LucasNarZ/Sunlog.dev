@@ -20,6 +20,7 @@ const Post = () => {
 	const [likesCount, setLikesCount] = useState(post?.likes || 0);
 	const [following, setFollowing, followError] = useFollow(author?.id);
 
+
 	useEffect(() => {
 		if (post) setLikesCount(post.likes || 0);
 	}, [post]);
@@ -130,7 +131,7 @@ const Post = () => {
 					<div className="flex gap-4 items-center mb-6 text-gray-700 flex-wrap">
 						<div>
 							<strong>Category:</strong>{' '}
-							{post.categorys.join(', ') || 'General'}
+							{post.category}
 						</div>
 						{post.tags && post.tags.length > 0 && (
 							<div className="flex flex-wrap gap-2">

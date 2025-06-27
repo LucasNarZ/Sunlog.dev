@@ -117,7 +117,7 @@ function CreatePostPage() {
 				.split(',')
 				.map((tag) => tag.trim())
 				.filter((tag) => tag),
-			category: [category.trim()],
+			category: category.trim(),
 			content,
 			authorId: user?.id,
 		};
@@ -130,10 +130,8 @@ function CreatePostPage() {
 				navigate(`/post/${post.slug}`);
 			} else alert('Failed to create post. Please try again.');
 		} catch (error) {
-			alert(
-				(error as AxiosError)?.response?.data ||
-					'An unexpected error occurred.',
-			);
+			console.log(error);
+			alert('An unexpected error occurred.');
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -253,7 +251,7 @@ function CreatePostPage() {
 					</div>
 				)}
 				{step === 2 && (
-					<div className="bg-white rounded-xl shadow-2xl w-full h-[90vh] p-6 flex flex-col">
+					<div className="bg-white rounded-xl shadow-2xl w-[90vw] h-[90vh] p-6 flex flex-col">
 						<div
 							ref={containerRef}
 							className="flex-1 w-full flex relative overflow-hidden rounded-xl border border-gray-300"
@@ -277,7 +275,7 @@ function CreatePostPage() {
 								onMouseDown={startResizing}
 								className="w-2 bg-gray-300 cursor-col-resize hover:bg-primary transition duration-300"
 							/>
-							<div className="flex-1 flex flex-col h-full">
+							<div className="flex-1 flex flex-col h-full" style={{ width: `${leftWidth}%` }}>
 								<div className="bg-gray-100 p-2 text-sm font-semibold text-muted border-b">
 									Preview
 								</div>
