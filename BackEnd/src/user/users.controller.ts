@@ -25,6 +25,9 @@ export class UsersController {
 
 	@Get('basic/:userId')
 	async findUserBasicInfo(@Param('userId') userId: string) {
+		if(!isUUID(userId)){
+			throw new BadRequestException("UserId must be an UUID.");
+		}
 		return await this.usersService.findUserBasic(userId);
 	}
 
@@ -45,7 +48,7 @@ export class UsersController {
 	@Get(':userId')
 	async findUserPublic(@Param('userId') userId: string) {
 		if(!isUUID(userId)){
-			throw new BadRequestException("UserId must be an UUID.")
+			throw new BadRequestException("UserId must be an UUID.");
 		}
 		return await this.usersService.findUserPublic(userId);
 	}
@@ -54,7 +57,7 @@ export class UsersController {
 	async getUserPosts(@Req() req: Request) {
 		const { id } = req.params;
 		if(!isUUID(id)){
-			throw new BadRequestException("UserId must be an UUID.")
+			throw new BadRequestException("UserId must be an UUID.");
 		}
 		const posts = await this.usersService.getPostByUser(id);
 		return posts;
@@ -98,4 +101,12 @@ export class UsersController {
 
 		return await this.usersService.getFollowUser(followerId, followedId);
 	}
+
+	@UseGuards(AuthGuard)
+	@Get("me")
+	getLoggedUserId(@Req() req: AuthRequest){
+		return req?.user?.userId;
+	}
+
+
 }
