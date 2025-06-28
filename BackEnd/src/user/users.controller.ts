@@ -44,12 +44,18 @@ export class UsersController {
 
 	@Get(':userId')
 	async findUserPublic(@Param('userId') userId: string) {
+		if(!isUUID(userId)){
+			throw new BadRequestException("UserId must be an UUID.")
+		}
 		return await this.usersService.findUserPublic(userId);
 	}
 
 	@Get(':id/posts')
 	async getUserPosts(@Req() req: Request) {
 		const { id } = req.params;
+		if(!isUUID(id)){
+			throw new BadRequestException("UserId must be an UUID.")
+		}
 		const posts = await this.usersService.getPostByUser(id);
 		return posts;
 	}
