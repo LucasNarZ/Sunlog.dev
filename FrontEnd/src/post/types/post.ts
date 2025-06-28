@@ -4,7 +4,6 @@ export interface Post {
 	content: string;
 	description: string;
 	previewImgUrl: string;
-	authorId: string;
 	createdAt: string;
 	updatedAt: string;
 	likes: number;

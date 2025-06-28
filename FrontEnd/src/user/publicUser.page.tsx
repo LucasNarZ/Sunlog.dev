@@ -15,14 +15,30 @@ const PublicUser = () => {
 	const [posts] = usePostsByAuthor(id);
 	const [following, setFollowing] = useFollow(id);
 	const [refreshUserKey, setRefreshUserKey] = useState(0);
-
+	const [ loggedUserId, setLoggedUserId ] = useState(null);
+	const [ error, setError ] = useState<unknown>(null)
 	const [user, errorUser] = useUser(id, refreshUserKey);
 
 	if (errorUser){
-		if(errorUser.status == 404 || errorUser.status == 400){
+		if((errorUser as AxiosError).status == 404 || (errorUser as AxiosError).status == 400){
 			navigate("/user-not-found")
 		}
 	}
+
+	useEffect(() => {
+		(async () => {
+			try{
+				const response = await apiClient.get("/user/me/id", {
+					withCredentials: true
+				})
+				setLoggedUserId(response.data)
+			}catch(err){
+				console.log(err)
+				setError(err)
+			}
+		})()
+	}, [])
+
 
 	const handleFollow = async () => {
 		try {
@@ -81,12 +97,15 @@ const PublicUser = () => {
 								? user?.bio
 								: 'No bio provided yet.'}
 						</p>
-						<button
-							onClick={handleFollow}
-							className={`cursor-pointer mt-4 px-5 py-2 text-white rounded transition ${following ? 'bg-gray-500 hover:bg-gray-600' : 'bg-blue-600 hover:bg-blue-700'}`}
-						>
-							{following ? 'Unfollow' : 'Follow'}
-						</button>
+						{error || loggedUserId !== id ? (
+							<button
+								onClick={handleFollow}
+								className={`cursor-pointer mt-4 px-5 py-2 text-white rounded transition ${following ? 'bg-gray-500 hover:bg-gray-600' : 'bg-blue-600 hover:bg-blue-700'}`}
+							>
+								{following ? 'Unfollow' : 'Follow'}
+							</button>) : null
+						}
+
 					</div>
 				</div>
 				<div className="w-full">

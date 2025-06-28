@@ -103,7 +103,7 @@ export class UsersController {
 	}
 
 	@UseGuards(AuthGuard)
-	@Get("me")
+	@Get("/me/id")
 	getLoggedUserId(@Req() req: AuthRequest){
 		return req?.user?.userId;
 	}

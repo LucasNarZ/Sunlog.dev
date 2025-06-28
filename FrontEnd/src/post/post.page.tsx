@@ -19,7 +19,8 @@ const Post = () => {
 	const [liked, setLiked] = useLike(post?.id);
 	const [likesCount, setLikesCount] = useState(post?.likes || 0);
 	const [following, setFollowing, followError] = useFollow(author?.id);
-
+	const [ loggedUserId, setLoggedUserId ] = useState(null);
+	const [ error, setError ] = useState<unknown>(null)
 
 	useEffect(() => {
 		if (post) setLikesCount(post.likes || 0);
@@ -31,6 +32,20 @@ const Post = () => {
 	}
 	if (authorError) console.error(authorError);
 	if (followError) console.error(followError);
+
+	useEffect(() => {
+		(async () => {
+			try{
+				const response = await apiClient.get("/user/me/id", {
+					withCredentials: true
+				})
+				setLoggedUserId(response.data)
+			}catch(err){
+				console.log(err)
+				setError(err)
+			}
+		})()
+	}, [])
 
 	const handleLike = async () => {
 		try {
@@ -118,7 +133,7 @@ const Post = () => {
 								{new Date(post.createdAt).toLocaleDateString()}
 							</p>
 						</div>
-						<button
+						{error || loggedUserId !== post.userId ?  (<button
 							onClick={(e) => {
 								e.stopPropagation();
 								handleFollow();
@@ -126,7 +141,7 @@ const Post = () => {
 							className={`ml-auto px-4 py-1 rounded-full font-semibold text-white transition cursor-pointer ${following ? 'bg-gray-500 hover:bg-gray-600' : 'bg-blue-600 hover:bg-blue-700'}`}
 						>
 							{following ? 'Unfollow' : 'Follow'}
-						</button>
+						</button>) : null}
 					</div>
 					<div className="flex gap-4 items-center mb-6 text-gray-700 flex-wrap">
 						<div>
