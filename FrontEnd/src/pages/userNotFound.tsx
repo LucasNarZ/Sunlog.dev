@@ -9,7 +9,7 @@ export default function UserNotFound() {
 					User Not Found
 				</h1>
 				<p className="mt-4 text-gray-700 font-family-garamond text-lg">
-					This user may have been removed or never existed.
+					This user may have been deleted or never existed.
 				</p>
 			</div>
 		</>

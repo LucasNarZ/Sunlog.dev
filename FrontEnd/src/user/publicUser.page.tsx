@@ -19,7 +19,7 @@ const PublicUser = () => {
 	const [user, errorUser] = useUser(id, refreshUserKey);
 
 	if (errorUser){
-		if(errorUser == 404){
+		if(errorUser.status == 404 || errorUser.status == 400){
 			navigate("/user-not-found")
 		}
 	}
