@@ -1,15 +1,16 @@
 services:
   front-end:
     build:
-      context: ./FrontEnd
+      context: ./frontend
       dockerfile: Dockerfile
     environment:
       - VITE_ENV=${NODE_ENV}
-      - VITE_API_URL=${VITE_API_URL}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+      - API_URL=${API_URL}
     volumes:
-      - ./FrontEnd/src:/app/src
+      - ./frontend/src:/app/src:cached
     ports:
-      - "5173:5173"
+      - "3001:3001"
   api: 
     build:
       context: ./BackEnd
