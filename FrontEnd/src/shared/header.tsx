@@ -15,7 +15,7 @@ const Header = () => {
 			<div className="flex items-center space-x-4">
 				<Link
 					to="/"
-					className="text-lg lg:text-xl font-family-garamond font-semibold text-gray-800 hover:text-secondary transition"
+					className="text-lg lg:text-xl font-family-garamond  sm:w-auto  w-32  font-semibold text-gray-800 hover:text-secondary transition"
 				>
 					The Learning Experience
 				</Link>

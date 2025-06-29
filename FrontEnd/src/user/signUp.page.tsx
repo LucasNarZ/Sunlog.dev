@@ -68,9 +68,9 @@ const SignUp = () => {
 
 	return (
 		<div className="h-[100vh] w-[100vw] flex justify-center items-center bg-gray-200">
-			<div className="flex bg-white w-11/12 max-w-[1000px] h-[600px] rounded-2xl overflow-hidden gap-y-7">
+			<div className="flex bg-white w-11/12 max-w-md md:max-w-[1000px] h-[600px] rounded-2xl overflow-hidden gap-y-7">
 				<form
-					className="w-1/2 flex flex-col items-center gap-5 pt-15"
+					className="w-full md:w-1/2 flex flex-col items-center gap-5 pt-15"
 					onSubmit={handleSubmit}
 				>
 					<p className="self-center text-3xl">Welcome</p>
@@ -181,7 +181,7 @@ const SignUp = () => {
 					</div>
 				</form>
 
-				<div className="w-1/2 bg-secondary text-white font-family-garamond flex flex-col items-center justify-around">
+				<div className="w-1/2 bg-secondary text-white font-family-garamond hidden md:flex flex-col items-center justify-around">
 					<p className="text-2xl text-center">
 						Begin Your <br /> Learning Experience
 					</p>

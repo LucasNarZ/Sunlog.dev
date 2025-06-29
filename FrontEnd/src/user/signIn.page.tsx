@@ -48,9 +48,9 @@ const SignIn = () => {
 
 	return (
 		<div className="h-[100vh] w-[100vw] flex justify-center items-center bg-gray-200">
-			<div className="flex bg-white w-11/12 max-w-[1000px] h-[600px] rounded-2xl overflow-hidden gap-y-7">
+			<div className="flex bg-white w-11/12 max-w-md md:max-w-[1000px] h-[600px] rounded-2xl overflow-hidden gap-y-7">
 				<form
-					className="w-1/2 flex flex-col items-center gap-7 pt-15"
+					className="w-full md:w-1/2 flex flex-col items-center gap-7 pt-15"
 					onSubmit={handleSubmit}
 					noValidate
 				>
@@ -114,7 +114,7 @@ const SignIn = () => {
 					</div>
 				</form>
 
-				<div className="w-1/2 bg-secondary text-white font-family-garamond flex flex-col items-center justify-around">
+				<div className="w-1/2 bg-secondary text-white font-family-garamond hidden md:flex flex-col items-center justify-around">
 					<p className="text-3xl text-center">Welcome back!</p>
 					<h1 className="text-6xl text-center leading-18">
 						Create, <br /> Share, <br /> Learn

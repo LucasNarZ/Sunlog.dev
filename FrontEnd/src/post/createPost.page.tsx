@@ -161,7 +161,7 @@ function CreatePostPage() {
 	return (
 		<>
 			<Header />
-			<div className="p-8 h-screen flex items-center justify-center bg-background">
+			<div className="sm:p-8 h-screen flex items-center justify-center bg-background">
 				{step === 1 && (
 					<div className="bg-white rounded-xl shadow-2xl max-w-5xl w-full p-10">
 						<div className="flex flex-col space-y-2">
@@ -251,14 +251,13 @@ function CreatePostPage() {
 					</div>
 				)}
 				{step === 2 && (
-					<div className="bg-white rounded-xl shadow-2xl w-[90vw] h-[90vh] p-6 flex flex-col">
+					<div className="bg-white rounded-xl shadow-2xl w-screen sm:w-[90vw] h-[90vh] p-6 flex flex-col">
 						<div
 							ref={containerRef}
-							className="flex-1 w-full flex relative overflow-hidden rounded-xl border border-gray-300"
+							className="flex-1 w-full flex flex-col sm:flex-row relative overflow-hidden rounded-xl border border-gray-300"
 						>
 							<div
-								className="h-full flex flex-col"
-								style={{ width: `${leftWidth}%` }}
+								className={`sm:h-full h-1/2 flex flex-col w-full sm:w-[${leftWidth}%]`}
 							>
 								<div className="bg-gray-100 p-2 text-sm font-semibold text-muted border-b">
 									Markdown
@@ -273,9 +272,9 @@ function CreatePostPage() {
 							</div>
 							<div
 								onMouseDown={startResizing}
-								className="w-2 bg-gray-300 cursor-col-resize hover:bg-primary transition duration-300"
+								className="w-0 sm:w-2 bg-gray-300 cursor-col-resize hover:bg-primary transition duration-300"
 							/>
-							<div className="flex-1 flex flex-col h-full" style={{ width: `${100 - leftWidth}%` }}>
+							<div className={`flex-1 flex flex-col sm:h-full h-1/2 w-full sm:w-[${100 - leftWidth}%]`}>
 								<div className="bg-gray-100 p-2 text-sm font-semibold text-muted border-b">
 									Preview
 								</div>
@@ -295,7 +294,7 @@ function CreatePostPage() {
 								</div>
 							</div>
 						</div>
-						<div className="mt-6 flex justify-between">
+						<div className="mt-6 flex justify-between flex-col sm:flex-row sm:gap-0 gap-3">
 							<button
 								onClick={handleBack}
 								className="cursor-pointer rounded-xl px-8 py-3 font-semibold shadow-md transition bg-muted text-white hover:bg-gray-600"
