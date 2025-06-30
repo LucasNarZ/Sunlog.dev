@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import Header from '@components/Header';
 import useUser from '@hooks/getUser';
 import usePostsByAuthor from '@hooks/getUserPosts';
-import CardPost from '@components/CardPost';
+import CardPostClient from '@components/CardPostClient';
 import useFollow from '@hooks/getFollow';
 import { apiClient } from '@lib/apiClient';
 import { AxiosError } from 'axios';
@@ -119,7 +119,7 @@ const PublicUser = () => {
 							</h3>
 							<div className="grid gap-6">
 								{posts.map((post, index) => (
-									<CardPost key={index} post={post} />
+									<CardPostClient key={index} post={post} />
 								))}
 							</div>
 						</>

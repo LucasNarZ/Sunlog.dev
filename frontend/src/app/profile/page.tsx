@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import Header from '@components/Header';
 import useAuthor from '@hooks/getAuthor';
 import usePostsByAuthor from '@hooks/getUserPosts';
-import CardPost from '@components/CardPost';
+import CardPostClient from '@components/CardPostClient';
 import { apiClient } from '@lib/apiClient';
 import { Post } from '@/types/post';
 
@@ -101,7 +101,7 @@ const Profile = () => {
 					<div className="w-32 h-32 rounded-full shadow-md overflow-hidden">
 						<img
 							className="object-cover w-full h-full"
-							src={previewImgUrl}
+							src={previewImgUrl || "https://deepgrouplondon.com/wp-content/uploads/2019/06/person-placeholder-5.png"}
 							alt="Profile"
 						/>
 					</div>
@@ -214,7 +214,7 @@ const Profile = () => {
 							</h3>
 							<div className="grid gap-6">
 								{posts.map((post:Post, index:number) => (
-									<CardPost key={index} post={post} />
+									<CardPostClient key={index} post={post} />
 								))}
 							</div>
 						</>

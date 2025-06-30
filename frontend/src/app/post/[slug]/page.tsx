@@ -33,6 +33,9 @@ const Post = async ({ params }:{params:{slug:string}}) => {
 							src={post.previewImgUrl}
 							alt="Post preview"
 							className="w-full h-72 object-cover rounded-xl mb-8 shadow-md"
+							width={0}
+							height={0}
+							unoptimized
 						/>
 					)}
 					<h1 className="text-4xl font-extrabold mb-4 leading-tight font-family-garamond">

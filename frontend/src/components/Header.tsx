@@ -1,9 +1,12 @@
+"use client";
+
 import Link from 'next/link'
 import Image from 'next/image';
 import { fetchUser } from '@/lib/fetchUser';
+import useAuthor from '@/hooks/getAuthor';
 
-const Header = async () => {
-	const userData = await fetchUser()
+const Header = () => {
+	const [ userData ] = useAuthor()
 
 	return (
 		<header className="h-20 w-full bg-white shadow-md px-6 lg:px-16 flex items-center justify-between">
