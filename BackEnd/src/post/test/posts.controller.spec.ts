@@ -48,7 +48,7 @@ describe('PostsController', () => {
 	});
 
 	it('should return filtered posts by tags and categories', async () => {
-		const query = { tag: ['react'], category: ['frontend'] };
+		const query = { tag: ['react'], category: 'frontend' };
 		mockPostsService.findPostsByTagAndCategory.mockResolvedValue(['filteredPost']);
 		await expect(controller.findPostsByTagAndCategory(query.tag, query.category)).resolves.toEqual(['filteredPost']);
 		expect(mockPostsService.findPostsByTagAndCategory).toHaveBeenCalledWith(query.tag, query.category);

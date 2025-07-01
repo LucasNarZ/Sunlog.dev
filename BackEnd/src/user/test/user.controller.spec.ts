@@ -44,10 +44,10 @@ describe('UsersController', () => {
 				followers: 10,
 			};
 			usersService.findUserBasic!.mockResolvedValue(userBasic);
-			expect(await controller.findUserBasicInfo('123')).toEqual(
+			expect(await controller.findUserBasicInfo('d02cc816-b60b-49c9-b0a8-0acf5caebafb')).toEqual(
 				userBasic,
 			);
-			expect(usersService.findUserBasic).toHaveBeenCalledWith('123');
+			expect(usersService.findUserBasic).toHaveBeenCalledWith('d02cc816-b60b-49c9-b0a8-0acf5caebafb');
 		});
 	});
 
@@ -60,17 +60,17 @@ describe('UsersController', () => {
 		});
 
 		it('should throw UserNotFoundException if user not found', async () => {
-			const req = { user: { userId: '123' } } as AuthRequest;
+			const req = { user: { userId: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb' } } as AuthRequest;
 			usersService.findUser!.mockResolvedValue(null);
 			await expect(controller.findUser(req)).rejects.toThrow(
 				UserNotFoundException,
 			);
-			expect(usersService.findUser).toHaveBeenCalledWith('123');
+			expect(usersService.findUser).toHaveBeenCalledWith('d02cc816-b60b-49c9-b0a8-0acf5caebafb');
 		});
 
 		it('should return user if found', async () => {
-			const req = { user: { userId: '123' } } as AuthRequest;
-			const user = { id: '123', name: 'John' };
+			const req = { user: { userId: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb' } } as AuthRequest;
+			const user = { id: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb', name: 'John' };
 			usersService.findUser!.mockResolvedValue(user);
 			expect(await controller.findUser(req)).toEqual(user);
 		});
@@ -78,26 +78,26 @@ describe('UsersController', () => {
 
 	describe('findUserPublic', () => {
 		it('should call usersService.findUserPublic and return user', async () => {
-			const user = { id: '123', name: 'John' };
+			const user = { id: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb', name: 'John' };
 			usersService.findUserPublic!.mockResolvedValue(user);
-			expect(await controller.findUserPublic('123')).toEqual(user);
-			expect(usersService.findUserPublic).toHaveBeenCalledWith('123');
+			expect(await controller.findUserPublic('d02cc816-b60b-49c9-b0a8-0acf5caebafb')).toEqual(user);
+			expect(usersService.findUserPublic).toHaveBeenCalledWith('d02cc816-b60b-49c9-b0a8-0acf5caebafb');
 		});
 	});
 
 	describe('getUserPosts', () => {
 		it('should call usersService.getPostByUser with correct id', async () => {
-			const req = { params: { id: '123' } } as unknown as Request;
-			const posts = [{ id: 'p1' }, { id: 'p2' }];
+			const req = { params: { id: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb' } } as unknown as Request;
+			const posts = [{ id: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb' }, { id: 'd02cc816-b60b-49c9-b0a8-0acf5caebafc' }];
 			usersService.getPostByUser!.mockResolvedValue(posts);
 			expect(await controller.getUserPosts(req)).toEqual(posts);
-			expect(usersService.getPostByUser).toHaveBeenCalledWith('123');
+			expect(usersService.getPostByUser).toHaveBeenCalledWith('d02cc816-b60b-49c9-b0a8-0acf5caebafb');
 		});
 	});
 
 	describe('updateUser', () => {
 		it('should call usersService.updateUser with userId and body', async () => {
-			const req = { user: { userId: '123' } } as AuthRequest;
+			const req = { user: { userId: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb' } } as AuthRequest;
 			const updateDto: updateUserDto = {
 				name: 'New Name',
 				bio: 'New bio',
@@ -108,7 +108,7 @@ describe('UsersController', () => {
 				'updated',
 			);
 			expect(usersService.updateUser).toHaveBeenCalledWith(
-				'123',
+				'd02cc816-b60b-49c9-b0a8-0acf5caebafb',
 				updateDto,
 			);
 		});
@@ -116,22 +116,22 @@ describe('UsersController', () => {
 
 	describe('followUser', () => {
 		it('should call usersService.followUser with followerId and followedId', async () => {
-			const req = { user: { userId: '123' } } as AuthRequest;
-			const dto: FollowUserDto = { followedId: '456' };
+			const req = { user: { userId: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb' } } as AuthRequest;
+			const dto: FollowUserDto = { followedId: 'd02cc816-b60b-49c9-b0a8-0acf5caebafc' };
 			usersService.followUser!.mockResolvedValue({
 				message: 'Followed successfully',
 			});
 			expect(await controller.followUser(req, dto)).toEqual({
 				message: 'Followed successfully',
 			});
-			expect(usersService.followUser).toHaveBeenCalledWith('123', '456');
+			expect(usersService.followUser).toHaveBeenCalledWith('d02cc816-b60b-49c9-b0a8-0acf5caebafb', 'd02cc816-b60b-49c9-b0a8-0acf5caebafc');
 		});
 	});
 
 	describe('unfollowUser', () => {
 		it('should call usersService.unfollowUser with followerId and followedId', async () => {
-			const req = { user: { userId: '123' } } as AuthRequest;
-			const dto: FollowUserDto = { followedId: '456' };
+			const req = { user: { userId: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb' } } as AuthRequest;
+			const dto: FollowUserDto = { followedId: 'd02cc816-b60b-49c9-b0a8-0acf5caebafc' };
 			usersService.unfollowUser!.mockResolvedValue({
 				message: 'Unfollowed successfully',
 			});
@@ -139,8 +139,8 @@ describe('UsersController', () => {
 				message: 'Unfollowed successfully',
 			});
 			expect(usersService.unfollowUser).toHaveBeenCalledWith(
-				'123',
-				'456',
+				'd02cc816-b60b-49c9-b0a8-0acf5caebafb',
+				'd02cc816-b60b-49c9-b0a8-0acf5caebafc',
 			);
 		});
 	});

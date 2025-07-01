@@ -170,13 +170,13 @@ describe('PostsService', () => {
 			const mockPosts = ['post1', 'post2'];
 			postsRepository.findAll.mockResolvedValue(mockPosts);
 
-			const result = await service.findPostsByTagAndCategory(['react'], ['frontend']);
+			const result = await service.findPostsByTagAndCategory(['react'], 'frontend');
 
 			expect(postsRepository.findAll).toHaveBeenCalledWith({
 				where: {
 					[Op.or]: [
 						{ tags: { [Op.overlap]: ['react'] } },
-						{ categorys: { [Op.overlap]: ['frontend'] } }
+						{ category: 'frontend' }
 					]
 				}
 			});
@@ -193,7 +193,7 @@ describe('PostsService', () => {
 				where: {
 					[Op.or]: [
 						{ tags: { [Op.overlap]: ['node'] } },
-						{ categorys: { [Op.overlap]: ['backend'] } }
+						{ category: 'backend' }
 					]
 				}
 			});
@@ -222,14 +222,14 @@ describe('PostsService', () => {
 			});
 		});
 
-		it('should search only by categories if tags are undefined', async () => {
-			postsRepository.findAll.mockResolvedValue(['categoryOnly']);
+		it('should search only by category if tags are undefined', async () => {
+			postsRepository.findAll.mockResolvedValue('categoryOnly');
 
-			await service.findPostsByTagAndCategory(undefined, ['design']);
+			await service.findPostsByTagAndCategory(undefined, 'design');
 
 			expect(postsRepository.findAll).toHaveBeenCalledWith({
 				where: {
-					[Op.or]: [{ categorys: { [Op.overlap]: ['design'] } }]
+					[Op.or]: [{ category: 'design'  }]
 				}
 			});
 		});
