@@ -6,7 +6,8 @@ export async function getIsUserLoggedUser() {
             withCredentials: true
         });
         return data;
-    }catch {
+    }catch(err) {
+        console.log(err)
         return null;
     }
 }

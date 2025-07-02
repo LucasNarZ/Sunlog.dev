@@ -26,7 +26,7 @@ export default function PostInteractions({
   const [following, setFollowing] = useState(initialFollowing)
   const [likesCount, setLikesCount] = useState(initialLikesCount)
   const router = useRouter()
-
+  console.log(loggedUserId)
   const handleAuthorClick = () => {
     router.push(`/user/${user.id}`)
   }
@@ -41,7 +41,8 @@ export default function PostInteractions({
         setLikesCount((c) => c + 1)
       }
       setLiked(!liked)
-    } catch {
+    } catch(err) {
+      console.log(err)
       router.push("/signIn")
     }
   }

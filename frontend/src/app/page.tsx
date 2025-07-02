@@ -10,8 +10,9 @@ const allTags = ['react', 'node', 'javascript', 'typescript'];
 const allCategories = ['frontend', 'backend', 'devops', 'design'];
 
 const Home = async ({ searchParams }: { searchParams: { [key: string]: string | string[] } }) => {
-	const tags = Array.isArray(searchParams?.tag) ? searchParams.tag : searchParams?.tag ? [searchParams.tag] : []
-	const categories = Array.isArray(searchParams?.category) ? searchParams.category : searchParams?.category ? [searchParams.category] : []
+	const searchParamsNew = await searchParams;
+	const tags = Array.isArray(searchParamsNew?.tag) ? searchParamsNew.tag : searchParamsNew?.tag ? [searchParamsNew.tag] : []
+	const categories = Array.isArray(searchParamsNew?.category) ? searchParamsNew.category : searchParamsNew?.category ? [searchParamsNew.category] : []
 
 	const posts = await fetchFilteredPosts(tags, categories);
 
@@ -29,7 +30,7 @@ const Home = async ({ searchParams }: { searchParams: { [key: string]: string | 
 				<div className="mt-10 w-full max-w-5xl flex flex-col gap-4">
 					<div className="flex flex-wrap gap-2 justify-center">
 						{allTags.map((tag) => {
-							const params = createURLSearchParams(searchParams)
+							const params = createURLSearchParams(searchParamsNew)
 							const currentTags = new Set(params.getAll('tag'))
 
 							if (currentTags.has(tag)) currentTags.delete(tag)
@@ -54,7 +55,7 @@ const Home = async ({ searchParams }: { searchParams: { [key: string]: string | 
 
 					<div className="flex flex-wrap gap-2 justify-center">
 						{allCategories.map((category) => {
-							const params = createURLSearchParams(searchParams)
+							const params = createURLSearchParams(searchParamsNew)
 							const currentCategories = new Set(params.getAll('category'))
 
 							if (currentCategories.has(category)) currentCategories.delete(category)

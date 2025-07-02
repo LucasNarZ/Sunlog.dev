@@ -12,13 +12,13 @@ import { getIsUserLoggedUser } from '@/lib/getIsUserLogged';
 import PostInteractions from '@/components/PostInteractions';
 
 const Post = async ({ params }:{params:{slug:string}}) => {
-	const slug = params.slug;
+	const { slug } = await params;
 	const post = await getPost(slug)
 	const user = await getAuthor(post?.userId)
 	const liked = await getLike(user.id)
 	const following = await getFollow(user.id)
 	const loggedUserId = await getIsUserLoggedUser()
-
+	console.log(loggedUserId)
 	if (!post) {
 		redirect('/post-not-found');
 	}
