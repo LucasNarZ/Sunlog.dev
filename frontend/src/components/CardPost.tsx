@@ -32,7 +32,7 @@ const CardPost = async ({ post }: CardPostProps) => {
 						</div>
 					</div>
 					<div className="flex flex-col gap-1 min-w-0">
-						<p className="text-lg font-semibold text-gray-900 break-words">{post.title}</p>
+						<p className="text-lg font-semibold text-gray-900 line-clamp-2 break-words">{post.title}</p>
 						<p className="text-sm text-gray-600 break-words line-clamp-3">{post.description}</p>
 					</div>
 				</div>

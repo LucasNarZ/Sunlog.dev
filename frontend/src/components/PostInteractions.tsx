@@ -1,32 +1,48 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { apiClient } from "@/lib/apiClient"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { User } from "@/types/user"
 import { Post } from "@/types/post"
+import useLike from "@/hooks/getLike"
 
 export default function PostInteractions({
   user,
   post,
   initialLiked,
   initialFollowing,
-  initialLikesCount,
-  loggedUserId
+  initialLikesCount
 }: {
   user: User
   post: Post
   initialLiked: boolean
   initialFollowing: boolean
   initialLikesCount: number
-  loggedUserId: string | null
 }) {
-  const [liked, setLiked] = useState(initialLiked)
-  const [following, setFollowing] = useState(initialFollowing)
-  const [likesCount, setLikesCount] = useState(initialLikesCount)
+  const [liked, setLiked] = useLike(post.id);
+  const [following, setFollowing] = useState(initialFollowing);
+  const [likesCount, setLikesCount] = useState(post.likes);
+  const [ loggedUserId, setLoggedUserId ] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      try{
+          const { data } = await apiClient.get("/user/me/id", {
+              withCredentials: true
+          });
+          setLoggedUserId(data);
+      }catch(err) {
+          console.log(err)
+          setLoggedUserId(null)
+      }
+    })()
+  }, [])
+
   const router = useRouter()
   console.log(loggedUserId)
+
   const handleAuthorClick = () => {
     router.push(`/user/${user.id}`)
   }

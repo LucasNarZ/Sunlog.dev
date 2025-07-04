@@ -20,7 +20,7 @@ const CardPostClient = ({ post }: CardPostProps) => {
             >
                 <div className="flex flex-col gap-3 flex-1 min-w-0">
                     <div className="flex items-center gap-3 text-sm text-gray-600 flex-wrap">
-                        {/* <Image className="rounded-full object-cover" src={author?.profileImgUrl ?? "https://deepgrouplondon.com/wp-content/uploads/2019/06/person-placeholder-5.png"} alt="profilePic" width={32} height={32} /> */}
+                        <Image className="rounded-full object-cover" src={author?.profileImgUrl || "https://deepgrouplondon.com/wp-content/uploads/2019/06/person-placeholder-5.png"} alt="profilePic" width={32} height={32} />
                         <span className="font-medium break-words">{author?.name}</span>
                         <span className="text-gray-400">•</span>
                         <span>
@@ -33,14 +33,14 @@ const CardPostClient = ({ post }: CardPostProps) => {
                         </div>
                     </div>
                     <div className="flex flex-col gap-1 min-w-0">
-                        <p className="text-lg font-semibold text-gray-900 break-words">{post.title}</p>
+                        <p className="text-lg font-semibold text-gray-900 break-words line-clamp-2">{post.title}</p>
                         <p className="text-sm text-gray-600 break-words line-clamp-3">{post.description}</p>
                     </div>
                 </div>
 
-                {/* {post.previewImgUrl && (
+                {post.previewImgUrl && (
                     <Image className="rounded-xl object-cover" src={post.previewImgUrl} alt="post preview" width={112} height={112} unoptimized/>
-                )} */}
+                )}
             </div>
         </Link>
         
