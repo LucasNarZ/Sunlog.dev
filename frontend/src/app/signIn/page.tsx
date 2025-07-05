@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, FormEvent } from 'react';
 import { apiClient } from '@lib/apiClient';
 import { useRouter } from "next/navigation"
 import Link from "next/link"
@@ -16,7 +16,7 @@ const SignIn = () => {
 	const validateEmail = (email: string) =>
 		/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-	const handleSubmit = async (e:any) => {
+	const handleSubmit = async (e:FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		setErrorMessage(null);
 

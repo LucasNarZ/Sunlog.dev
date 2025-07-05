@@ -1,8 +1,6 @@
 "use client";
 
 import Link from 'next/link'
-import Image from 'next/image';
-import { fetchUser } from '@/lib/fetchUser';
 import useAuthor from '@/hooks/getAuthor';
 
 const Header = () => {

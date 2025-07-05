@@ -9,7 +9,7 @@ import { createURLSearchParams } from '@utils/createURLSearchParams';
 const allTags = ['react', 'node', 'javascript', 'typescript'];
 const allCategories = ['frontend', 'backend', 'devops', 'design'];
 
-const Home = async ({ searchParams }: { searchParams: { [key: string]: string | string[] } }) => {
+const Home = async ({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] }> }) => {
 	const searchParamsNew = await searchParams;
 	const tags = Array.isArray(searchParamsNew?.tag) ? searchParamsNew.tag : searchParamsNew?.tag ? [searchParamsNew.tag] : []
 	const categories = Array.isArray(searchParamsNew?.category) ? searchParamsNew.category : searchParamsNew?.category ? [searchParamsNew.category] : []

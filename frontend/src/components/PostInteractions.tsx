@@ -11,15 +11,11 @@ import useLike from "@/hooks/getLike"
 export default function PostInteractions({
   user,
   post,
-  initialLiked,
-  initialFollowing,
-  initialLikesCount
+  initialFollowing
 }: {
   user: User
   post: Post
-  initialLiked: boolean
   initialFollowing: boolean
-  initialLikesCount: number
 }) {
   const [liked, setLiked] = useLike(post.id);
   const [following, setFollowing] = useState(initialFollowing);

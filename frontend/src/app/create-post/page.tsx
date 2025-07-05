@@ -155,8 +155,9 @@ function CreatePostPage() {
 		}
 	};
 
-	const handleMouseMove = (e: any) => {
+	const handleMouseMove = (e: MouseEvent) => {
 		if (!isResizingRef.current || !containerRef.current) return;
+		// @ts-expect-error expect error here
 		const rect = containerRef.current.getBoundingClientRect();
 		const width = ((e.clientX - rect.left) / rect.width) * 100;
 		if (width > 20 && width < 80) setLeftWidth(width);

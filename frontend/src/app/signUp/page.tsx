@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, FormEvent } from 'react';
 import { apiClient } from '@lib/apiClient';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -45,7 +45,8 @@ const SignUp = () => {
 		return valid;
 	};
 
-	const handleSubmit = async (e: any) => {
+	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+		
 		e.preventDefault();
 
 		if (!validate()) return;
@@ -57,13 +58,9 @@ const SignUp = () => {
 			if (response.status === 201) {
 				router.push('/signIn');
 			}
-		} catch (err: any) {
+		} catch (err) {
 			console.error(err);
-			if (err.response && err.response.data?.message) {
-				setError(err.response.data.message);
-			} else {
-				setError('Unexpected Error. Try again later.');
-			}
+			setError('Unexpected Error. Try again later.');
 		} finally {
 			setLoading(false);
 		}

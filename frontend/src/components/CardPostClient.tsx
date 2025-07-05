@@ -1,5 +1,4 @@
 import { Post } from '@/types/post';
-import { fetchAuthorPostCard } from '@/lib/fetchAuthorPostCard';
 import { Heart } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';

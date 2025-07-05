@@ -4,21 +4,16 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import Image from 'next/image';
-import { getLike } from '@/lib/getLike';
 import { getAuthor } from '@/lib/fetchAuthorPost';
 import { getPost } from '@/lib/getPost';
 import { getFollow } from '@/lib/getFollow';
-import { getIsUserLoggedUser } from '@/lib/getIsUserLogged';
 import PostInteractions from '@/components/PostInteractions';
 
-const Post = async ({ params }:{params:{slug:string}}) => {
+const Post = async ({ params }:{params:Promise<{slug:string}>}) => {
 	const { slug } = await params;
 	const post = await getPost(slug)
 	const user = await getAuthor(post?.userId)
-	const liked = await getLike(user.id)
 	const following = await getFollow(user.id)
-	const loggedUserId = await getIsUserLoggedUser()
-	console.log(loggedUserId)
 	if (!post) {
 		redirect('/post-not-found');
 	}
@@ -44,10 +39,7 @@ const Post = async ({ params }:{params:{slug:string}}) => {
 					<PostInteractions
 						user={user}
 						post={post}
-						initialLiked={liked}
 						initialFollowing={following}
-						initialLikesCount={post.likes || 0}
-						loggedUserId={loggedUserId}
 					/>
 					<div className="prose prose-lg max-w-none leading-relaxed font-serif text-gray-800">
 						<ReactMarkdown
