@@ -8,6 +8,21 @@ import { apiClient } from '@lib/apiClient';
 import useAuthor from '@hooks/getAuthor';
 import { AxiosError } from 'axios';
 
+
+function useIsMobile(breakpoint = 728) {
+	const [isMobile, setIsMobile] = useState(false);
+  
+	useEffect(() => {
+	  const mql = window.matchMedia(`(max-width: ${breakpoint}px)`);
+	  const update = () => setIsMobile(mql.matches);
+	  update();
+	  mql.addEventListener('change', update);
+	  return () => mql.removeEventListener('change', update);
+	}, [breakpoint]);
+  
+	return isMobile;
+  }
+
 function CreatePostPage() {
 	const router = useRouter();
 	const [user, error] = useAuthor();
@@ -28,6 +43,7 @@ function CreatePostPage() {
 	const [leftWidth, setLeftWidth] = useState(50);
 	const containerRef = useRef(null);
 	const isResizingRef = useRef(false);
+	const isMobile = useIsMobile();
 
 	useEffect(() => {
 		if (error) router.push('/signIn');
@@ -117,7 +133,7 @@ function CreatePostPage() {
 			description: description.trim(),
 			tags: tags
 				.split(',')
-				.map((tag) => tag.trim())
+				.map((tag: string) => tag.trim())
 				.filter((tag) => tag),
 			category: category.trim() || "General",
 			content,
@@ -259,7 +275,8 @@ function CreatePostPage() {
 							className="flex-1 w-full flex flex-col sm:flex-row relative overflow-hidden rounded-xl border border-gray-300"
 						>
 							<div
-								className={`sm:h-full h-1/2 flex flex-col w-full sm:w-[${leftWidth}%]`}
+								className={`sm:h-full h-1/2 flex flex-col `}
+								style={{ width: isMobile ? '100%' : `${leftWidth}%` }} 
 							>
 								<div className="bg-gray-100 p-2 text-sm font-semibold text-muted border-b">
 									Markdown
@@ -276,7 +293,10 @@ function CreatePostPage() {
 								onMouseDown={startResizing}
 								className="w-0 sm:w-2 bg-gray-300 cursor-col-resize hover:bg-primary transition duration-300"
 							/>
-							<div className={`flex-1 flex flex-col sm:h-full h-1/2 w-full sm:w-[${100 - leftWidth}%]`}>
+							<div 
+								className={`flex-1 flex flex-col sm:h-full h-1/2`}
+								style={{ width: isMobile ? '100%' : `${100 - leftWidth}%` }} 
+							>
 								<div className="bg-gray-100 p-2 text-sm font-semibold text-muted border-b">
 									Preview
 								</div>
@@ -287,8 +307,8 @@ function CreatePostPage() {
 											alt="Preview"
 											className="mb-8 max-h-96 w-full object-contain rounded-lg shadow-lg"
 											onError={(e) =>
-												(e.currentTarget.style.display =
-													'none')
+											(e.currentTarget.style.display =
+												'none')
 											}
 										/>
 									)}
