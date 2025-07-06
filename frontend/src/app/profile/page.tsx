@@ -96,7 +96,7 @@ const Profile = () => {
 	return (
 		<div className="min-h-screen bg-gray-50 flex flex-col items-center w-full">
 			<Header />
-			<div className="w-full max-w-5xl mt-12 px-6">
+			<div className="w-full max-w-5xl mt-12 mb-12 px-6">
 				<div className="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-10 mb-6">
 					<div className="w-32 h-32 rounded-full shadow-md overflow-hidden">
 						<img

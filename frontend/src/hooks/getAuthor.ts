@@ -9,9 +9,11 @@ const useAuthor = (): [User | null, unknown] => {
 	useEffect(() => {
 		(async () => {
 			try {
+				console.log("asdasdasd")
 				const response = await apiClient.get(`/user/profile`, {
 					withCredentials: true,
 				});
+				console.log(response.data)
 				setResponse(response.data);
 			} catch (err) {
 				console.log(err);

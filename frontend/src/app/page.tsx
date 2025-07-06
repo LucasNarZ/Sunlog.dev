@@ -2,7 +2,6 @@ import Header from '@components/Header';
 import CardPost from '@components/CardPost';
 import { fetchFilteredPosts } from '@lib/fetchPostsByTagNCategory';
 import type { Post } from '@/types/post';
-import Footer from '@components/Footer';
 import Link from 'next/link';
 import { createURLSearchParams } from '@utils/createURLSearchParams';
 
@@ -67,8 +66,8 @@ const Home = async ({ searchParams }: { searchParams: Promise<{ [key: string]: s
 							return <Link
 								key={category}
 								className={`cursor-pointer px-3 py-1 rounded-full text-sm border transition ${
-									tags.includes(category)
-										? 'bg-indigo-500 text-white border-indigo-500'
+									categories.includes(category)
+										? 'bg-emerald-600 text-white border-emerald-600'
 										: 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
 								}`}
 								href={`?${params.toString()}`}
@@ -99,7 +98,6 @@ const Home = async ({ searchParams }: { searchParams: Promise<{ [key: string]: s
 					)}
 				</div>
 			</div>
-			<Footer />
 		</div>
 	);
 };
