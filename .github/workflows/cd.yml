@@ -35,4 +35,4 @@ jobs:
 
       # Deploy to the server
       - name: Deploy using script
-        run: ssh ubuntu@3.215.179.178 './scripts/deploy.sh'
+        run: ssh ubuntu@3.215.179.178 './The-Learning-Experience/scripts/deploy.sh'
