@@ -26,7 +26,7 @@ jobs:
 
       
       - name: Update Script Permission
-        run: chmod +x ./deploy.sh
+        run: chmod +x ./scripts/deploy.sh
 
       # Deploy to the server
       - name: Deploy using script
