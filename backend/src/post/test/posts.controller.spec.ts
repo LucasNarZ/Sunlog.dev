@@ -7,6 +7,7 @@ import { EditPostDto } from '../dtos/editPost.dto';
 import { LikePostDto } from '../dtos/likePost.dto';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { Request } from 'express';
 
 describe('PostsController', () => {
 	let controller: PostsController;
