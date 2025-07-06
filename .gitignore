@@ -1,2 +1,33 @@
-node_modules
+# Terraform
+infra/terraform/.terraform/
+infra/terraform/terraform.tfstate
+infra/terraform/terraform.tfstate.backup
+infra/terraform/*.tfstate.*
+infra/terraform/crash.log
+.terraform.lock.hcl
+terraform.tfvars
+
+# Node
+**/node_modules/
+**/dist/
+**/.next/
+**/coverage/
+**/.turbo/
+**/.eslintcache
+
+# TypeScript
+**/*.tsbuildinfo
+
+# Logs
+*.log
+
+# Docker
+**/.docker
+
+# IDEs
+.vscode/
+.idea/
+.DS_Store
+
 .env
+.env.local
