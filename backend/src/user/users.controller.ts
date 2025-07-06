@@ -67,7 +67,6 @@ export class UsersController {
 	@Put('update')
 	async updateUser(@Req() req: AuthRequest, @Body() body: updateUserDto) {
 		const id = req?.user?.userId;
-
 		return await this.usersService.updateUser(id, body);
 	}
 
