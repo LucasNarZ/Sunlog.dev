@@ -8,6 +8,7 @@ interface CardPostProps {
 	post: Post;
 }
 
+
 const CardPost = async ({ post }: CardPostProps) => {
 	const creationDate = new Date(post.createdAt);
   	const author = await fetchAuthorPostCard(post.userId)
