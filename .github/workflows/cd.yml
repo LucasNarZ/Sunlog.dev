@@ -31,8 +31,8 @@ jobs:
       - name: Add server to known_hosts
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan 34.238.248.207 >> ~/.ssh/known_hosts
+          ssh-keyscan 3.215.179.178 >> ~/.ssh/known_hosts
 
       # Deploy to the server
       - name: Deploy using script
-        run: ssh ubuntu@34.238.248.207 './scripts/deploy.sh'
+        run: ssh ubuntu@3.215.179.178 './scripts/deploy.sh'
