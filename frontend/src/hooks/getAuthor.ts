@@ -3,7 +3,6 @@ import { apiClient } from '@lib/apiClient';
 import type { User } from '@/types/user';
 
 const useAuthor = (): [User | null, unknown] => {
-	// implement dispatch later
 	const [error, setError] = useState<unknown>(null);
 	const [response, setResponse] = useState<User | null>(null);
 	useEffect(() => {

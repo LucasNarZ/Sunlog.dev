@@ -28,6 +28,11 @@ jobs:
       - name: Update Script Permission
         run: chmod +x ./scripts/deploy.sh
 
+      - name: Add server to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan 34.238.248.207 >> ~/.ssh/known_hosts
+
       # Deploy to the server
       - name: Deploy using script
         run: ssh ubuntu@34.238.248.207 './scripts/deploy.sh'
