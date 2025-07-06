@@ -1,0 +1,12 @@
+{
+  "name": "the-learning-experience",
+  "version": "1.0.0",
+  "description": "**The Learning Experience** is a modern, interactive blog platform built for developers and learners who love to share knowledge through **HTML**, **CSS**, and **JavaScript**.",
+  "main": "index.js",
+  "scripts": {
+    "test": "cd BackEnd && npm run test && cd ..",
+    "install-all":"cd frontend && npm ci && cd ../BackEnd && npm ci && cd .."
+  },
+  "author": "Lucas",
+  "license": "ISC"
+}
