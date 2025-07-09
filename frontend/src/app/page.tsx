@@ -22,7 +22,7 @@ const Home = async ({ searchParams }: { searchParams: Promise<{ [key: string]: s
 				<h1 className="text-4xl sm:text-5xl text-center font-serif font-semibold tracking-tight">
 					Welcome to{' '}
 					<span className="text-primary">
-						The Learning Experience
+						Satorix
 					</span>
 				</h1>
 

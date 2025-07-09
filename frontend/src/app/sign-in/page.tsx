@@ -108,7 +108,7 @@ const SignIn = () => {
 						</button>
 						<p className="text-sm opacity-40 mt-2">
 							Don&apos;t have an account?{' '}
-							<Link href="/signUp" className="text-blue-700">
+							<Link href="/sign-up" className="text-blue-700">
 								Create Account
 							</Link>
 						</p>

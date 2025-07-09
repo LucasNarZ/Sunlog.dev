@@ -56,7 +56,7 @@ const SignUp = () => {
 			const body = { name, email, password };
 			const response = await apiClient.post('/auth/register', body);
 			if (response.status === 201) {
-				router.push('/signIn');
+				router.push('/sign-in');
 			}
 		} catch (err) {
 			console.error(err);
@@ -172,7 +172,7 @@ const SignUp = () => {
 						<p className="text-sm opacity-40">
 							Already have an account?{' '}
 							<Link
-								href="/signIn"
+								href="/sign-iin"
 								className="text-blue-700 cursor-pointer"
 							>
 								Sign In

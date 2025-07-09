@@ -55,7 +55,7 @@ export default function PostInteractions({
       setLiked(!liked)
     } catch(err) {
       console.log(err)
-      router.push("/signIn")
+      router.push("/sign-in")
     }
   }
 
@@ -68,7 +68,7 @@ export default function PostInteractions({
       }
       setFollowing(!following)
     } catch {
-      router.push("/signIn")
+      router.push("/sign-in")
     }
   }
 

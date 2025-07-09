@@ -8,6 +8,16 @@ import { getAuthor } from '@/lib/fetchAuthorPost';
 import { getPost } from '@/lib/getPost';
 import { getFollow } from '@/lib/getFollow';
 import PostInteractions from '@/components/PostInteractions';
+import { Metadata } from 'next'
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const post = await getPost(params.slug)
+
+  return {
+    title: post.title,
+    description: post.description
+  }
+}
 
 const Post = async ({ params }:{params:Promise<{slug:string}>}) => {
 	const { slug } = await params;
