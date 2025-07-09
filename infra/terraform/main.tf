@@ -75,6 +75,8 @@ resource "aws_instance" "web_server" {
     hostname_type                        = "ip-name"
   }
 
+  user_data = templatefile("../../scripts/startup.sh", {})
+
   tags = {
     Name = var.instance_name
   }
