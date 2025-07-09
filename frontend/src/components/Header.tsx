@@ -1,15 +1,10 @@
 "use client";
 
-import { useEffect } from "react"
 import Link from 'next/link'
 import useAuthor from '@/hooks/getAuthor';
 
 const Header = () => {
 	const [ userData ] = useAuthor()
-
-	useEffect(() => {
-		console.log("mounted")
-	}, [])
 
 	return (
 		<header className="h-20 w-full bg-white shadow-md px-6 lg:px-16 flex items-center justify-between">
@@ -18,7 +13,7 @@ const Header = () => {
 					href="/"
 					className="text-lg lg:text-xl font-family-garamond  sm:w-auto  w-32  font-semibold text-gray-800 hover:text-secondary transition"
 				>
-					The Learning Experience
+					Satorix
 				</Link>
 			</div>
 
@@ -27,13 +22,13 @@ const Header = () => {
 				{!userData ? (
 					<>
 						<Link
-							href="/signUp"
+							href="/sign-up"
 							className="cursor-pointer text-sm font-semibold text-primary hover:text-secondary transition"
 						>
 							Sign Up
 						</Link>
 						<Link
-							href="/signIn"
+							href="/sign-in"
 							className="cursor-pointer bg-primary text-white px-4 py-2 rounded-xl text-sm hover:bg-secondary transition font-semibold"
 						>
 							Sign In

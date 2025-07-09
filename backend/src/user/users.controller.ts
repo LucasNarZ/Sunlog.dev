@@ -106,6 +106,4 @@ export class UsersController {
 	getLoggedUserId(@Req() req: AuthRequest){
 		return req?.user?.userId;
 	}
-
-
 }

@@ -24,7 +24,7 @@ const Profile = () => {
 	const [urlError, setUrlError] = useState('');
 
 	useEffect(() => {
-		if (errorUser) router.push('/signIn');
+		if (errorUser) router.push('/sign-in');
 	}, [errorUser, router]);
 
 	useEffect(() => {

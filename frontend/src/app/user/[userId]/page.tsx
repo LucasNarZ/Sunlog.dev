@@ -66,7 +66,7 @@ const PublicUser = () => {
 			setRefreshUserKey((prev) => prev + 1);
 		} catch (err) {
 			if ((err as AxiosError).status == 401) {
-				router.push('/signIn');
+				router.push('/sign-in');
 			} else {
 				alert('Error on follow/unfollow user');
 			}

@@ -46,7 +46,7 @@ function CreatePostPage() {
 	const isMobile = useIsMobile();
 
 	useEffect(() => {
-		if (error) router.push('/signIn');
+		if (error) router.push('/sign-in');
 	}, [error, router]);
 
 	const validateTitle = (value: string) => {
