@@ -7,6 +7,8 @@ services:
       - NODE_ENV=${NODE_ENV}
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
       - API_URL=${API_URL}
+    depends_on:
+      - nginx
     volumes:
       - ./frontend/src:/app/src
     ports:
