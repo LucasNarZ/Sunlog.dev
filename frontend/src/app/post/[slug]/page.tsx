@@ -10,13 +10,14 @@ import { getFollow } from '@/lib/getFollow';
 import PostInteractions from '@/components/PostInteractions';
 import { Metadata } from 'next'
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const post = await getPost(params.slug)
+export async function generateMetadata({ params }:{params:Promise<{slug:string}>}): Promise<Metadata> {
+	const { slug } = await params;
+	const post = await getPost(slug)
 
-  return {
-    title: post.title,
-    description: post.description
-  }
+	return {
+		title: post.title,
+		description: post.description
+	}
 }
 
 const Post = async ({ params }:{params:Promise<{slug:string}>}) => {

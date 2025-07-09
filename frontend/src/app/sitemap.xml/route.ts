@@ -1,11 +1,22 @@
-// app/sitemap.xml/route.ts
+
 import { NextResponse } from 'next/server'
-import { fetchFilteredPosts } from "@lib/fetchPostsByTagNCategory"
-import { Post } from '@/types/post'
+// import { fetchFilteredPosts } from "@lib/fetchPostsByTagNCategory"
+// import { Post } from '@/types/post'
+
+
+// ${posts
+//   .map((post:Post) => `
+//     <url>
+//       <loc>${baseUrl}/posts/${post.slug}</loc>
+//       <changefreq>weekly</changefreq>
+//       <priority>0.8</priority>
+//     </url>
+//   `)
+//   .join('')}
 
 export async function GET() {
-  const posts = await fetchFilteredPosts([], [])
-  const baseUrl = 'https://the-learning-experience.com'
+  // const posts = await fetchFilteredPosts([], [])
+  const baseUrl = 'http://satorix.duckdns.org/'
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -14,15 +25,7 @@ export async function GET() {
       <changefreq>daily</changefreq>
       <priority>1.0</priority>
     </url>
-    ${posts
-      .map((post:Post) => `
-        <url>
-          <loc>${baseUrl}/posts/${post.slug}</loc>
-          <changefreq>weekly</changefreq>
-          <priority>0.8</priority>
-        </url>
-      `)
-      .join('')}
+
   </urlset>`
 
   return new NextResponse(sitemap, {
