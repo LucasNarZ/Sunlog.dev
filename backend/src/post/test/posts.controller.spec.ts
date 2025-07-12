@@ -7,7 +7,11 @@ import { EditPostDto } from '../dtos/editPost.dto';
 import { LikePostDto } from '../dtos/likePost.dto';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
-import { Request } from 'express';
+import { BadRequestException } from '@nestjs/common';
+
+interface TestRequest extends AuthRequest{
+	params:{postId: string};
+}
 
 describe('PostsController', () => {
 	let controller: PostsController;
@@ -22,6 +26,7 @@ describe('PostsController', () => {
 		likePost: jest.fn(),
 		unlikePost: jest.fn(),
 		getLikePost: jest.fn(),
+		deletePost: jest.fn()
 	};
 
 	const mockJwtService = {
@@ -96,6 +101,18 @@ describe('PostsController', () => {
 			id: '1',
 			...dto,
 		});
+	});
+
+	it('should return 400 for post not UUID in delete route', async () => {
+		const req = { params: { postId: '1' },  user: { userId: '1' }  } as TestRequest;
+		await expect(controller.deletePost(req.params.postId, req)).rejects.toThrow(BadRequestException);
+	});
+
+	it('should delete a post', async () => {
+		const req = { params: { postId: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb' },  user: { userId: '1' }  } as TestRequest;
+
+		mockPostsService.deletePost.mockResolvedValue({ id: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb', userId:'1'});
+		await expect(controller.deletePost(req.params.postId, req)).resolves.toEqual({ id: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb', userId:'1'});
 	});
 
 	it('should like a post', async () => {

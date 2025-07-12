@@ -17,6 +17,7 @@ describe('PostsService', () => {
 		update: jest.Mock;
 		increment: jest.Mock;
 		decrement: jest.Mock;
+		destroy: jest.Mock;
 	};
 	let likesRepository: {
 		findOne: jest.Mock;
@@ -32,6 +33,7 @@ describe('PostsService', () => {
 			update: jest.fn(),
 			increment: jest.fn(),
 			decrement: jest.fn(),
+			destroy: jest.fn()
 		};
 		likesRepository = {
 			findOne: jest.fn(),
@@ -113,6 +115,25 @@ describe('PostsService', () => {
 		});
 	});
 
+	describe('deletePost', () => {
+		it('should throw UnauthorizedException', async () => {
+			postsRepository.findOne.mockResolvedValue({userId:"2"});
+			await expect(service.deletePost("1", "1")).rejects.toThrow(UnauthorizedException);
+		});
+	
+		it('should throw NotFoundException for post not found', async () => {
+			postsRepository.findOne.mockResolvedValue(null);
+			await expect(service.deletePost("1", "1")).rejects.toThrow(NotFoundException);
+		});
+
+		it('should delete a post successfully', async () => {
+			postsRepository.findOne.mockResolvedValue({userId:"1"});
+			postsRepository.destroy.mockResolvedValue(1);
+			await expect(service.deletePost("1", "1")).resolves.toEqual({userId:"1"});
+		});
+
+	})
+
 	describe('likePost', () => {
 		it('should throw if already liked', async () => {
 			likesRepository.findOne.mockResolvedValue({});
@@ -187,7 +208,7 @@ describe('PostsService', () => {
 			const mockPosts = ['post'];
 			postsRepository.findAll.mockResolvedValue(mockPosts);
 
-			const result = await service.findPostsByTagAndCategory('node' as any, 'backend' as any);
+			const result = await service.findPostsByTagAndCategory('node' , 'backend');
 
 			expect(postsRepository.findAll).toHaveBeenCalledWith({
 				where: {
