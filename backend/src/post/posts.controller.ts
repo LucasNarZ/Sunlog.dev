@@ -9,6 +9,7 @@ import {
 	Param,
 	BadRequestException,
 	Query,
+	Delete
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { createPostDto } from 'src/post/dtos/post.dto';
@@ -57,6 +58,17 @@ export class PostsController {
 		return await this.postsService.updatePost(postId, userId, body);
 	}
 
+	@UseGuards(AuthGuard)
+	@Delete(":postId")
+	async deletePost(@Param("postId") postId: string, @Req() req: AuthRequest,) {
+		if(!isUUID(postId)){
+			throw new BadRequestException("postId must be an UUID.");
+		}
+		const { userId } = req.user;
+
+		return this.postsService.deletePost(postId, userId);
+	}
+	
 	@UseGuards(AuthGuard)
 	@Post('/like')
 	async followUser(@Req() req: AuthRequest, @Body() body: LikePostDto) {
