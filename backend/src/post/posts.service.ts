@@ -121,6 +121,26 @@ export class PostsService {
 		});
 	}
 
+	async deletePost(postId: string, userId: string) {
+		const post = await this.findPost(postId);
+
+		if(!post){
+			throw new NotFoundException("Post do not exist.");
+		}
+
+		if(post.userId !== userId) {
+			throw new UnauthorizedException("You have to be the author of the post to delete it.")
+		}
+
+		await this.postsRepository.destroy({
+			where:{
+				id: postId
+			}
+		});
+
+		return post;
+	}
+
 	async likePost(likerId: string, likedId: string) {
 		const relation = await this.likesRepository.findOne({
 			where: {
