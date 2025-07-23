@@ -8,7 +8,7 @@ export const fetchUser = async (): Promise<User | null> => {
         });
         return response.data;
     } catch (err) {
-        console.log(err);
+        console.error(err);
         return null;
     }
 };

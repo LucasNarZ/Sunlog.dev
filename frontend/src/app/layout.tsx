@@ -14,8 +14,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Solarix",
-  description: "Solarix is a developer blog sharing insights, tutorials, and tools for modern software development, clean code, and continuous learning.",
+  title: "Sunlog",
+  description: "Sunlog is a developer platform to write and share devlogs, track your progress, and showcase your learning journey.",
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({
