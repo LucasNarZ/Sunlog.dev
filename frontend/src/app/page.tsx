@@ -2,12 +2,10 @@ import Header from '@components/Header'
 import CardPost from '@components/CardPost'
 import TrendingUsers from '@components/TrendingUsers'
 import TrendingDevlogs from '@components/TrendingDevlogs'
-import Hero from '@components/Hero'
 import FilterSection from '@/components/FilterSection'
 import { fetchFilteredPosts } from '@lib/fetchPostsByTagNCategory'
 import type { Post } from '@/types/post'
-import { fetchUser } from '@/lib/fetchUser'
-import Link from 'next/link';
+import HeroSection from '@/components/HeroSection'
 
 const allTags = ['react', 'node', 'javascript', 'typescript']
 const allCategories = ['frontend', 'backend', 'devops', 'design']
@@ -18,28 +16,12 @@ const Home = async ({ searchParams }: { searchParams: Promise<{ [key: string]: s
 	const categories = Array.isArray(searchParamsNew?.category) ? searchParamsNew.category : searchParamsNew?.category ? [searchParamsNew.category] : []
 
 	const posts = await fetchFilteredPosts(tags, categories)
-	const user = await fetchUser()
-
 
 	return (
 		<div>
 			<Header />
 			<div className="min-h-[100vh] w-full flex flex-col items-center pt-16 px-4 pb-16">
-				{user ?
-				
-					<div className="p-8 bg-white rounded-xl shadow max-w-5xl w-full text-center">
-						<img src={user.profileImgUrl} alt={user.name} className="mx-auto rounded-full w-24 h-24 mb-4 object-cover" />
-						<h2 className="text-2xl font-semibold mb-2">Welcome back, {user.name}!</h2>
-						<p className="text-gray-600 mb-6">Check out your latest devlogs or start a new entry.</p>
-						<div className="flex justify-center gap-4">
-							<Link href="/create-post" className="px-6 py-2 bg-primary text-white rounded hover:bg-secondary transition">New Devlog</Link>
-							<Link href="/profile" className="px-6 py-2 border border-primary text-primary rounded hover:bg-primary hover:text-white transition">My Profile</Link>
-						</div>
-					</div>
-					:
-					<Hero />
-				}
-				
+				<HeroSection />	
 
 				<div className="mt-10 w-full max-w-5xl flex flex-col gap-6">
 					<FilterSection label={'tag'} values={allTags} paramKey={'tag'} activeValues={tags} searchParams={searchParamsNew}/>

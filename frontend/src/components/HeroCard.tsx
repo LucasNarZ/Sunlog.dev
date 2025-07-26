@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-const Hero = () => {
+const HeroCard = () => {
   return (
     <section className="bg-gradient-to-br from-indigo-600 to-purple-600 text-white rounded-xl shadow p-8 flex flex-col items-center text-center">
       <h1 className="text-4xl font-bold mb-4">Join the Devlog Community</h1>
@@ -12,4 +12,4 @@ const Hero = () => {
   )
 }
 
-export default Hero
+export default HeroCard
