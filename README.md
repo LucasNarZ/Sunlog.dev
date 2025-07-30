@@ -20,7 +20,7 @@ Sunlog.dev is a personal developer journey platform where users can create, shar
 - **Frontend:** Next.js (React), TypeScript, Tailwind CSS  
 - **Backend:** NestJS with Sequelize ORM and PostgreSQL  
 - **API Requests:** Axios with centralized `apiClient`  
-- **Authentication:** JWT or session-based (customizable)  
+- **Authentication:** JWT
 - **Web Server / Proxy:** Nginx  
 - **Infrastructure as Code:** Terraform managing AWS EC2 instances  
 - **CI/CD:** GitHub Actions pipelines  
