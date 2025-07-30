@@ -1,29 +1,40 @@
-import { Post } from '@/types/post';
-import { fetchAuthorPostCard } from '@/lib/fetchAuthorPostCard';
-import { Heart } from 'lucide-react';
-import Link from 'next/link';
-import Image from 'next/image';
+import { Post } from '@/types/post'
+import { fetchAuthorPostCard } from '@/lib/fetchAuthorPostCard'
+import { Heart } from 'lucide-react'
+import Link from 'next/link'
+import Image from 'next/image'
 
 interface CardPostProps {
-	post: Post;
+	post: Post
 }
 
+const lineHeightTitle = 1.25 
+const maxLinesTitle = 2
+const lineHeightDesc = 1.25 
+const maxLinesDesc = 3
 
 const CardPost = async ({ post }: CardPostProps) => {
-	const creationDate = new Date(post.createdAt);
-  	const author = await fetchAuthorPostCard(post.userId)
+	const creationDate = new Date(post.createdAt)
+	const author = await fetchAuthorPostCard(post.userId)
 
 	return (
-		<Link href={'/post/' + post.slug}>
+		<Link href={'/devlog/' + post.slug}>
 			<div
-			className="w-11/12 max-w-[600px] bg-white hover:shadow-xl transition-shadow duration-300 flex items-center gap-4 p-5 rounded-3xl border border-gray-200 cursor-pointer"
+				className="w-11/12 max-w-[600px] bg-white hover:shadow-xl transition-shadow duration-300 flex items-center gap-4 p-5 rounded-3xl border border-gray-200 cursor-pointer"
 			>
 				<div className="flex flex-col gap-3 flex-1 min-w-0">
 					<div className="flex items-center gap-3 text-sm text-gray-600 flex-wrap">
-						<Image className="rounded-full object-cover" src={author?.profileImgUrl ?? "https://deepgrouplondon.com/wp-content/uploads/2019/06/person-placeholder-5.png"} alt="profilePic" width={32} height={32} unoptimized />
+						<Image
+							className="rounded-full object-cover"
+							src={author?.profileImgUrl ?? "https://deepgrouplondon.com/wp-content/uploads/2019/06/person-placeholder-5.png"}
+							alt="profilePic"
+							width={32}
+							height={32}
+							unoptimized
+						/>
 						<span className="font-medium break-words">{author?.name}</span>
 						<span className="text-gray-400">•</span>
-						<span >
+						<span>
 							{creationDate.getDate().toString().padStart(2, '0')}/
 							{(creationDate.getMonth() + 1).toString().padStart(2, '0')}
 						</span>
@@ -33,18 +44,34 @@ const CardPost = async ({ post }: CardPostProps) => {
 						</div>
 					</div>
 					<div className="flex flex-col gap-1 min-w-0">
-						<p className="text-lg font-semibold text-gray-900 line-clamp-2 break-words">{post.title}</p>
-						<p className="text-sm text-gray-600 break-words line-clamp-3">{post.description}</p>
+						<p
+							className="text-lg font-semibold text-gray-900 line-clamp-2 break-words"
+							style={{ height: `${lineHeightTitle * maxLinesTitle}rem`, lineHeight: `${lineHeightTitle}rem` }}
+						>
+							{post.title}
+						</p>
+						<p
+							className="text-sm text-gray-600 break-words line-clamp-3"
+							style={{ height: `${lineHeightDesc * maxLinesDesc}rem`, lineHeight: `${lineHeightDesc}rem` }}
+						>
+							{post.description}
+						</p>
 					</div>
 				</div>
 
 				{post.previewImgUrl && (
-					<Image className="rounded-xl object-cover" src={post.previewImgUrl} alt="post preview" width={112} height={112} unoptimized/>
+					<Image
+						className="rounded-xl object-cover"
+						src={post.previewImgUrl}
+						alt="post preview"
+						width={112}
+						height={112}
+						unoptimized
+					/>
 				)}
 			</div>
 		</Link>
-		
-	);
-};
+	)
+}
 
-export default CardPost;
+export default CardPost

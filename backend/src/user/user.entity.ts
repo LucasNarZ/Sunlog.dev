@@ -8,6 +8,7 @@ import {
 	HasMany,
 	Unique,
 } from 'sequelize-typescript';
+import { Follow } from './follow.entity';
 
 @Table
 export class User extends Model {
@@ -53,7 +54,14 @@ export class User extends Model {
 		type: DataType.INTEGER,
 		allowNull: false,
 	})
-	followers: number;
+	followersNumber: number;
+
+	@HasMany(() => Follow, { foreignKey: 'followedId', as: 'followers' }) 
+	followers: Follow[];
+
+	@HasMany(() => Follow, { foreignKey: 'followerId', as: 'followings' }) 
+	followings: Follow[];
+
 
 	@Default('')
 	@Column({

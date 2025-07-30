@@ -1,6 +1,6 @@
 export interface Author {
 	id: string;
 	name: string;
-	followers: number;
+	followersNumber: number;
 	profileImgUrl: string;
 }

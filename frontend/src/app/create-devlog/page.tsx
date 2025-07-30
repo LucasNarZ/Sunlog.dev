@@ -8,6 +8,15 @@ import { apiClient } from '@lib/apiClient';
 import useAuthor from '@hooks/getAuthor';
 import { AxiosError } from 'axios';
 
+const generateSlug = (value: string) => 
+	value
+		.normalize("NFD")
+		.replace(/[\u0300-\u036f]/g, "")
+		.toLowerCase()
+		.trim()
+		.replace(/[^a-z0-9\s-]/g, "")
+		.replace(/\s+/g, "-");
+
 
 function useIsMobile(breakpoint = 728) {
 	const [isMobile, setIsMobile] = useState(false);
@@ -21,7 +30,7 @@ function useIsMobile(breakpoint = 728) {
 	}, [breakpoint]);
   
 	return isMobile;
-  }
+}
 
 function CreatePostPage() {
 	const router = useRouter();
@@ -29,12 +38,14 @@ function CreatePostPage() {
 	const [step, setStep] = useState(1);
 	const [title, setTitle] = useState('');
 	const [slug, setSlug] = useState('');
+	const [slugTouched, setSlugTouched] = useState(false);
 	const [previewImgUrl, setPreviewImgUrl] = useState('');
 	const [description, setDescription] = useState('');
-	const [tags, setTags] = useState('');
+	const [projects, setProjects] = useState('');
+	const [skills, setSkills] = useState('');
 	const [category, setCategory] = useState('');
 	const [content, setContent] = useState(
-		'Welcome to your new post! This is **Markdown**.\n- You can write text\n- Add _formatting_\n- And preview it live!\n- ![Example Image](https://placehold.co/600x400)',
+		'Welcome to your new devlog entry! Use **Markdown** to write notes, ideas or code snippets.\n- Document what you learn\n- Track your progress\n- Share your journey\n- ![Example Image](https://placehold.co/600x400)',
 	);
 	const [titleError, setTitleError] = useState('');
 	const [slugError, setSlugError] = useState('');
@@ -51,11 +62,7 @@ function CreatePostPage() {
 
 	const validateTitle = (value: string) => {
 		if (!value.trim()) return (setTitleError('Title is required'), false);
-		if (value.trim().length < 3)
-			return (
-				setTitleError('Title must be at least 3 characters'),
-				false
-			);
+		if (value.trim().length < 3) return (setTitleError('Title must be at least 3 characters'), false);
 		setTitleError('');
 		return true;
 	};
@@ -63,12 +70,7 @@ function CreatePostPage() {
 	const validateSlug = async (value: string) => {
 		if (!value.trim()) return (setSlugError('Slug is required'), false);
 		if (!/^[a-z0-9-_]+$/i.test(value.trim()))
-			return (
-				setSlugError(
-					'Slug can only contain letters, numbers, hyphens and underscores',
-				),
-				false
-			);
+			return (setSlugError('Slug can only contain letters, numbers, hyphens and underscores'), false);
 		try {
 			const response = await apiClient.get(`/post/${value.trim()}`);
 			if (response.status === 200) {
@@ -90,12 +92,10 @@ function CreatePostPage() {
 			setUrlError('Image URL must start with http or https');
 			return false;
 		}
-
 		if (!value) {
 			setUrlError('');
 			return true;
 		}
-
 		return new Promise<boolean>((resolve) => {
 			const img = new Image();
 			img.onload = () => {
@@ -128,27 +128,28 @@ function CreatePostPage() {
 		const post = {
 			title: title.trim(),
 			slug: slug.trim(),
-			previewImgUrl:
-				previewImgUrl.trim() === '' ? undefined : previewImgUrl.trim(),
+			previewImgUrl: previewImgUrl.trim() === '' ? undefined : previewImgUrl.trim(),
 			description: description.trim(),
-			tags: tags
+			projects: projects
 				.split(',')
-				.map((tag: string) => tag.trim())
-				.filter((tag) => tag),
-			category: category.trim() || "General",
+				.map((p) => p.trim())
+				.filter((p) => p),
+			skills: skills
+				.split(',')
+				.map((s) => s.trim())
+				.filter((s) => s),
+			category: category.trim() || 'General',
 			content,
 			authorId: user?.id,
 		};
 		try {
-			const response = await apiClient.post('/post', post, {
-				withCredentials: true,
-			});
+			const response = await apiClient.post('/post', post, { withCredentials: true });
 			if ([200, 201].includes(response.status)) {
-				alert('Post created successfully!');
-				router.push(`/post/${post.slug}`);
-			} else alert('Failed to create post. Please try again.');
+				alert('Devlog entry created successfully!');
+				router.push(`/devlog/${post.slug}`);
+			} else alert('Failed to create devlog entry. Please try again.');
 		} catch (error) {
-			console.log(error);
+			console.error(error);
 			alert('An unexpected error occurred.');
 		} finally {
 			setIsSubmitting(false);
@@ -157,7 +158,7 @@ function CreatePostPage() {
 
 	const handleMouseMove = (e: MouseEvent) => {
 		if (!isResizingRef.current || !containerRef.current) return;
-		// @ts-expect-error expect error here
+		// @ts-expect-error
 		const rect = containerRef.current.getBoundingClientRect();
 		const width = ((e.clientX - rect.left) / rect.width) * 100;
 		if (width > 20 && width < 80) setLeftWidth(width);
@@ -185,41 +186,37 @@ function CreatePostPage() {
 					<div className="bg-white rounded-xl shadow-2xl max-w-5xl w-full p-10">
 						<div className="flex flex-col space-y-2">
 							<h1 className="text-4xl font-bold select-none text-primary mb-6">
-								Post Metadata
+								Devlog Entry Metadata
 							</h1>
 							<input
-								title="Title of your post (minimum 3 characters)"
+								title="Title of your devlog entry (minimum 3 characters)"
 								type="text"
-								placeholder="Post title"
+								placeholder="Entry title"
 								value={title}
 								onChange={(e) => {
-									setTitle(e.target.value);
-									if (titleError)
-										validateTitle(e.target.value);
+									const val = e.target.value;
+									setTitle(val);
+									if (!slugTouched) setSlug(generateSlug(val));
+									if (titleError) validateTitle(val);
 								}}
 								className={`p-4 border rounded-xl text-lg font-semibold shadow-md focus:outline-none focus:ring-2 transition ${titleError ? 'border-danger focus:ring-danger' : 'border-secondary focus:ring-primary'}`}
 							/>
-							{titleError && (
-								<p className="text-danger text-sm mb-2">
-									{titleError}
-								</p>
-							)}
+							{titleError && <p className="text-danger text-sm mb-2">{titleError}</p>}
 							<input
-								title="Slug will be part of the URL (e.g. my-post-title)"
+								title="Slug will be part of the URL (e.g. my-entry-title)"
 								type="text"
 								placeholder="Slug (url-friendly)"
 								value={slug}
 								onBlur={(e) => validateSlug(e.target.value)}
-								onChange={(e) => setSlug(e.target.value)}
+								onChange={(e) => {
+									setSlug(e.target.value);
+									setSlugTouched(true);
+								}}
 								className={`p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 transition ${slugError ? 'border-danger focus:ring-danger' : 'border-secondary focus:ring-primary'}`}
 							/>
-							{slugError && (
-								<p className="text-danger text-sm mb-2">
-									{slugError}
-								</p>
-							)}
+							{slugError && <p className="text-danger text-sm mb-2">{slugError}</p>}
 							<input
-								title="This image will be shown in the homepage preview of the post"
+								title="Preview image URL (optional, for homepage preview)"
 								type="text"
 								placeholder="Preview image URL"
 								value={previewImgUrl}
@@ -229,21 +226,25 @@ function CreatePostPage() {
 								}}
 								className={`p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 transition ${urlError ? 'border-danger focus:ring-danger' : 'border-secondary focus:ring-primary'}`}
 							/>
-							{urlError && (
-								<p className="text-danger text-sm mb-2">
-									{urlError}
-								</p>
-							)}
+							{urlError && <p className="text-danger text-sm mb-2">{urlError}</p>}
 							<input
-								title="Separate tags with commas (e.g. react,css,web)"
+								title="Associated projects (comma-separated)"
 								type="text"
-								placeholder="Tags (comma-separated)"
-								value={tags}
-								onChange={(e) => setTags(e.target.value)}
+								placeholder="Projects (e.g. Sunlog, Portfolio)"
+								value={projects}
+								onChange={(e) => setProjects(e.target.value)}
 								className="p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary transition"
 							/>
 							<input
-								title="Post category (e.g. Programming, Design)"
+								title="Skills related to this entry (comma-separated)"
+								type="text"
+								placeholder="Skills (e.g. React, TypeScript)"
+								value={skills}
+								onChange={(e) => setSkills(e.target.value)}
+								className="p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary transition"
+							/>
+							<input
+								title="Entry category (e.g. Programming, Design)"
 								type="text"
 								placeholder="Category"
 								value={category}
@@ -251,7 +252,7 @@ function CreatePostPage() {
 								className="p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary transition"
 							/>
 							<textarea
-								title="Short summary for the post"
+								title="Short summary for the entry"
 								placeholder="Short description..."
 								value={description}
 								onChange={(e) => setDescription(e.target.value)}
@@ -259,12 +260,12 @@ function CreatePostPage() {
 							/>
 							<button
 								onClick={handleNext}
-								disabled={
-									!!titleError || !!slugError || !!urlError
-								}
-								className={`cursor-pointer self-end rounded-2xl font-bold shadow-lg px-8 py-3 text-white transition duration-500 ${!!titleError || !!slugError || !!urlError ? 'bg-gray-400 cursor-not-allowed' : 'bg-primary hover:bg-secondary'}`}
+								disabled={!!titleError || !!slugError || !!urlError}
+								className={`cursor-pointer self-end rounded-2xl font-bold shadow-lg px-8 py-3 text-white transition duration-500 ${
+									!!titleError || !!slugError || !!urlError ? 'bg-gray-400 cursor-not-allowed' : 'bg-primary hover:bg-secondary'
+								}`}
 							>
-								Next: Write Content
+								Next: Write Devlog Entry
 							</button>
 						</div>
 					</div>
@@ -277,15 +278,13 @@ function CreatePostPage() {
 						>
 							<div
 								className={`sm:h-full h-1/2 flex flex-col `}
-								style={{ width: isMobile ? '100%' : `${leftWidth}%` }} 
+								style={{ width: isMobile ? '100%' : `${leftWidth}%` }}
 							>
-								<div className="bg-gray-100 p-2 text-sm font-semibold text-muted border-b">
-									Markdown
-								</div>
+								<div className="bg-gray-100 p-2 text-sm font-semibold text-muted border-b">Markdown</div>
 								<textarea
 									value={content}
 									onChange={(e) => setContent(e.target.value)}
-									placeholder="Write your post content in Markdown..."
+									placeholder="Write your devlog entry content in Markdown..."
 									className="w-full h-full p-4 font-mono resize-none focus:outline-none focus:ring-2 focus:ring-primary"
 									spellCheck={false}
 								/>
@@ -294,23 +293,18 @@ function CreatePostPage() {
 								onMouseDown={startResizing}
 								className="w-0 sm:w-2 bg-gray-300 cursor-col-resize hover:bg-primary transition duration-300"
 							/>
-							<div 
+							<div
 								className={`flex-1 flex flex-col sm:h-full h-1/2`}
-								style={{ width: isMobile ? '100%' : `${100 - leftWidth}%` }} 
+								style={{ width: isMobile ? '100%' : `${100 - leftWidth}%` }}
 							>
-								<div className="bg-gray-100 p-2 text-sm font-semibold text-muted border-b">
-									Preview
-								</div>
+								<div className="bg-gray-100 p-2 text-sm font-semibold text-muted border-b">Preview</div>
 								<div className="flex-1 overflow-y-auto p-6 prose max-w-none break-words">
 									{previewImgUrl && (
 										<img
 											src={previewImgUrl}
 											alt="Preview"
 											className="mb-8 max-h-96 w-full object-contain rounded-lg shadow-lg"
-											onError={(e) =>
-											(e.currentTarget.style.display =
-												'none')
-											}
+											onError={(e) => (e.currentTarget.style.display = 'none')}
 										/>
 									)}
 									<ReactMarkdown>{`# ${title}\n\n${content}`}</ReactMarkdown>
@@ -327,9 +321,11 @@ function CreatePostPage() {
 							<button
 								onClick={handleSubmit}
 								disabled={isSubmitting}
-								className={`cursor-pointer rounded-xl px-8 py-3 font-bold shadow-lg transition text-white ${isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-primary hover:bg-secondary'}`}
+								className={`cursor-pointer rounded-xl px-8 py-3 font-bold shadow-lg transition text-white ${
+									isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-primary hover:bg-secondary'
+								}`}
 							>
-								{isSubmitting ? 'Saving...' : 'Save Post'}
+								{isSubmitting ? 'Saving...' : 'Save Devlog Entry'}
 							</button>
 						</div>
 					</div>

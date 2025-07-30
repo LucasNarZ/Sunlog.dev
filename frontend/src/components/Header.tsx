@@ -13,7 +13,7 @@ const Header = () => {
 					href="/"
 					className="text-lg lg:text-xl font-family-garamond  sm:w-auto  w-32  font-semibold text-gray-800 hover:text-secondary transition"
 				>
-					Satorix
+					<img src="logo.svg" alt="logo" width={150} height={300}/>
 				</Link>
 			</div>
 
