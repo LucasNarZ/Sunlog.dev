@@ -1,26 +1,29 @@
-# 🌱 The Learning Experience
+# Sunlog.dev — Developer Devlog Platform
 
-**The Learning Experience** is a modern, interactive blog platform built for developers and learners who love to share knowledge through **HTML**, **CSS**, and **JavaScript**.
-
----
-
-## 🚀 Features
-
-- ✍️ Create and publish rich blog posts with:
-  - Markdown
-  - Embedded HTML/CSS/JS code
-- 💻 Live preview of your content
-- 🔐 Authentication and user profile management
-- 📱 Responsive design for desktop and mobile
-- 🗂️ Categorized posts and tags
-- ❤️ Developer-friendly interface
+Sunlog.dev is a personal developer journey platform where users can create, share, and discover developer logs (devlogs) organized by projects, skills, categories, and tags. It helps developers document their learning process, projects, and share knowledge with the community.
 
 ---
 
-## 🧠 Tech Stack
+## Features
 
-- **Frontend**: React + Tailwind CSS
-- **Backend**: NestJS + Sequelize (PostgreSQL)
-- **Authentication**: JWT
-- **Markdown & Code Rendering**: `react-markdown`
-- **Deployment**: Docker-ready
+- User registration and authentication
+- Create, edit, and delete devlogs with title, description, preview image, and tags
+- Filter devlogs by tags, categories, skills, and projects
+- Trending sections for users and devlogs based on recent activity and popularity
+- Responsive and accessible UI with Next.js and Tailwind CSS
+- Server-side rendering for SEO and fast load times
+
+---
+
+## Tech Stack
+
+- **Frontend:** Next.js (React), TypeScript, Tailwind CSS  
+- **Backend:** NestJS with Sequelize ORM and PostgreSQL  
+- **API Requests:** Axios with centralized `apiClient`  
+- **Authentication:** JWT or session-based (customizable)  
+- **Web Server / Proxy:** Nginx  
+- **Infrastructure as Code:** Terraform managing AWS EC2 instances  
+- **CI/CD:** GitHub Actions pipelines  
+- **Hosting:** AWS EC2  
+
+---
