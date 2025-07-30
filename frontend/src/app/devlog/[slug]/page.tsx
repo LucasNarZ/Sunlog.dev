@@ -23,11 +23,11 @@ export async function generateMetadata({ params }:{params:Promise<{slug:string}>
 const Post = async ({ params }:{params:Promise<{slug:string}>}) => {
 	const { slug } = await params;
 	const post = await getPost(slug)
-	const user = await getAuthor(post?.userId)
-	const following = await getFollow(user.id)
 	if (!post) {
 		redirect('/post-not-found');
 	}
+	const user = await getAuthor(post?.userId)
+	const following = await getFollow(user.id)
 
 	return (
 		<div className="min-h-screen w-full bg-white text-gray-900 flex flex-col items-center">

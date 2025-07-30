@@ -106,4 +106,9 @@ export class UsersController {
 	getLoggedUserId(@Req() req: AuthRequest){
 		return req?.user?.userId;
 	}
+
+	@Get("/trending-users")
+	async getTrendingUsers() {
+		return await this.usersService.getTrendingUsers();
+	}
 }

@@ -15,6 +15,8 @@ import { createUserDto } from 'src/user/dtos/user.dto';
 import { Post } from 'src/post/post.entity';
 import { updateUserDto } from 'src/user/dtos/updateUser.dto';
 import { Follow } from './follow.entity';
+import { fn, col, Op, literal } from 'sequelize'
+
 
 @Injectable()
 export class UsersService {
@@ -49,7 +51,7 @@ export class UsersService {
 		return await this.getUserById(id, [
 			'name',
 			'profileImgUrl',
-			'followers',
+			'followersNumber',
 		]);
 	}
 
@@ -60,7 +62,7 @@ export class UsersService {
 			'email',
 			'profileImgUrl',
 			'bio',
-			'followers',
+			'followersNumber',
 			'createdAt',
 			'updatedAt',
 		]);
@@ -72,7 +74,7 @@ export class UsersService {
 			'name',
 			'profileImgUrl',
 			'bio',
-			'followers',
+			'followersNumber',
 			'createdAt',
 		]);
 		if (!user) {
@@ -172,4 +174,36 @@ export class UsersService {
 			},
 		}));
 	}
+
+	async getTrendingUsers() {
+		const twoWeeksAgo = new Date()
+		twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14)
+		
+		return await this.usersRepository.findAll({
+			attributes:[
+				'id',
+				'name',
+				'followers',
+				'profileImageUrl',
+				[fn('COUNT', col('Follows.followedId')), 'followersGained']	
+			],
+			include:[
+				{
+					model: Follow,
+					as: 'followers',
+					attributes: [],
+					where:{
+						createdAt:{
+							[Op.gte]: twoWeeksAgo
+						}
+					},
+					required: true
+				}
+			],
+			group: ["User.id"],
+			order: [[literal("followersGained"), "DESC"]],
+			limit: 3
+		})
+	}
+
 }

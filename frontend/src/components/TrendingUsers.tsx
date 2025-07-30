@@ -14,7 +14,7 @@ const TrendingUsers = async () => {
               <Image src={user.profileImgUrl} alt={user.name} width={40} height={40} className="rounded-full" />
               <div>
                 <div className="font-medium">{user.name}</div>
-                <div className="text-sm text-gray-500">+{user.followers} followers</div>
+                <div className="text-sm text-gray-500">+{user.followersNumber} followers</div>
               </div>
             </div>
           ))

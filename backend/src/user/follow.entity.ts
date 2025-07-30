@@ -4,6 +4,7 @@ import {
 	Table,
 	Column,
 	ForeignKey,
+	BelongsTo
 } from 'sequelize-typescript';
 import { User } from './user.entity';
 
@@ -30,6 +31,12 @@ export class Follow extends Model {
 		allowNull: false,
 	})
 	followedId: string;
+
+	@BelongsTo(() => User, { as: 'follower' })
+	follower: User;
+
+	@BelongsTo(() => User, { as: 'followed' })
+	followed: User;
 
 	@Column({
 		type: DataType.DATE,
