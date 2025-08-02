@@ -1,14 +1,13 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { Post } from "@/types/post";
 import { fetchAuthorPostCard } from "@/lib/fetchAuthorPostCard";
-import { Heart } from "lucide-react";
+import { Heart, X } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
 interface CardPostProps {
   post: Post;
+  onDeleteClick?: () => void;
 }
 
 const lineHeightTitle = 1.25;
@@ -16,7 +15,7 @@ const maxLinesTitle = 2;
 const lineHeightDesc = 1.25;
 const maxLinesDesc = 3;
 
-const CardPost = ({ post }: CardPostProps) => {
+const CardPost = ({ post, onDeleteClick }: CardPostProps) => {
   const [author, setAuthor] = useState<{
     name: string;
     profileImgUrl: string;
@@ -33,8 +32,19 @@ const CardPost = ({ post }: CardPostProps) => {
   const creationDate = new Date(post.createdAt);
 
   return (
-    <Link href={"/devlog/" + post.slug}>
-      <div className="w-11/12 max-w-[600px] bg-white hover:shadow-xl transition-shadow duration-300 flex items-center gap-4 p-5 rounded-3xl border border-gray-200 cursor-pointer">
+    <div className="relative w-11/12 max-w-[600px] bg-white hover:shadow-xl transition-shadow duration-300 flex items-center gap-4 p-5 rounded-3xl border border-gray-200">
+      {onDeleteClick && (
+        <button
+          onClick={onDeleteClick}
+          className="absolute top-3 right-3 text-gray-400 hover:text-red-500"
+        >
+          <X className="w-5 h-5 cursor-pointer" />
+        </button>
+      )}
+      <Link
+        href={"/devlog/" + post.slug}
+        className="flex items-center gap-4 w-full"
+      >
         <div className="flex flex-col gap-3 flex-1 min-w-0">
           <div className="flex items-center gap-3 text-sm text-gray-600 flex-wrap">
             <Image
@@ -80,7 +90,6 @@ const CardPost = ({ post }: CardPostProps) => {
             </p>
           </div>
         </div>
-
         {post.previewImgUrl && (
           <Image
             className="rounded-xl object-cover"
@@ -91,8 +100,8 @@ const CardPost = ({ post }: CardPostProps) => {
             unoptimized
           />
         )}
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 };
 

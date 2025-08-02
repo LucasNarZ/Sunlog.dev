@@ -94,8 +94,8 @@ const PublicUser = () => {
                 : "Unknown date"}
             </p>
             <p className="text-sm text-gray-500">
-              {user?.followers} follower
-              {user?.followers === 1 ? "" : "s"}
+              {user?.followersNumber} follower
+              {user?.followersNumber === 1 ? "" : "s"}
             </p>
             <p className="text-gray-700 mt-3 italic max-w-xl whitespace-pre-line">
               {user?.bio?.trim() !== "" ? user?.bio : "No bio provided yet."}

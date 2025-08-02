@@ -166,7 +166,7 @@ function CreatePostPage() {
 
   const handleMouseMove = (e: MouseEvent) => {
     if (!isResizingRef.current || !containerRef.current) return;
-    // @ts-expect-error
+    // @ts-expect-error i dont how to fix this type error
     const rect = containerRef.current.getBoundingClientRect();
     const width = ((e.clientX - rect.left) / rect.width) * 100;
     if (width > 20 && width < 80) setLeftWidth(width);
