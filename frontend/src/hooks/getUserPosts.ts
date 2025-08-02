@@ -1,28 +1,26 @@
-import { useEffect, useState } from 'react';
-import { Post } from '@/types/post';
-import { apiClient } from '@lib/apiClient';
+import { useEffect, useState } from "react";
+import { Post } from "@/types/post";
+import { apiClient } from "@lib/apiClient";
 
 const usePostsByAuthor = (
-	userId: string | undefined,
+  userId: string | undefined,
 ): [Post[] | null, unknown | null] => {
-	const [posts, setPosts] = useState<Post[] | null>(null);
-	const [error, setError] = useState<unknown | null>(null);
+  const [posts, setPosts] = useState<Post[] | null>(null);
+  const [error, setError] = useState<unknown | null>(null);
 
-	useEffect(() => {
-		(async () => {
-			if (!userId) return;
-			try {
-				const response = await apiClient.get(
-					'/user/' + userId + '/posts',
-				);
-				setPosts(response.data);
-			} catch (err) {
-				setError(err);
-			}
-		})();
-	}, [userId]);
+  useEffect(() => {
+    (async () => {
+      if (!userId) return;
+      try {
+        const response = await apiClient.get("/user/" + userId + "/posts");
+        setPosts(response.data);
+      } catch (err) {
+        setError(err);
+      }
+    })();
+  }, [userId]);
 
-	return [posts, error];
+  return [posts, error];
 };
 
 export default usePostsByAuthor;

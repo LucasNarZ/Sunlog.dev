@@ -1,8 +1,6 @@
-
-import { NextResponse } from 'next/server'
+import { NextResponse } from "next/server";
 // import { fetchFilteredPosts } from "@lib/fetchPostsByTagNCategory"
 // import { Post } from '@/types/post'
-
 
 // ${posts
 //   .map((post:Post) => `
@@ -16,7 +14,7 @@ import { NextResponse } from 'next/server'
 
 export async function GET() {
   // const posts = await fetchFilteredPosts([], [])
-  const baseUrl = 'http://satorix.duckdns.org/'
+  const baseUrl = "http://satorix.duckdns.org/";
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -26,11 +24,11 @@ export async function GET() {
       <priority>1.0</priority>
     </url>
 
-  </urlset>`
+  </urlset>`;
 
   return new NextResponse(sitemap, {
     headers: {
-      'Content-Type': 'application/xml'
-    }
-  })
+      "Content-Type": "application/xml",
+    },
+  });
 }
