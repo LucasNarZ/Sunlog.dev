@@ -6,7 +6,7 @@ export interface Post {
   previewImgUrl: string;
   createdAt: string;
   updatedAt: string;
-  likes: number;
+  likesNumber: number;
   views: number;
   comments: string[];
   slug: string;

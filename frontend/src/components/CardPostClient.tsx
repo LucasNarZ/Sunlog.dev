@@ -66,7 +66,7 @@ const CardPost = ({ post, onDeleteClick }: CardPostProps) => {
             </span>
             <div className="flex items-center gap-1 text-sm text-gray-500">
               <Heart className="w-4 h-4" />
-              {post.likes ?? 0}
+              {post.likesNumber ?? 0}
             </div>
           </div>
           <div className="flex flex-col gap-1 min-w-0">

@@ -6,8 +6,10 @@ import {
 	Default,
 	ForeignKey,
 	BelongsTo,
+    HasMany,
 } from 'sequelize-typescript';
 import { User } from '../user/user.entity';
+import { Like } from './like.entity';
 
 @Table
 export class Post extends Model {
@@ -69,7 +71,10 @@ export class Post extends Model {
 		type: DataType.INTEGER,
 		allowNull: false,
 	})
-	likes: number;
+	likesNumber: number;
+
+	@HasMany(() => Like, { foreignKey: 'likedId', as: 'likes' }) 
+	likes: Like[];
 
 	@Column({
 		type: DataType.STRING,

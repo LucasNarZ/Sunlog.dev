@@ -15,7 +15,7 @@ import { createUserDto } from 'src/user/dtos/user.dto';
 import { Post } from 'src/post/post.entity';
 import { updateUserDto } from 'src/user/dtos/updateUser.dto';
 import { Follow } from './follow.entity';
-import { fn, col, Op, literal } from 'sequelize'
+import { fn, col, Op } from 'sequelize'
 
 
 @Injectable()
