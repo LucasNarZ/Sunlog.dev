@@ -1,8 +1,8 @@
 import { Post } from "@/types/post";
-import { fetchAuthorPostCard } from "@/lib/fetchAuthorPostCard";
 import { Heart } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { getAuthor } from "@/lib/fetchAuthorPost";
 
 interface CardPostProps {
   post: Post;
@@ -15,7 +15,7 @@ const maxLinesDesc = 3;
 
 const CardPost = async ({ post }: CardPostProps) => {
   const creationDate = new Date(post.createdAt);
-  const author = await fetchAuthorPostCard(post.userId);
+  const author = await getAuthor(post.userId);
 
   return (
     <Link href={"/devlog/" + post.slug}>

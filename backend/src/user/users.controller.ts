@@ -23,14 +23,6 @@ import { isUUID } from 'class-validator';
 export class UsersController {
 	constructor(private readonly usersService: UsersService) {}
 
-	@Get('basic/:userId')
-	async findUserBasicInfo(@Param('userId') userId: string) {
-		if(!isUUID(userId)){
-			throw new BadRequestException("UserId must be an UUID.");
-		}
-		return await this.usersService.findUserBasic(userId);
-	}
-
 	@UseGuards(AuthGuard)
 	@Get('profile')
 	async findUser(@Req() req: AuthRequest) {
@@ -45,7 +37,7 @@ export class UsersController {
 		return user;
 	}
 
-	@Get(':userId')
+	@Get('public/:userId')
 	async findUserPublic(@Param('userId') userId: string) {
 		if(!isUUID(userId)){
 			throw new BadRequestException("UserId must be an UUID.");

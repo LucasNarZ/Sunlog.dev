@@ -47,14 +47,6 @@ export class UsersService {
 		return await this.usersRepository.findOne({ where: { email } });
 	}
 
-	async findUserBasic(id: string) {
-		return await this.getUserById(id, [
-			'name',
-			'profileImgUrl',
-			'followersNumber',
-		]);
-	}
-
 	async findUser(id: string) {
 		return await this.getUserById(id, [
 			'id',
@@ -120,7 +112,7 @@ export class UsersService {
 			throw new ConflictException('You already follow this user.');
 		}
 
-		await this.usersRepository.increment('followers', {
+		await this.usersRepository.increment('followersNumber', {
 			where: {
 				id: followedId,
 			},
@@ -150,7 +142,7 @@ export class UsersService {
 			throw new NotFoundException("You don't follow this user.");
 		}
 
-		await this.usersRepository.decrement('followers', {
+		await this.usersRepository.decrement('followersNumber', {
 			where: {
 				id: followedId,
 			},
@@ -183,9 +175,9 @@ export class UsersService {
 			attributes:[
 				'id',
 				'name',
-				'followers',
-				'profileImageUrl',
-				[fn('COUNT', col('Follows.followedId')), 'followersGained']	
+				'followersNumber',
+				'profileImgUrl',
+				[fn('COUNT', col('followers.followedId')), 'followersGained']	
 			],
 			include:[
 				{
@@ -197,11 +189,11 @@ export class UsersService {
 							[Op.gte]: twoWeeksAgo
 						}
 					},
-					required: true
+          duplicating: false
 				}
 			],
 			group: ["User.id"],
-			order: [[literal("followersGained"), "DESC"]],
+			order: [[col("followersGained"), "DESC"]],
 			limit: 3
 		})
 	}
