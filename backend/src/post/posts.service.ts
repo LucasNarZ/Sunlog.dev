@@ -210,7 +210,15 @@ export class PostsService {
 
 		return await this.postsRepository.findAll({
 			attributes:[
-        '*'
+        'id',
+        'userId',
+        'category',
+        'tags',
+        'title',
+        'description',
+        'previewImgUrl',
+        'likesNumber',
+        'createdAt',
 				[fn('COUNT', col('likes.likedId')), 'likesGained']	
 			],
 			include:[
