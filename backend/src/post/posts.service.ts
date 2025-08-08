@@ -213,6 +213,7 @@ export class PostsService {
         'id',
         'userId',
         'category',
+        'slug',
         'tags',
         'title',
         'description',
