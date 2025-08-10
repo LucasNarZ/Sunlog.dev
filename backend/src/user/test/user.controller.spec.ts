@@ -15,7 +15,6 @@ describe('UsersController', () => {
 
 	beforeEach(async () => {
 		usersService = {
-			findUserBasic: jest.fn(),
 			findUser: jest.fn(),
 			findUserPublic: jest.fn(),
 			getPostByUser: jest.fn(),
@@ -34,21 +33,6 @@ describe('UsersController', () => {
 			.compile();
 
 		controller = module.get<UsersController>(UsersController);
-	});
-
-	describe('findUserBasicInfo', () => {
-		it('should call usersService.findUserBasic and return user basic info', async () => {
-			const userBasic = {
-				name: 'John',
-				profileImgUrl: 'img.jpg',
-				followers: 10,
-			};
-			usersService.findUserBasic!.mockResolvedValue(userBasic);
-			expect(await controller.findUserBasicInfo('d02cc816-b60b-49c9-b0a8-0acf5caebafb')).toEqual(
-				userBasic,
-			);
-			expect(usersService.findUserBasic).toHaveBeenCalledWith('d02cc816-b60b-49c9-b0a8-0acf5caebafb');
-		});
 	});
 
 	describe('findUser', () => {
