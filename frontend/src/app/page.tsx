@@ -9,7 +9,7 @@ import HeroSection from "@/components/HeroSection";
 
 const allTags = ["react", "node", "javascript", "typescript"];
 const allCategories = ["frontend", "backend", "devops", "design"];
-
+const a = 0
 const Home = async ({
   searchParams,
 }: {
