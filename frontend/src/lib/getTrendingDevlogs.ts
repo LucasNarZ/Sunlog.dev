@@ -3,7 +3,7 @@ import type { Post } from "@/types/post";
 
 export const getTrendingDevlogs = async (): Promise<Post[]> => {
   try {
-    const res = await apiClient.get("/post/trending-devlogs");
+    const res = await apiClient.get("/post/trending/trending-devlogs");
     return res.data;
   } catch (err) {
     console.error(err);

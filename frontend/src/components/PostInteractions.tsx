@@ -19,7 +19,7 @@ export default function PostInteractions({
 }) {
   const [liked, setLiked] = useLike(post.id);
   const [following, setFollowing] = useState(initialFollowing);
-  const [likesCount, setLikesCount] = useState(post.likes);
+  const [likesCount, setLikesCount] = useState(post.likesNumber);
   const [loggedUserId, setLoggedUserId] = useState(null);
 
   useEffect(() => {

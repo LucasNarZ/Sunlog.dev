@@ -96,4 +96,11 @@ export class PostsController {
 
 		return await this.postsService.getLikePost(likerId, likedId);
 	}
+
+  @Get("/trending/trending-devlogs")
+  async getTrendingDevlogs(){
+    return await this.postsService.getTrendingDevlogs();
+  }
+
 }
+

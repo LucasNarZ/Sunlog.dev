@@ -3,7 +3,6 @@ import CardPost from "./CardPost";
 
 const TrendingDevlogs = async () => {
   const devlogs = await getTrendingDevlogs();
-
   return (
     <div className="p-4 border rounded-xl shadow bg-white">
       <h2 className="text-xl font-semibold mb-4">Trending Devlogs</h2>

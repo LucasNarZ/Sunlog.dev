@@ -10,7 +10,7 @@ import { createPostDto } from 'src/post/dtos/post.dto';
 import { likesRepositoryToken, postsRepositoryToken } from 'src/constants';
 import { EditPostDto } from 'src/post/dtos/editPost.dto';
 import { Like } from './like.entity';
-import { Op } from 'sequelize';
+import { col, fn, Op } from 'sequelize';
 
 
 @Injectable()
@@ -153,7 +153,7 @@ export class PostsService {
 			throw new ConflictException('You already liked this.');
 		}
 
-		await this.postsRepository.increment('likes', {
+		await this.postsRepository.increment('likesNumber', {
 			where: {
 				id: likedId,
 			},
@@ -179,7 +179,7 @@ export class PostsService {
 			throw new ConflictException("You haven't liked this post.");
 		}
 
-		await this.postsRepository.decrement('likes', {
+		await this.postsRepository.decrement('likesNumber', {
 			where: {
 				id: likedId,
 			},
@@ -203,4 +203,42 @@ export class PostsService {
 			},
 		}));
 	}
+
+  async getTrendingDevlogs(){
+		const twoWeeksAgo = new Date()
+		twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14)
+
+		return await this.postsRepository.findAll({
+			attributes:[
+        'id',
+        'userId',
+        'category',
+        'slug',
+        'tags',
+        'title',
+        'description',
+        'previewImgUrl',
+        'likesNumber',
+        'createdAt',
+				[fn('COUNT', col('likes.likedId')), 'likesGained']	
+			],
+			include:[
+				{
+					model: Like,
+					as: 'likes',
+					attributes: [],
+					where:{
+						createdAt:{
+							[Op.gte]: twoWeeksAgo
+						}
+					},
+          duplicating: false
+				}
+			],
+			group: ["Post.id"],
+			order: [[col("likesGained"), "DESC"]],
+			limit: 3
+		})
+	}
 }
+

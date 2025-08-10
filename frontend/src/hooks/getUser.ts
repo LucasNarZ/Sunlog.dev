@@ -10,10 +10,9 @@ const useUser = (
   const [response, setResponse] = useState<User | null>(null);
   useEffect(() => {
     (async () => {
-      console.log("asdasdasd");
       if (!userId) return;
       try {
-        const response = await apiClient.get(`/user/` + userId);
+        const response = await apiClient.get(`/user/public/` + userId);
         setResponse(response.data);
       } catch (err) {
         console.log(err);

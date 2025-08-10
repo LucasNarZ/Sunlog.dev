@@ -142,7 +142,7 @@ describe('UsersService', () => {
 				message: 'Followed successfully',
 			});
 			expect(usersRepository.increment).toHaveBeenCalledWith(
-				'followers',
+				'followersNumber',
 				{ where: { id: '2' } },
 			);
 			expect(followsRepository.create).toHaveBeenCalledWith({
@@ -175,7 +175,7 @@ describe('UsersService', () => {
 				message: 'Unfollowed successfully',
 			});
 			expect(usersRepository.decrement).toHaveBeenCalledWith(
-				'followers',
+				'followersNumber',
 				{ where: { id: '2' } },
 			);
 			expect(followsRepository.destroy).toHaveBeenCalledWith({
