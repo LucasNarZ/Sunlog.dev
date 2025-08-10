@@ -153,7 +153,7 @@ export class PostsService {
 			throw new ConflictException('You already liked this.');
 		}
 
-		await this.postsRepository.increment('likes', {
+		await this.postsRepository.increment('likesNumber', {
 			where: {
 				id: likedId,
 			},
@@ -179,7 +179,7 @@ export class PostsService {
 			throw new ConflictException("You haven't liked this post.");
 		}
 
-		await this.postsRepository.decrement('likes', {
+		await this.postsRepository.decrement('likesNumber', {
 			where: {
 				id: likedId,
 			},
