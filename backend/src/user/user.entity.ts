@@ -8,7 +8,7 @@ import {
 	HasMany,
 	Unique,
 } from 'sequelize-typescript';
-import { Follow } from './follow.entity';
+import { Follow } from 'src/follow/follow.entity';
 
 @Table
 export class User extends Model {

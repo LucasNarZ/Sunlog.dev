@@ -49,7 +49,7 @@ const PublicUser = () => {
     try {
       if (following) {
         await apiClient.post(
-          "/user/unfollow",
+          "/follow/unfollowUser",
           {
             followedId: id,
           },
@@ -57,7 +57,7 @@ const PublicUser = () => {
         );
       } else {
         await apiClient.post(
-          "/user/follow",
+          "/follow/followUser",
           {
             followedId: id,
           },

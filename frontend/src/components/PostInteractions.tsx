@@ -71,13 +71,13 @@ export default function PostInteractions({
     try {
       if (following) {
         await apiClient.post(
-          "/user/unfollow",
+          "/follow/unfollowUser",
           { followedId: user.id },
           { withCredentials: true },
         );
       } else {
         await apiClient.post(
-          "/user/follow",
+          "/follow/followUser",
           { followedId: user.id },
           { withCredentials: true },
         );

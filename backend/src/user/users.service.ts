@@ -1,20 +1,17 @@
 import {
-	BadRequestException,
-	ConflictException,
 	Inject,
 	Injectable,
 	NotFoundException,
 } from '@nestjs/common';
 import {
-	followsRepositoryToken,
 	postsRepositoryToken,
 	usersRepositoryToken,
 } from 'src/constants';
 import { User } from './user.entity';
 import { createUserDto } from 'src/user/dtos/user.dto';
 import { Post } from 'src/post/post.entity';
+import { Follow } from 'src/follow/follow.entity';
 import { updateUserDto } from 'src/user/dtos/updateUser.dto';
-import { Follow } from './follow.entity';
 import { fn, col, Op } from 'sequelize'
 
 
@@ -25,8 +22,6 @@ export class UsersService {
 		private usersRepository: typeof User,
 		@Inject(postsRepositoryToken)
 		private postsRepository: typeof Post,
-		@Inject(followsRepositoryToken)
-		private followsRepository: typeof Follow,
 	) {}
 
 	private async getUserById(id: string, attributes?: string[]) {
@@ -95,76 +90,6 @@ export class UsersService {
 			},
 			returning: true,
 		});
-	}
-
-	async followUser(followerId: string, followedId: string) {
-		if (followedId === followerId) {
-			throw new BadRequestException("You can't follow yourself.");
-		}
-		const relation = await this.followsRepository.findOne({
-			where: {
-				followerId,
-				followedId,
-			},
-		});
-
-		if (relation) {
-			throw new ConflictException('You already follow this user.');
-		}
-
-		await this.usersRepository.increment('followersNumber', {
-			where: {
-				id: followedId,
-			},
-		});
-
-		await this.followsRepository.create({
-			followerId,
-			followedId,
-		});
-
-		return { message: 'Followed successfully' };
-	}
-
-	async unfollowUser(followerId: string, followedId: string) {
-		if (followedId === followerId) {
-			throw new BadRequestException("You can't unfollow yourself.");
-		}
-
-		const relation = await this.followsRepository.findOne({
-			where: {
-				followerId,
-				followedId,
-			},
-		});
-
-		if (!relation) {
-			throw new NotFoundException("You don't follow this user.");
-		}
-
-		await this.usersRepository.decrement('followersNumber', {
-			where: {
-				id: followedId,
-			},
-		});
-
-		await this.followsRepository.destroy({
-			where: {
-				followerId,
-				followedId,
-			},
-		});
-
-		return { message: 'Unfollowed successfully' };
-	}
-
-	async getFollowUser(followerId: string, followedId: string) {
-		return !!(await this.followsRepository.findOne({
-			where: {
-				followerId,
-				followedId,
-			},
-		}));
 	}
 
 	async getTrendingUsers() {

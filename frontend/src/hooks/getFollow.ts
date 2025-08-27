@@ -10,7 +10,7 @@ const useFollow = (
     (async () => {
       if (!followedId) return;
       try {
-        const response = await apiClient.get(`/user/follow/${followedId}`);
+        const response = await apiClient.get(`/follow/${followedId}`);
         setResponse(response.data);
       } catch (err) {
         setError(err);

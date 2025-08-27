@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize-typescript';
 import { Post } from '../post/post.entity';
 import { User } from 'src/user/user.entity';
-import { Follow } from 'src/user/follow.entity';
+import { Follow } from 'src/follow/follow.entity';
 import { Like } from 'src/post/like.entity';
 
 export const databaseProviders = [
@@ -17,7 +17,7 @@ export const databaseProviders = [
 				database: process.env.POSTGRES_DB,
 			});
 			sequelize.addModels([Post, User, Follow, Like]);
-			await sequelize.sync({alter: true});
+			await sequelize.sync()
 			return sequelize;
 		},
 	},

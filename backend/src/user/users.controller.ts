@@ -7,7 +7,6 @@ import {
 	UseGuards,
 	UnauthorizedException,
 	Param,
-	Post,
 	BadRequestException,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
@@ -16,7 +15,6 @@ import { Request } from 'express';
 import { updateUserDto } from 'src/user/dtos/updateUser.dto';
 import { UserNotFoundException } from 'src/exceptions/UserNotFound.exception';
 import { AuthRequest } from 'src/interfaces/authRequest.interface';
-import { FollowUserDto } from './dtos/followUser.dto';
 import { isUUID } from 'class-validator';
 
 @Controller('user')
@@ -60,37 +58,6 @@ export class UsersController {
 	async updateUser(@Req() req: AuthRequest, @Body() body: updateUserDto) {
 		const id = req?.user?.userId;
 		return await this.usersService.updateUser(id, body);
-	}
-
-	@UseGuards(AuthGuard)
-	@Post('/follow')
-	async followUser(@Req() req: AuthRequest, @Body() body: FollowUserDto) {
-		const followerId = req?.user?.userId;
-		return await this.usersService.followUser(followerId, body.followedId);
-	}
-
-	@UseGuards(AuthGuard)
-	@Post('/unfollow')
-	async unfollowUser(@Req() req: AuthRequest, @Body() body: FollowUserDto) {
-		const followerId = req?.user?.userId;
-		return await this.usersService.unfollowUser(
-			followerId,
-			body.followedId,
-		);
-	}
-
-	@UseGuards(AuthGuard)
-	@Get('/follow/:followedId')
-	async getFollowUser(
-		@Req() req: AuthRequest,
-		@Param('followedId') followedId: string,
-	) {
-		const followerId = req?.user?.userId;
-		if (!isUUID(followedId)) {
-			throw new BadRequestException('The followedId must be an uuid.');
-		}
-
-		return await this.usersService.getFollowUser(followerId, followedId);
 	}
 
 	@UseGuards(AuthGuard)

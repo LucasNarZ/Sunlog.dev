@@ -11,16 +11,22 @@ import { UsersModule } from './user/users.module';
 import { UsersService } from './user/users.service';
 import { usersProviders } from './user/users.providers';
 import { AuthModule } from './auth/auth.module';
+import { FollowController } from './follow/follow.controller';
+import { FollowService } from './follow/follow.service';
+import { followProviders } from './follow/follow.providers';
+import { FollowModule } from './follow/follow.module';
 
 @Module({
-	imports: [DatabaseModule, PostsModule, UsersModule, AuthModule],
-	controllers: [AppController, PostsController, UsersController],
+	imports: [DatabaseModule, PostsModule, UsersModule, AuthModule, FollowModule],
+	controllers: [AppController, PostsController, UsersController, FollowController],
 	providers: [
 		AppService,
 		PostsService,
 		...postsProviders,
 		UsersService,
 		...usersProviders,
+    FollowService,
+    ...followProviders
 	],
 })
 export class AppModule {}
