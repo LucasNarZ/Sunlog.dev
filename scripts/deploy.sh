@@ -5,4 +5,4 @@ git checkout -- .
 git pull --rebase origin main
 sudo docker compose down
 npm run install-all
-sudo docker compose up -d --build
+sudo BRANCH=main docker compose up -d --build
