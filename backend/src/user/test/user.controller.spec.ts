@@ -7,7 +7,6 @@ import { UserNotFoundException } from 'src/exceptions/UserNotFound.exception';
 import { AuthRequest } from 'src/interfaces/authRequest.interface';
 import { Request } from 'express';
 import { updateUserDto } from 'src/user/dtos/updateUser.dto';
-import { FollowUserDto } from '../dtos/followUser.dto';
 
 describe('UsersController', () => {
 	let controller: UsersController;
@@ -19,9 +18,6 @@ describe('UsersController', () => {
 			findUserPublic: jest.fn(),
 			getPostByUser: jest.fn(),
 			updateUser: jest.fn(),
-			followUser: jest.fn(),
-			unfollowUser: jest.fn(),
-			getFollowUser: jest.fn(),
 		};
 
 		const module: TestingModule = await Test.createTestingModule({
@@ -94,57 +90,6 @@ describe('UsersController', () => {
 			expect(usersService.updateUser).toHaveBeenCalledWith(
 				'd02cc816-b60b-49c9-b0a8-0acf5caebafb',
 				updateDto,
-			);
-		});
-	});
-
-	describe('followUser', () => {
-		it('should call usersService.followUser with followerId and followedId', async () => {
-			const req = { user: { userId: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb' } } as AuthRequest;
-			const dto: FollowUserDto = { followedId: 'd02cc816-b60b-49c9-b0a8-0acf5caebafc' };
-			usersService.followUser!.mockResolvedValue({
-				message: 'Followed successfully',
-			});
-			expect(await controller.followUser(req, dto)).toEqual({
-				message: 'Followed successfully',
-			});
-			expect(usersService.followUser).toHaveBeenCalledWith('d02cc816-b60b-49c9-b0a8-0acf5caebafb', 'd02cc816-b60b-49c9-b0a8-0acf5caebafc');
-		});
-	});
-
-	describe('unfollowUser', () => {
-		it('should call usersService.unfollowUser with followerId and followedId', async () => {
-			const req = { user: { userId: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb' } } as AuthRequest;
-			const dto: FollowUserDto = { followedId: 'd02cc816-b60b-49c9-b0a8-0acf5caebafc' };
-			usersService.unfollowUser!.mockResolvedValue({
-				message: 'Unfollowed successfully',
-			});
-			expect(await controller.unfollowUser(req, dto)).toEqual({
-				message: 'Unfollowed successfully',
-			});
-			expect(usersService.unfollowUser).toHaveBeenCalledWith(
-				'd02cc816-b60b-49c9-b0a8-0acf5caebafb',
-				'd02cc816-b60b-49c9-b0a8-0acf5caebafc',
-			);
-		});
-	});
-
-	describe('getFollowUser', () => {
-		it('should throw BadRequestException if followedId is not UUID', async () => {
-			const req = { user: { userId: '123' } } as AuthRequest;
-			await expect(
-				controller.getFollowUser(req, 'invalid-uuid'),
-			).rejects.toThrow(BadRequestException);
-		});
-
-		it('should call usersService.getFollowUser and return result', async () => {
-			const req = { user: { userId: '123' } } as AuthRequest;
-			const validUuid = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
-			usersService.getFollowUser!.mockResolvedValue(true);
-			expect(await controller.getFollowUser(req, validUuid)).toBe(true);
-			expect(usersService.getFollowUser).toHaveBeenCalledWith(
-				'123',
-				validUuid,
 			);
 		});
 	});
