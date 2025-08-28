@@ -7,9 +7,9 @@ import {
 } from '@nestjs/common';
 import { Post } from './post.entity';
 import { createPostDto } from 'src/post/dtos/post.dto';
-import { likesRepositoryToken, postsRepositoryToken } from 'src/constants';
+import { postsRepositoryToken } from 'src/constants';
 import { EditPostDto } from 'src/post/dtos/editPost.dto';
-import { Like } from './like.entity';
+import { Like } from '../like/like.entity';
 import { col, fn, Op } from 'sequelize';
 
 
@@ -18,8 +18,6 @@ export class PostsService {
 	constructor(
 		@Inject(postsRepositoryToken)
 		private postsRepository: typeof Post,
-		@Inject(likesRepositoryToken)
-		private likesRepository: typeof Like,
 	) {}
 
 	private normalizeToArray(input?: string | string[]): string[]{
@@ -139,69 +137,6 @@ export class PostsService {
 		});
 
 		return post;
-	}
-
-	async likePost(likerId: string, likedId: string) {
-		const relation = await this.likesRepository.findOne({
-			where: {
-				likerId,
-				likedId,
-			},
-		});
-
-		if (relation) {
-			throw new ConflictException('You already liked this.');
-		}
-
-		await this.postsRepository.increment('likesNumber', {
-			where: {
-				id: likedId,
-			},
-		});
-
-		await this.likesRepository.create({
-			likerId,
-			likedId,
-		});
-
-		return { message: 'Liked successfully' };
-	}
-
-	async unlikePost(likerId: string, likedId: string) {
-		const relation = await this.likesRepository.findOne({
-			where: {
-				likerId,
-				likedId,
-			},
-		});
-
-		if (!relation) {
-			throw new ConflictException("You haven't liked this post.");
-		}
-
-		await this.postsRepository.decrement('likesNumber', {
-			where: {
-				id: likedId,
-			},
-		});
-
-		await this.likesRepository.destroy({
-			where: {
-				likerId,
-				likedId,
-			},
-		});
-
-		return { message: 'Unliked successfully' };
-	}
-
-	async getLikePost(likerId: string, likedId: string) {
-		return !!(await this.likesRepository.findOne({
-			where: {
-				likerId,
-				likedId,
-			},
-		}));
 	}
 
   async getTrendingDevlogs(){

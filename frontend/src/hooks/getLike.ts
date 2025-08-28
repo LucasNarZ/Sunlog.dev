@@ -10,7 +10,7 @@ const useLike = (
     (async () => {
       if (!likedId) return;
       try {
-        const response = await apiClient.get(`/post/like/${likedId}`);
+        const response = await apiClient.get(`/like/${likedId}`);
         setResponse(response.data);
       } catch (err) {
         setError(err);

@@ -1,10 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PostsService } from '../posts.service';
-import { postsRepositoryToken, likesRepositoryToken } from 'src/constants';
+import { postsRepositoryToken } from 'src/constants';
 import {
 	UnauthorizedException,
 	NotFoundException,
-	ConflictException,
 } from '@nestjs/common';
 import { Op } from 'sequelize';
 
@@ -19,11 +18,6 @@ describe('PostsService', () => {
 		decrement: jest.Mock;
 		destroy: jest.Mock;
 	};
-	let likesRepository: {
-		findOne: jest.Mock;
-		create: jest.Mock;
-		destroy: jest.Mock;
-	};
 
 	beforeEach(async () => {
 		postsRepository = {
@@ -35,17 +29,11 @@ describe('PostsService', () => {
 			decrement: jest.fn(),
 			destroy: jest.fn()
 		};
-		likesRepository = {
-			findOne: jest.fn(),
-			create: jest.fn(),
-			destroy: jest.fn(),
-		};
 
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
 				PostsService,
 				{ provide: postsRepositoryToken, useValue: postsRepository },
-				{ provide: likesRepositoryToken, useValue: likesRepository },
 			],
 		}).compile();
 
@@ -133,58 +121,6 @@ describe('PostsService', () => {
 		});
 
 	})
-
-	describe('likePost', () => {
-		it('should throw if already liked', async () => {
-			likesRepository.findOne.mockResolvedValue({});
-			await expect(service.likePost('uid', 'pid')).rejects.toThrow(
-				ConflictException,
-			);
-		});
-
-		it('should like post and return message', async () => {
-			likesRepository.findOne.mockResolvedValue(null);
-			postsRepository.increment.mockResolvedValue(null);
-			likesRepository.create.mockResolvedValue(null);
-
-			await expect(service.likePost('uid', 'pid')).resolves.toEqual({
-				message: 'Liked successfully',
-			});
-		});
-	});
-
-	describe('unlikePost', () => {
-		it('should throw if not liked', async () => {
-			likesRepository.findOne.mockResolvedValue(null);
-			await expect(service.unlikePost('uid', 'pid')).rejects.toThrow(
-				ConflictException,
-			);
-		});
-
-		it('should unlike post and return message', async () => {
-			likesRepository.findOne.mockResolvedValue({});
-			postsRepository.decrement.mockResolvedValue(null);
-			likesRepository.destroy.mockResolvedValue(null);
-
-			await expect(service.unlikePost('uid', 'pid')).resolves.toEqual({
-				message: 'Unliked successfully',
-			});
-		});
-	});
-
-	describe('getLikePost', () => {
-		it('should return true if liked', async () => {
-			likesRepository.findOne.mockResolvedValue({});
-			await expect(service.getLikePost('uid', 'pid')).resolves.toBe(true);
-		});
-
-		it('should return false if not liked', async () => {
-			likesRepository.findOne.mockResolvedValue(null);
-			await expect(service.getLikePost('uid', 'pid')).resolves.toBe(
-				false,
-			);
-		});
-	});
 
 	describe('findPostsByTagAndCategory', () => {
 		it('should find posts by array of tags and categories', async () => {

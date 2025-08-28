@@ -4,7 +4,7 @@ import { PostsService } from '../posts.service';
 import { AuthRequest } from 'src/interfaces/authRequest.interface';
 import { createPostDto } from '../dtos/post.dto';
 import { EditPostDto } from '../dtos/editPost.dto';
-import { LikePostDto } from '../dtos/likePost.dto';
+import { LikePostDto } from '../../like/dtos/likePost.dto';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { BadRequestException } from '@nestjs/common';
@@ -23,9 +23,6 @@ describe('PostsController', () => {
 		findPost: jest.fn(),
 		findPostSlug: jest.fn(),
 		updatePost: jest.fn(),
-		likePost: jest.fn(),
-		unlikePost: jest.fn(),
-		getLikePost: jest.fn(),
 		deletePost: jest.fn()
 	};
 
@@ -113,35 +110,5 @@ describe('PostsController', () => {
 
 		mockPostsService.deletePost.mockResolvedValue({ id: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb', userId:'1'});
 		await expect(controller.deletePost(req.params.postId, req)).resolves.toEqual({ id: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb', userId:'1'});
-	});
-
-	it('should like a post', async () => {
-		const req = { user: { userId: 'u1' } } as AuthRequest;
-		const dto: LikePostDto = { likedId: 'p1' };
-		mockPostsService.likePost.mockResolvedValue({
-			message: 'Liked successfully',
-		});
-		await expect(controller.followUser(req, dto)).resolves.toEqual({
-			message: 'Liked successfully',
-		});
-	});
-
-	it('should unlike a post', async () => {
-		const req = { user: { userId: 'u1' } } as AuthRequest;
-		const dto: LikePostDto = { likedId: 'p1' };
-		mockPostsService.unlikePost.mockResolvedValue({
-			message: 'Unliked successfully',
-		});
-		await expect(controller.unlikePost(req, dto)).resolves.toEqual({
-			message: 'Unliked successfully',
-		});
-	});
-
-	it('should return true if post is liked', async () => {
-		const req = {
-			user: { userId: '584829f9-e209-4d5d-9cd5-68aca9c5498e' },
-		} as AuthRequest;
-		mockPostsService.getLikePost.mockResolvedValue(true);
-		await expect(controller.getLikePost(req, 'p1')).resolves.toBe(true);
 	});
 });

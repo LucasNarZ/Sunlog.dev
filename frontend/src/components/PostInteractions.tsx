@@ -47,14 +47,14 @@ export default function PostInteractions({
     try {
       if (liked) {
         await apiClient.post(
-          "/post/unlike",
+          "/like/unlikePost",
           { likedId: post.id },
           { withCredentials: true },
         );
         setLikesCount((c) => c - 1);
       } else {
         await apiClient.post(
-          "/post/like",
+          "/like/likePost",
           { likedId: post.id },
           { withCredentials: true },
         );
