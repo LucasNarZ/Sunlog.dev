@@ -29,10 +29,10 @@ import { LikeModule } from './like/like.module';
 		...postsProviders,
 		UsersService,
 		...usersProviders,
-    FollowService,
-    ...followProviders,
-	LikeService,
-	...likeProviders
+		FollowService,
+		...followProviders,
+		LikeService,
+		...likeProviders
 	],
 })
 export class AppModule {}
