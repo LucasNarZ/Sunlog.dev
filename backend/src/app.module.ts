@@ -15,10 +15,14 @@ import { FollowController } from './follow/follow.controller';
 import { FollowService } from './follow/follow.service';
 import { followProviders } from './follow/follow.providers';
 import { FollowModule } from './follow/follow.module';
+import { LikeService } from './like/like.service';
+import { likeProviders } from './like/like.providers';
+import { LikeController } from './like/like.controller';
+import { LikeModule } from './like/like.module';
 
 @Module({
-	imports: [DatabaseModule, PostsModule, UsersModule, AuthModule, FollowModule],
-	controllers: [AppController, PostsController, UsersController, FollowController],
+	imports: [DatabaseModule, PostsModule, UsersModule, AuthModule, FollowModule, LikeModule],
+	controllers: [AppController, PostsController, UsersController, FollowController, LikeController],
 	providers: [
 		AppService,
 		PostsService,
@@ -26,7 +30,9 @@ import { FollowModule } from './follow/follow.module';
 		UsersService,
 		...usersProviders,
     FollowService,
-    ...followProviders
+    ...followProviders,
+	LikeService,
+	...likeProviders
 	],
 })
 export class AppModule {}

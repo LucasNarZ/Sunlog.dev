@@ -9,7 +9,7 @@ import {
     HasMany,
 } from 'sequelize-typescript';
 import { User } from '../user/user.entity';
-import { Like } from './like.entity';
+import { Like } from '../like/like.entity';
 
 @Table
 export class Post extends Model {

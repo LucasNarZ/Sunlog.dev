@@ -2,7 +2,7 @@ import { Sequelize } from 'sequelize-typescript';
 import { Post } from '../post/post.entity';
 import { User } from 'src/user/user.entity';
 import { Follow } from 'src/follow/follow.entity';
-import { Like } from 'src/post/like.entity';
+import { Like } from 'src/like/like.entity';
 
 export const databaseProviders = [
 	{

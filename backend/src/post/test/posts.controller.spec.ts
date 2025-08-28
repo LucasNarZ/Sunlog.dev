@@ -4,7 +4,7 @@ import { PostsService } from '../posts.service';
 import { AuthRequest } from 'src/interfaces/authRequest.interface';
 import { createPostDto } from '../dtos/post.dto';
 import { EditPostDto } from '../dtos/editPost.dto';
-import { LikePostDto } from '../dtos/likePost.dto';
+import { LikePostDto } from '../../like/dtos/likePost.dto';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { BadRequestException } from '@nestjs/common';

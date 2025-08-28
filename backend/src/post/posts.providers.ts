@@ -1,4 +1,4 @@
-import { Like } from './like.entity';
+import { Like } from '../like/like.entity';
 import { Post } from './post.entity';
 import { likesRepositoryToken, postsRepositoryToken } from 'src/constants';
 

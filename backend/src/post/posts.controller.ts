@@ -17,7 +17,7 @@ import { Request } from 'express';
 import { EditPostDto } from 'src/post/dtos/editPost.dto';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { AuthRequest } from 'src/interfaces/authRequest.interface';
-import { LikePostDto } from './dtos/likePost.dto';
+import { LikePostDto } from '../like/dtos/likePost.dto';
 import { isUUID } from 'class-validator';
 
 @Controller('post')

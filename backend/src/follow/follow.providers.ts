@@ -10,8 +10,8 @@ export const followProviders = [
 		provide: usersRepositoryToken,
 		useValue: User,
 	},
-  {
-    provide: followsRepositoryToken,
-    useValue: Follow
-  },
+	{
+		provide: followsRepositoryToken,
+		useValue: Follow
+	},
 ];

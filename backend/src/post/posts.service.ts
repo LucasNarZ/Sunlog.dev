@@ -9,7 +9,7 @@ import { Post } from './post.entity';
 import { createPostDto } from 'src/post/dtos/post.dto';
 import { likesRepositoryToken, postsRepositoryToken } from 'src/constants';
 import { EditPostDto } from 'src/post/dtos/editPost.dto';
-import { Like } from './like.entity';
+import { Like } from '../like/like.entity';
 import { col, fn, Op } from 'sequelize';
 
 

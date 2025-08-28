@@ -5,7 +5,7 @@ import {
 	Column,
 	ForeignKey,
 } from 'sequelize-typescript';
-import { Post } from './post.entity';
+import { Post } from 'src/post/post.entity';
 import { User } from 'src/user/user.entity';
 
 @Table
