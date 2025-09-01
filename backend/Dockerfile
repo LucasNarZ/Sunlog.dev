@@ -10,4 +10,7 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ["npm", "run", "start"]
+ARG BRANCH=main
+ENV BRANCH=$BRANCH
+
+CMD if [ "$BRANCH" = "main" ]; then npm run build && npm run start:prod; else npm run start:dev; fi
