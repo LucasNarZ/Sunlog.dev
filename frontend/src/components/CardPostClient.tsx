@@ -56,6 +56,7 @@ const CardPost = ({ post, onDeleteClick }: CardPostProps) => {
               alt="profilePic"
               width={32}
               height={32}
+              style={{ width: "32px", height: "32px" }}
               unoptimized
             />
             <span className="font-medium break-words">{author?.name}</span>
