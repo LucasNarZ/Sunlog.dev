@@ -17,7 +17,6 @@ export const databaseProviders = [
 				database: process.env.POSTGRES_DB,
 			});
 			sequelize.addModels([Post, User, Follow, Like]);
-			await sequelize.sync()
 			return sequelize;
 		},
 	},
