@@ -5,11 +5,12 @@ import HeroCard from "./HeroCard";
 import useAuthor from "@/hooks/getAuthor";
 
 const HeroSection = () => {
-  const [user] = useAuthor();
+  const [user, _, loading] = useAuthor();
 
   return (
     <>
-      {user ? (
+      {loading ? <div className="max-w-5xl w-full bg-gray-100 animate-pulse rounded-xl" /> :
+        user ? (
         <div className="p-8 bg-white rounded-xl shadow max-w-5xl w-full text-center">
           <img
             src={user.profileImgUrl}

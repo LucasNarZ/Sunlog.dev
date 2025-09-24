@@ -160,7 +160,7 @@ const SignUp = () => {
             </button>
             <p className="text-sm opacity-40">
               Already have an account?{" "}
-              <Link href="/sign-iin" className="text-blue-700 cursor-pointer">
+              <Link href="/sign-in" className="text-blue-700 cursor-pointer">
                 Sign In
               </Link>
             </p>
