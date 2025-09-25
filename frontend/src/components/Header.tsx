@@ -5,13 +5,13 @@ import Image from "next/image";
 import useAuthor from "@/hooks/getAuthor";
 
 const UserButtons = () => {
-  const [ userData, _, loading ] = useAuthor(); 
+  const [ userData, error, loading ] = useAuthor(); 
 
   if(loading){
     return <div className="w-32 h-10 bg-gray-100 animate-pulse rounded-xl" />
   }
 
-  if (!userData) {
+  if (!userData || error) {
     return (
       <>
         <Link
