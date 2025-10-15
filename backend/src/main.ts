@@ -11,7 +11,7 @@ async function bootstrap() {
 	app.use(helmet());
 	app.use(cookieParser());
 	app.enableCors({
-		origin: 'http://localhost',
+		origin: ['https://sunlog.dev', 'http://localhost'],
 		credentials: true,
 	});
 	app.useGlobalPipes(new ValidationPipe());
