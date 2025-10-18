@@ -66,12 +66,20 @@ export class User extends Model {
 	@Default('')
 	@Column({
 		type: DataType.TEXT,
+    defaultValue: 0,
 		allowNull: false,
 	})
 	bio: string;
 
 	@HasMany(() => Post)
 	posts: Post[];
+
+  @Column({
+		type: DataType.BOOLEAN,
+    defaultValue: false,
+		allowNull: false,
+	})
+  isAdmin: boolean;
 
 	@Column({
 		type: DataType.DATE,
