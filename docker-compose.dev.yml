@@ -13,7 +13,7 @@ services:
       - ./frontend/src:/app/src
     ports:
       - "3001:3000"
-  api: 
+  api:
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -45,7 +45,7 @@ services:
   nginx:
     image: nginx
     volumes:
-      - ./nginx.dev.conf:/etc/nginx/nginx.conf 
+      - ./nginx.dev.conf:/etc/nginx/nginx.conf
       - /etc/letsencrypt:/etc/letsencrypt:ro
     depends_on:
       - api

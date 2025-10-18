@@ -8,12 +8,10 @@ export class AdminMiddleware implements NestMiddleware {
 		const user = req.user;
 
 		if (!user || !user.isAdmin) {
-			return res
-				.status(403)
-				.json({
-					message:
-						'Not authorized: You need admin privilegies to access this route.',
-				});
+			return res.status(403).json({
+				message:
+					'Not authorized: You need admin privilegies to access this route.',
+			});
 		}
 
 		next();
