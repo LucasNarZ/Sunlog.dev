@@ -1,12 +1,7 @@
-import {
-	Table,
-	Column,
-	Model,
-	DataType,
-} from 'sequelize-typescript';
+import { Table, Column, Model, DataType } from 'sequelize-typescript';
 
 @Table({
-  tableName: "PostStatuses"
+	tableName: 'PostStatuses',
 })
 export class PostStatus extends Model {
 	@Column({
@@ -22,5 +17,4 @@ export class PostStatus extends Model {
 		allowNull: false,
 	})
 	name: string;
-
 }

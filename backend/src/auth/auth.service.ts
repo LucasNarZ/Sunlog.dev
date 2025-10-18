@@ -49,8 +49,8 @@ export class AuthService {
 			userId: user.id,
 			username: user.name,
 			profileImageUrl: user.profileImgUrl,
-	        isAdmin: user.isAdmin
-        };
+			isAdmin: user.isAdmin,
+		};
 
 		return {
 			accessToken: await this.jwtService.signAsync(payload),

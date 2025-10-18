@@ -25,12 +25,27 @@ import { AdminService } from './admin/admin.service';
 import { adminProviders } from './admin/admin.providers';
 
 @Module({
-	imports: [DatabaseModule, AdminModule, PostsModule, UsersModule, AuthModule, FollowModule, LikeModule],
-	controllers: [AppController, AdminController, PostsController, UsersController, FollowController, LikeController],
+	imports: [
+		DatabaseModule,
+		AdminModule,
+		PostsModule,
+		UsersModule,
+		AuthModule,
+		FollowModule,
+		LikeModule,
+	],
+	controllers: [
+		AppController,
+		AdminController,
+		PostsController,
+		UsersController,
+		FollowController,
+		LikeController,
+	],
 	providers: [
 		AppService,
-        AdminService,
-        ...adminProviders,
+		AdminService,
+		...adminProviders,
 		PostsService,
 		...postsProviders,
 		UsersService,
@@ -38,7 +53,7 @@ import { adminProviders } from './admin/admin.providers';
 		FollowService,
 		...followProviders,
 		LikeService,
-		...likeProviders
+		...likeProviders,
 	],
 })
 export class AppModule {}

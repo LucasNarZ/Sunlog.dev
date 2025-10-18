@@ -1,3 +1,3 @@
 export interface AuthRequest extends Request {
-	user: { userId: string, isAdmin: boolean };
+	user: { userId: string; isAdmin: boolean };
 }

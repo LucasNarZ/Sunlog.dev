@@ -13,9 +13,6 @@ import { AdminMiddleware } from './admin.middleware';
 })
 export class AdminModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
-		consumer
-			.apply(AdminMiddleware)
-			.forRoutes('*'); 
+		consumer.apply(AdminMiddleware).forRoutes('*');
 	}
 }
-

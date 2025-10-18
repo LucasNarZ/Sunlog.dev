@@ -1,7 +1,4 @@
-import {
-	postsRepositoryToken,
-	usersRepositoryToken,
-} from 'src/constants';
+import { postsRepositoryToken, usersRepositoryToken } from 'src/constants';
 import { User } from './user.entity';
 import { Post } from 'src/post/post.entity';
 

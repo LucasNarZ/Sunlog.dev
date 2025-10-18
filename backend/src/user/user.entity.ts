@@ -56,17 +56,15 @@ export class User extends Model {
 	})
 	followersNumber: number;
 
-	@HasMany(() => Follow, { foreignKey: 'followedId', as: 'followers' }) 
+	@HasMany(() => Follow, { foreignKey: 'followedId', as: 'followers' })
 	followers: Follow[];
 
-	@HasMany(() => Follow, { foreignKey: 'followerId', as: 'followings' }) 
+	@HasMany(() => Follow, { foreignKey: 'followerId', as: 'followings' })
 	followings: Follow[];
-
 
 	@Default('')
 	@Column({
 		type: DataType.TEXT,
-    defaultValue: 0,
 		allowNull: false,
 	})
 	bio: string;
@@ -74,12 +72,12 @@ export class User extends Model {
 	@HasMany(() => Post)
 	posts: Post[];
 
-  @Column({
+	@Column({
 		type: DataType.BOOLEAN,
-    defaultValue: false,
+		defaultValue: false,
 		allowNull: false,
 	})
-  isAdmin: boolean;
+	isAdmin: boolean;
 
 	@Column({
 		type: DataType.DATE,

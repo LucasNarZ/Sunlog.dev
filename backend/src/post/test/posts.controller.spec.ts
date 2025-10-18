@@ -9,8 +9,8 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { BadRequestException } from '@nestjs/common';
 
-interface TestRequest extends AuthRequest{
-	params:{postId: string};
+interface TestRequest extends AuthRequest {
+	params: { postId: string };
 }
 
 describe('PostsController', () => {
@@ -23,7 +23,7 @@ describe('PostsController', () => {
 		findPost: jest.fn(),
 		findPostSlug: jest.fn(),
 		updatePost: jest.fn(),
-		deletePost: jest.fn()
+		deletePost: jest.fn(),
 	};
 
 	const mockJwtService = {
@@ -52,9 +52,16 @@ describe('PostsController', () => {
 
 	it('should return filtered posts by tags and categories', async () => {
 		const query = { tag: ['react'], category: 'frontend' };
-		mockPostsService.findPostsByTagAndCategory.mockResolvedValue(['filteredPost']);
-		await expect(controller.findPostsByTagAndCategory(query.tag, query.category)).resolves.toEqual(['filteredPost']);
-		expect(mockPostsService.findPostsByTagAndCategory).toHaveBeenCalledWith(query.tag, query.category);
+		mockPostsService.findPostsByTagAndCategory.mockResolvedValue([
+			'filteredPost',
+		]);
+		await expect(
+			controller.findPostsByTagAndCategory(query.tag, query.category),
+		).resolves.toEqual(['filteredPost']);
+		expect(mockPostsService.findPostsByTagAndCategory).toHaveBeenCalledWith(
+			query.tag,
+			query.category,
+		);
 	});
 
 	it('should create a post', async () => {
@@ -64,7 +71,7 @@ describe('PostsController', () => {
 			content: 'c',
 			authorId: '123',
 			tags: [],
-			category: "",
+			category: '',
 			description: '',
 			slug: '',
 			previewImgUrl: '',
@@ -101,14 +108,30 @@ describe('PostsController', () => {
 	});
 
 	it('should return 400 for post not UUID in delete route', async () => {
-		const req = { params: { postId: '1' },  user: { userId: '1' }  } as TestRequest;
-		await expect(controller.deletePost(req.params.postId, req)).rejects.toThrow(BadRequestException);
+		const req = {
+			params: { postId: '1' },
+			user: { userId: '1' },
+		} as TestRequest;
+		await expect(
+			controller.deletePost(req.params.postId, req),
+		).rejects.toThrow(BadRequestException);
 	});
 
 	it('should delete a post', async () => {
-		const req = { params: { postId: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb' },  user: { userId: '1' }  } as TestRequest;
+		const req = {
+			params: { postId: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb' },
+			user: { userId: '1' },
+		} as TestRequest;
 
-		mockPostsService.deletePost.mockResolvedValue({ id: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb', userId:'1'});
-		await expect(controller.deletePost(req.params.postId, req)).resolves.toEqual({ id: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb', userId:'1'});
+		mockPostsService.deletePost.mockResolvedValue({
+			id: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb',
+			userId: '1',
+		});
+		await expect(
+			controller.deletePost(req.params.postId, req),
+		).resolves.toEqual({
+			id: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb',
+			userId: '1',
+		});
 	});
 });

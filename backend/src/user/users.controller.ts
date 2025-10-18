@@ -37,8 +37,8 @@ export class UsersController {
 
 	@Get('public/:userId')
 	async findUserPublic(@Param('userId') userId: string) {
-		if(!isUUID(userId)){
-			throw new BadRequestException("UserId must be an UUID.");
+		if (!isUUID(userId)) {
+			throw new BadRequestException('UserId must be an UUID.');
 		}
 		return await this.usersService.findUserPublic(userId);
 	}
@@ -46,8 +46,8 @@ export class UsersController {
 	@Get(':id/posts')
 	async getUserPosts(@Req() req: Request) {
 		const { id } = req.params;
-		if(!isUUID(id)){
-			throw new BadRequestException("UserId must be an UUID.");
+		if (!isUUID(id)) {
+			throw new BadRequestException('UserId must be an UUID.');
 		}
 		const posts = await this.usersService.getPostByUser(id);
 		return posts;
@@ -61,12 +61,12 @@ export class UsersController {
 	}
 
 	@UseGuards(AuthGuard)
-	@Get("/me/id")
-	getLoggedUserId(@Req() req: AuthRequest){
+	@Get('/me/id')
+	getLoggedUserId(@Req() req: AuthRequest) {
 		return req?.user?.userId;
 	}
 
-	@Get("/trending-users")
+	@Get('/trending-users')
 	async getTrendingUsers() {
 		return await this.usersService.getTrendingUsers();
 	}
