@@ -12,14 +12,14 @@ jobs:
     services:
       docker:
         image: docker:20.10.16
-        options:  --privileged
+        options: --privileged
         ports:
           - 8080:8080
-    
+
     steps:
       - name: Check out code
         uses: actions/checkout@v2
-      
+
       - name: Set up Docker Compose
         run: |
           sudo curl -L "https://github.com/docker/compose/releases/download/$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep 'tag_name' | cut -d\" -f4)/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -28,7 +28,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
-          node-version: '23'
+          node-version: "23"
 
       - name: Install dependencies
         run: npm run install-all
@@ -40,10 +40,9 @@ jobs:
           POSTGRES_DB: ${{secrets.POSTGRES_DB}}
           SESSION_SECRET: ${{secrets.JWT_SECRET}}
           HTTP_PORT: 3000
-          NODE_ENV: "dev"
+          NODE_ENV: "development"
 
-        run: docker compose up -d --build
-      
+        run: docker compose -f docker-compose.dev.yml up -d --build
+
       - name: Run tests
         run: npm run test
-      

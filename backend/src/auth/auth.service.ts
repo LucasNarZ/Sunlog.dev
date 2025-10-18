@@ -49,6 +49,7 @@ export class AuthService {
 			userId: user.id,
 			username: user.name,
 			profileImageUrl: user.profileImgUrl,
+			isAdmin: user.isAdmin,
 		};
 
 		return {

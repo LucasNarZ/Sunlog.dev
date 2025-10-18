@@ -5,7 +5,7 @@ import type { User } from "@/types/user";
 const useAuthor = (): [User | null, unknown, boolean] => {
   const [error, setError] = useState<unknown>(null);
   const [response, setResponse] = useState<User | null>(null);
-  const [ loading, setLoading ] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
     (async () => {
       try {
@@ -16,7 +16,7 @@ const useAuthor = (): [User | null, unknown, boolean] => {
         setResponse(response.data);
         setLoading(false);
       } catch (err) {
-          setLoading(false)
+        setLoading(false);
         console.log(err);
         setError(err);
       }

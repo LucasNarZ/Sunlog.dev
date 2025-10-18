@@ -19,12 +19,33 @@ import { LikeService } from './like/like.service';
 import { likeProviders } from './like/like.providers';
 import { LikeController } from './like/like.controller';
 import { LikeModule } from './like/like.module';
+import { AdminModule } from './admin/admin.module';
+import { AdminController } from './admin/admin.controller';
+import { AdminService } from './admin/admin.service';
+import { adminProviders } from './admin/admin.providers';
 
 @Module({
-	imports: [DatabaseModule, PostsModule, UsersModule, AuthModule, FollowModule, LikeModule],
-	controllers: [AppController, PostsController, UsersController, FollowController, LikeController],
+	imports: [
+		DatabaseModule,
+		AdminModule,
+		PostsModule,
+		UsersModule,
+		AuthModule,
+		FollowModule,
+		LikeModule,
+	],
+	controllers: [
+		AppController,
+		AdminController,
+		PostsController,
+		UsersController,
+		FollowController,
+		LikeController,
+	],
 	providers: [
 		AppService,
+		AdminService,
+		...adminProviders,
 		PostsService,
 		...postsProviders,
 		UsersService,
@@ -32,7 +53,7 @@ import { LikeModule } from './like/like.module';
 		FollowService,
 		...followProviders,
 		LikeService,
-		...likeProviders
+		...likeProviders,
 	],
 })
 export class AppModule {}

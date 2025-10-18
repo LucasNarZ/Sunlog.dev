@@ -1,10 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PostsService } from '../posts.service';
 import { postsRepositoryToken } from 'src/constants';
-import {
-	UnauthorizedException,
-	NotFoundException,
-} from '@nestjs/common';
+import { UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { Op } from 'sequelize';
 
 describe('PostsService', () => {
@@ -27,7 +24,7 @@ describe('PostsService', () => {
 			update: jest.fn(),
 			increment: jest.fn(),
 			decrement: jest.fn(),
-			destroy: jest.fn()
+			destroy: jest.fn(),
 		};
 
 		const module: TestingModule = await Test.createTestingModule({
@@ -47,7 +44,7 @@ describe('PostsService', () => {
 				content: 'c',
 				authorId: '1',
 				tags: [],
-				category: "",
+				category: '',
 				previewImgUrl: '',
 				description: '',
 				slug: 'test',
@@ -105,37 +102,45 @@ describe('PostsService', () => {
 
 	describe('deletePost', () => {
 		it('should throw UnauthorizedException', async () => {
-			postsRepository.findOne.mockResolvedValue({userId:"2"});
-			await expect(service.deletePost("1", "1")).rejects.toThrow(UnauthorizedException);
+			postsRepository.findOne.mockResolvedValue({ userId: '2' });
+			await expect(service.deletePost('1', '1')).rejects.toThrow(
+				UnauthorizedException,
+			);
 		});
-	
+
 		it('should throw NotFoundException for post not found', async () => {
 			postsRepository.findOne.mockResolvedValue(null);
-			await expect(service.deletePost("1", "1")).rejects.toThrow(NotFoundException);
+			await expect(service.deletePost('1', '1')).rejects.toThrow(
+				NotFoundException,
+			);
 		});
 
 		it('should delete a post successfully', async () => {
-			postsRepository.findOne.mockResolvedValue({userId:"1"});
+			postsRepository.findOne.mockResolvedValue({ userId: '1' });
 			postsRepository.destroy.mockResolvedValue(1);
-			await expect(service.deletePost("1", "1")).resolves.toEqual({userId:"1"});
+			await expect(service.deletePost('1', '1')).resolves.toEqual({
+				userId: '1',
+			});
 		});
-
-	})
+	});
 
 	describe('findPostsByTagAndCategory', () => {
 		it('should find posts by array of tags and categories', async () => {
 			const mockPosts = ['post1', 'post2'];
 			postsRepository.findAll.mockResolvedValue(mockPosts);
 
-			const result = await service.findPostsByTagAndCategory(['react'], 'frontend');
+			const result = await service.findPostsByTagAndCategory(
+				['react'],
+				'frontend',
+			);
 
 			expect(postsRepository.findAll).toHaveBeenCalledWith({
 				where: {
 					[Op.or]: [
 						{ tags: { [Op.overlap]: ['react'] } },
-						{ category: 'frontend' }
-					]
-				}
+						{ category: 'frontend' },
+					],
+				},
 			});
 			expect(result).toEqual(mockPosts);
 		});
@@ -144,15 +149,18 @@ describe('PostsService', () => {
 			const mockPosts = ['post'];
 			postsRepository.findAll.mockResolvedValue(mockPosts);
 
-			const result = await service.findPostsByTagAndCategory('node' , 'backend');
+			const result = await service.findPostsByTagAndCategory(
+				'node',
+				'backend',
+			);
 
 			expect(postsRepository.findAll).toHaveBeenCalledWith({
 				where: {
 					[Op.or]: [
 						{ tags: { [Op.overlap]: ['node'] } },
-						{ category: 'backend' }
-					]
-				}
+						{ category: 'backend' },
+					],
+				},
 			});
 			expect(result).toEqual(mockPosts);
 		});
@@ -161,7 +169,10 @@ describe('PostsService', () => {
 			const mockPosts = ['allPosts'];
 			postsRepository.findAll.mockResolvedValue(mockPosts);
 
-			const result = await service.findPostsByTagAndCategory(undefined, undefined);
+			const result = await service.findPostsByTagAndCategory(
+				undefined,
+				undefined,
+			);
 
 			expect(postsRepository.findAll).toHaveBeenCalledWith({ where: {} });
 			expect(result).toEqual(mockPosts);
@@ -174,8 +185,8 @@ describe('PostsService', () => {
 
 			expect(postsRepository.findAll).toHaveBeenCalledWith({
 				where: {
-					[Op.or]: [{ tags: { [Op.overlap]: ['react'] } }]
-				}
+					[Op.or]: [{ tags: { [Op.overlap]: ['react'] } }],
+				},
 			});
 		});
 
@@ -186,8 +197,8 @@ describe('PostsService', () => {
 
 			expect(postsRepository.findAll).toHaveBeenCalledWith({
 				where: {
-					[Op.or]: [{ category: 'design'  }]
-				}
+					[Op.or]: [{ category: 'design' }],
+				},
 			});
 		});
 	});

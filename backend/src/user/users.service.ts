@@ -1,19 +1,11 @@
-import {
-	Inject,
-	Injectable,
-	NotFoundException,
-} from '@nestjs/common';
-import {
-	postsRepositoryToken,
-	usersRepositoryToken,
-} from 'src/constants';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { postsRepositoryToken, usersRepositoryToken } from 'src/constants';
 import { User } from './user.entity';
 import { createUserDto } from 'src/user/dtos/user.dto';
 import { Post } from 'src/post/post.entity';
 import { Follow } from 'src/follow/follow.entity';
 import { updateUserDto } from 'src/user/dtos/updateUser.dto';
-import { fn, col, Op } from 'sequelize'
-
+import { fn, col, Op } from 'sequelize';
 
 @Injectable()
 export class UsersService {
@@ -93,34 +85,33 @@ export class UsersService {
 	}
 
 	async getTrendingUsers() {
-		const twoWeeksAgo = new Date()
-		twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14)
-		
+		const twoWeeksAgo = new Date();
+		twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+
 		return await this.usersRepository.findAll({
-			attributes:[
+			attributes: [
 				'id',
 				'name',
 				'followersNumber',
 				'profileImgUrl',
-				[fn('COUNT', col('followers.followedId')), 'followersGained']	
+				[fn('COUNT', col('followers.followedId')), 'followersGained'],
 			],
-			include:[
+			include: [
 				{
 					model: Follow,
 					as: 'followers',
 					attributes: [],
-					where:{
-						createdAt:{
-							[Op.gte]: twoWeeksAgo
-						}
+					where: {
+						createdAt: {
+							[Op.gte]: twoWeeksAgo,
+						},
 					},
-          duplicating: false
-				}
+					duplicating: false,
+				},
 			],
-			group: ["User.id"],
-			order: [[col("followersGained"), "DESC"]],
-			limit: 3
-		})
+			group: ['User.id'],
+			order: [[col('followersGained'), 'DESC']],
+			limit: 3,
+		});
 	}
-
 }
