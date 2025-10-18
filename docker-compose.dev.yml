@@ -4,7 +4,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        BRANCH: ${BRANCH:-dev}
+        BRANCH: dev
     environment:
       - NODE_ENV=${NODE_ENV}
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
@@ -17,6 +17,8 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+      args:
+        BRANCH: dev
     environment:
       - PORT=3000
       - POSTGRES_USER=${POSTGRES_USER}
@@ -25,6 +27,8 @@ services:
       - JWT_SECRET=${JWT_SECRET}
     depends_on:
       - postgres
+    volumes:
+      - ./backend/src:/app/src
     ports:
       - "${HTTP_PORT}:3000"
   postgres:
@@ -48,6 +52,21 @@ services:
     ports:
       - "80:80"
       - "443:443"
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
 volumes:
   postgres:
+  pgadmin_data:
   front-end:
