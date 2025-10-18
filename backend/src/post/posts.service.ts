@@ -12,7 +12,6 @@ import { EditPostDto } from 'src/post/dtos/editPost.dto';
 import { Like } from '../like/like.entity';
 import { col, fn, Op } from 'sequelize';
 
-
 @Injectable()
 export class PostsService {
 	constructor(
@@ -20,26 +19,29 @@ export class PostsService {
 		private postsRepository: typeof Post,
 	) {}
 
-	private normalizeToArray(input?: string | string[]): string[]{
+	private normalizeToArray(input?: string | string[]): string[] {
 		if (!input) return [];
 		return Array.isArray(input) ? input : [input];
-	};
+	}
 
-	async findPostsByTagAndCategory(tag?: string | string[], category?: string): Promise<Post[]> {
+	async findPostsByTagAndCategory(
+		tag?: string | string[],
+		category?: string,
+	): Promise<Post[]> {
 		const tags = this.normalizeToArray(tag);
 		const conditions: any[] = [];
 
 		if (tags && tags.length > 0) {
 			conditions.push({
 				tags: {
-					[Op.overlap]: tags
-				}
+					[Op.overlap]: tags,
+				},
 			});
 		}
 
 		if (category) {
 			conditions.push({
-				category
+				category,
 			});
 		}
 
@@ -122,58 +124,59 @@ export class PostsService {
 	async deletePost(postId: string, userId: string) {
 		const post = await this.findPost(postId);
 
-		if(!post){
-			throw new NotFoundException("Post do not exist.");
+		if (!post) {
+			throw new NotFoundException('Post do not exist.');
 		}
 
-		if(post.userId !== userId) {
-			throw new UnauthorizedException("You have to be the author of the post to delete it.")
+		if (post.userId !== userId) {
+			throw new UnauthorizedException(
+				'You have to be the author of the post to delete it.',
+			);
 		}
 
 		await this.postsRepository.destroy({
-			where:{
-				id: postId
-			}
+			where: {
+				id: postId,
+			},
 		});
 
 		return post;
 	}
 
-  async getTrendingDevlogs(){
-		const twoWeeksAgo = new Date()
-		twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14)
+	async getTrendingDevlogs() {
+		const twoWeeksAgo = new Date();
+		twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
 
 		return await this.postsRepository.findAll({
-			attributes:[
-        'id',
-        'userId',
-        'category',
-        'slug',
-        'tags',
-        'title',
-        'description',
-        'previewImgUrl',
-        'likesNumber',
-        'createdAt',
-				[fn('COUNT', col('likes.likedId')), 'likesGained']	
+			attributes: [
+				'id',
+				'userId',
+				'category',
+				'slug',
+				'tags',
+				'title',
+				'description',
+				'previewImgUrl',
+				'likesNumber',
+				'createdAt',
+				[fn('COUNT', col('likes.likedId')), 'likesGained'],
 			],
-			include:[
+			include: [
 				{
 					model: Like,
 					as: 'likes',
 					attributes: [],
-					where:{
-						createdAt:{
-							[Op.gte]: twoWeeksAgo
-						}
+					where: {
+						createdAt: {
+							[Op.gte]: twoWeeksAgo,
+						},
 					},
-          duplicating: false
-				}
+					duplicating: false,
+				},
 			],
-			group: ["Post.id"],
-			order: [[col("likesGained"), "DESC"]],
-			limit: 3
-		})
+			group: ['Post.id'],
+			order: [[col('likesGained'), 'DESC']],
+			limit: 3,
+		});
 	}
 }
-

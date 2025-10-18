@@ -9,8 +9,9 @@ const HeroSection = () => {
 
   return (
     <>
-      {loading ? <div className="max-w-5xl w-full bg-gray-100 animate-pulse rounded-xl" /> :
-        user && !error? (
+      {loading ? (
+        <div className="max-w-5xl w-full bg-gray-100 animate-pulse rounded-xl" />
+      ) : user && !error ? (
         <div className="p-8 bg-white rounded-xl shadow max-w-5xl w-full text-center">
           <img
             src={user.profileImgUrl}

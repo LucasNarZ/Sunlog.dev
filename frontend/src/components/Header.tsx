@@ -5,10 +5,10 @@ import Image from "next/image";
 import useAuthor from "@/hooks/getAuthor";
 
 const UserButtons = () => {
-  const [ userData, error, loading ] = useAuthor(); 
+  const [userData, error, loading] = useAuthor();
 
-  if(loading){
-    return <div className="w-32 h-10 bg-gray-100 animate-pulse rounded-xl" />
+  if (loading) {
+    return <div className="w-32 h-10 bg-gray-100 animate-pulse rounded-xl" />;
   }
 
   if (!userData || error) {
@@ -43,7 +43,9 @@ const UserButtons = () => {
         alt="Profile"
         className="w-10 h-10 rounded-full object-cover border border-gray-300 shadow"
       />
-      <span className="text-sm font-semibold text-gray-700">{userData?.name}</span>
+      <span className="text-sm font-semibold text-gray-700">
+        {userData?.name}
+      </span>
     </Link>
   );
 };
@@ -68,4 +70,3 @@ const Header = () => {
 };
 
 export default Header;
-

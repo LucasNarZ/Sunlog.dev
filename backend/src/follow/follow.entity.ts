@@ -4,7 +4,7 @@ import {
 	Table,
 	Column,
 	ForeignKey,
-	BelongsTo
+	BelongsTo,
 } from 'sequelize-typescript';
 import { User } from 'src/user/user.entity';
 

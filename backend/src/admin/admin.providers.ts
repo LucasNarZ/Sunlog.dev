@@ -1,8 +1,8 @@
 import { postsRepositoryToken, usersRepositoryToken } from 'src/constants';
-import { User } from './user.entity';
+import { User } from 'src/user/user.entity';
 import { Post } from 'src/post/post.entity';
 
-export const usersProviders = [
+export const adminProviders = [
 	{
 		provide: usersRepositoryToken,
 		useValue: User,

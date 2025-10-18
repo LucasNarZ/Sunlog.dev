@@ -32,7 +32,7 @@ describe('UsersService', () => {
 			update: jest.fn(),
 			increment: jest.fn(),
 			decrement: jest.fn(),
-			findAll: jest.fn()
+			findAll: jest.fn(),
 		};
 		postsRepository = {
 			findAll: jest.fn(),
@@ -105,38 +105,36 @@ describe('UsersService', () => {
 		});
 	});
 
-	describe("getTrendingUsers", () => {
+	describe('getTrendingUsers', () => {
 		it('shoud return trendingUsers', async () => {
-			usersRepository.findAll.mockResolvedValue(
-				[
-					{
-						"id": "1",
-						"name": "lucas"
-					},
-					{
-						"id": "2",
-						"name": "lucas"
-					},
-					{
-						"id": "3",
-						"name": "lucas"
-					}
-				]
-			)
+			usersRepository.findAll.mockResolvedValue([
+				{
+					id: '1',
+					name: 'lucas',
+				},
+				{
+					id: '2',
+					name: 'lucas',
+				},
+				{
+					id: '3',
+					name: 'lucas',
+				},
+			]);
 			await expect(service.getTrendingUsers()).resolves.toStrictEqual([
-					{
-						"id": "1",
-						"name": "lucas"
-					},
-					{
-						"id": "2",
-						"name": "lucas"
-					},
-					{
-						"id": "3",
-						"name": "lucas"
-					}
-				])
-		})
-	})
+				{
+					id: '1',
+					name: 'lucas',
+				},
+				{
+					id: '2',
+					name: 'lucas',
+				},
+				{
+					id: '3',
+					name: 'lucas',
+				},
+			]);
+		});
+	});
 });
