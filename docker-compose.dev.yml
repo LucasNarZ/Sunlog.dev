@@ -1,0 +1,53 @@
+services:
+  front-end:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        BRANCH: ${BRANCH:-dev}
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+      - API_URL=${API_URL}
+    volumes:
+      - ./frontend/src:/app/src
+    ports:
+      - "3001:3000"
+  api: 
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - PORT=3000
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - postgres
+    ports:
+      - "${HTTP_PORT}:3000"
+  postgres:
+    image: postgres:16.3
+    restart: on-failure
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  nginx:
+    image: nginx
+    volumes:
+      - ./nginx.dev.conf:/etc/nginx/nginx.conf 
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    depends_on:
+      - api
+    ports:
+      - "80:80"
+      - "443:443"
+volumes:
+  postgres:
+  front-end:
