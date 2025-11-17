@@ -1,6 +1,7 @@
-import { postsRepositoryToken, usersRepositoryToken } from 'src/constants';
+import { postsRepositoryToken, postStatusesRepositryToken, usersRepositoryToken } from 'src/constants';
 import { User } from 'src/user/user.entity';
 import { Post } from 'src/post/post.entity';
+import { PostStatus } from 'src/post/postStatus.entity';
 
 export const adminProviders = [
 	{
@@ -11,4 +12,8 @@ export const adminProviders = [
 		provide: postsRepositoryToken,
 		useValue: Post,
 	},
+    {
+        provide: postStatusesRepositryToken,
+        useValue: PostStatus
+    }
 ];
