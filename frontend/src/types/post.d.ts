@@ -9,6 +9,7 @@ export interface Post {
   likesNumber: number;
   views: number;
   comments: string[];
+  statusId: string;
   slug: string;
   userId: string;
   category: string;
