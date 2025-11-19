@@ -45,7 +45,7 @@ export class PostsService {
 			});
 		}
 
-		const where = conditions.length > 0 ? { [Op.or]: conditions } : {};
+		const where = conditions.length > 0 ? { [Op.or]: conditions, statusId:"ae5f2b56-d04c-4836-a702-e39dd9413b68" } : {statusId:"ae5f2b56-d04c-4836-a702-e39dd9413b68"};
 
 		return this.postsRepository.findAll({ where });
 	}
@@ -78,6 +78,7 @@ export class PostsService {
 		return await this.postsRepository.findOne<Post>({
 			where: {
 				id: postId,
+				statusId:"ae5f2b56-d04c-4836-a702-e39dd9413b68"
 			},
 		});
 	}
