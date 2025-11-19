@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { GlobalFilter } from './filters/globalFilter.filter';
 import helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
@@ -16,6 +17,16 @@ async function bootstrap() {
 	});
 	app.useGlobalPipes(new ValidationPipe());
 	app.useGlobalFilters(new GlobalFilter());
+
+	const config = new DocumentBuilder()
+		.setTitle('Sunlog.dev API Docs')
+		.setDescription('Sunlog.dev API Docs')
+		.setVersion('1.0')
+		.addTag('sunlog.dev')
+		.build();
+	const documentFactory = () => SwaggerModule.createDocument(app, config);
+	SwaggerModule.setup('api/docs', app, documentFactory);
+
 	await app.listen(process.env.PORT ?? 3000);
 }
 
