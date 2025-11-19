@@ -104,6 +104,7 @@ export class Post extends Model {
 	})
 	tags: string[];
 
+	@Default("e65d8712-bbf5-4840-af92-881100715aec")
 	@ForeignKey(() => PostStatus)
 	@Column({
 		type: DataType.UUID,
