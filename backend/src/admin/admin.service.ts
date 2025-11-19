@@ -21,7 +21,7 @@ export class AdminService {
 
 	async getPostsByStatus(status: string) {
 		const posts = await this.postRepository.findAll({
-			include: [{ model: PostStatus, attributes: ['name'] }],
+			include: [{ model: PostStatus, attributes: ['name'], required:true }],
 			where: {
 				'$status.name$': status,
 			},
@@ -41,18 +41,17 @@ export class AdminService {
 			},
 			attributes: ['id'],
 		});
-
+		
 		if (!status) {
 			throw new NotFoundException('Post Status not found.');
 		}
-
 		const [affected] = await this.postRepository.update(
-			{ status: status.id },
+			{ statusId: status.id },
 			{ where: { id: postId } },
 		);
 
 		if (affected == 0) {
-			throw new NotFoundException('No Posts found for this status.');
+			throw new NotFoundException('Post Not Found.');
 		}
 
 		return affected;
