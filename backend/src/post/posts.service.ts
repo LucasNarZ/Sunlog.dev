@@ -11,6 +11,7 @@ import { postsRepositoryToken } from 'src/constants';
 import { EditPostDto } from 'src/post/dtos/editPost.dto';
 import { Like } from '../like/like.entity';
 import { col, fn, Op } from 'sequelize';
+import { PostStatus } from './postStatus.entity';
 
 @Injectable()
 export class PostsService {
@@ -23,7 +24,6 @@ export class PostsService {
 		if (!input) return [];
 		return Array.isArray(input) ? input : [input];
 	}
-
 	async findPostsByTagAndCategory(
 		tag?: string | string[],
 		category?: string,
@@ -45,9 +45,22 @@ export class PostsService {
 			});
 		}
 
-		const where = conditions.length > 0 ? { [Op.or]: conditions, statusId:"ae5f2b56-d04c-4836-a702-e39dd9413b68" } : {statusId:"ae5f2b56-d04c-4836-a702-e39dd9413b68"};
+		const where = conditions.length > 0 ? { [Op.or]: conditions } : {};
 
-		return this.postsRepository.findAll({ where });
+		return this.postsRepository.findAll({
+			where,
+			include: [
+				{
+					model: PostStatus,
+					as: 'status',
+					attributes: [],
+					required: true,
+					where: {
+						name: 'APPROVED',
+					},
+				},
+			],
+		});
 	}
 
 	async createPost(
@@ -78,8 +91,18 @@ export class PostsService {
 		return await this.postsRepository.findOne<Post>({
 			where: {
 				id: postId,
-				statusId:"ae5f2b56-d04c-4836-a702-e39dd9413b68"
 			},
+			include: [
+				{
+					model: PostStatus,
+					as: 'status',
+					attributes: [],
+					required: true,
+					where: {
+						name: 'APPROVED',
+					},
+				},
+			],
 		});
 	}
 
@@ -173,6 +196,15 @@ export class PostsService {
 						},
 					},
 					duplicating: false,
+				},
+				{
+					model: PostStatus,
+					as: 'status',
+					attributes: [],
+					required: true,
+					where: {
+						name: 'APPROVED',
+					},
 				},
 			],
 			group: ['Post.id'],
