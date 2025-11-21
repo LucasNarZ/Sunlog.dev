@@ -34,7 +34,7 @@
 		"dotenv": "^17.2.2",
 		"express-session": "^1.18.1",
 		"helmet": "^8.0.0",
-		"ioredis": "^5.5.0",
+		"ioredis": "^5.8.2",
 		"pg": "^8.13.1",
 		"pg-hstore": "^2.3.4",
 		"redis": "^4.7.0",
