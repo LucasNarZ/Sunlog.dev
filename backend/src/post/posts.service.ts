@@ -3,7 +3,6 @@ import {
 	Inject,
 	UnauthorizedException,
 	NotFoundException,
-	ConflictException,
 } from '@nestjs/common';
 import { Post } from './post.entity';
 import { createPostDto } from 'src/post/dtos/post.dto';

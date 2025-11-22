@@ -3,6 +3,7 @@ import { PostsService } from '../posts.service';
 import { postsRepositoryToken } from 'src/constants';
 import { UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { Op } from 'sequelize';
+import { PostStatus } from '../postStatus.entity';
 
 describe('PostsService', () => {
 	let service: PostsService;
@@ -141,6 +142,17 @@ describe('PostsService', () => {
 						{ category: 'frontend' },
 					],
 				},
+				include: [
+					{
+						model: PostStatus,
+						as: 'status',
+						attributes: [],
+						required: true,
+						where: {
+							name: 'APPROVED',
+						},
+					},
+				],
 			});
 			expect(result).toEqual(mockPosts);
 		});
@@ -161,6 +173,17 @@ describe('PostsService', () => {
 						{ category: 'backend' },
 					],
 				},
+				include: [
+					{
+						model: PostStatus,
+						as: 'status',
+						attributes: [],
+						required: true,
+						where: {
+							name: 'APPROVED',
+						},
+					},
+				],
 			});
 			expect(result).toEqual(mockPosts);
 		});
@@ -174,7 +197,20 @@ describe('PostsService', () => {
 				undefined,
 			);
 
-			expect(postsRepository.findAll).toHaveBeenCalledWith({ where: {} });
+			expect(postsRepository.findAll).toHaveBeenCalledWith({
+				where: {},
+				include: [
+					{
+						model: PostStatus,
+						as: 'status',
+						attributes: [],
+						required: true,
+						where: {
+							name: 'APPROVED',
+						},
+					},
+				],
+			});
 			expect(result).toEqual(mockPosts);
 		});
 
@@ -187,6 +223,17 @@ describe('PostsService', () => {
 				where: {
 					[Op.or]: [{ tags: { [Op.overlap]: ['react'] } }],
 				},
+				include: [
+					{
+						model: PostStatus,
+						as: 'status',
+						attributes: [],
+						required: true,
+						where: {
+							name: 'APPROVED',
+						},
+					},
+				],
 			});
 		});
 
@@ -199,6 +246,17 @@ describe('PostsService', () => {
 				where: {
 					[Op.or]: [{ category: 'design' }],
 				},
+				include: [
+					{
+						model: PostStatus,
+						as: 'status',
+						attributes: [],
+						required: true,
+						where: {
+							name: 'APPROVED',
+						},
+					},
+				],
 			});
 		});
 	});
