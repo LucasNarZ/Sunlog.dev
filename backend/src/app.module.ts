@@ -23,7 +23,7 @@ import { AdminModule } from './admin/admin.module';
 import { AdminController } from './admin/admin.controller';
 import { AdminService } from './admin/admin.service';
 import { adminProviders } from './admin/admin.providers';
-import { RedisModule } from '@nestjs-modules/ioredis';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
 	imports: [

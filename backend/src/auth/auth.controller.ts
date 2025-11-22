@@ -1,4 +1,11 @@
-import { Controller, Req, Res, UnauthorizedException } from '@nestjs/common';
+import {
+	Controller,
+	Delete,
+	Req,
+	Res,
+	UnauthorizedException,
+	UseGuards,
+} from '@nestjs/common';
 import { Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import { createUserDto } from 'src/user/dtos/user.dto';
 import { LoginDto } from 'src/user/dtos/login.dto';
@@ -7,6 +14,7 @@ import { AuthService } from './auth.service';
 import { Response } from 'express';
 import { TokenService } from './token.service';
 import { extractTokenFromCookie } from 'src/utils/jwt.util';
+import { AuthGuard } from './guards/auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -44,6 +52,35 @@ export class AuthController {
 			maxAge: 15 * 60 * 1000,
 		});
 		return data;
+	}
+
+	@UseGuards(AuthGuard)
+	@Delete('logout')
+	async logoutUser(
+		@Req() req: Request,
+		@Res({ passthrough: true }) res: Response,
+	) {
+		const token = extractTokenFromCookie(req, 'access_token');
+
+		const isProduction = process.env.NODE_ENV === 'production';
+
+		this.authService.logout(token);
+
+		res.clearCookie('refresh_token', {
+			httpOnly: true,
+			secure: isProduction,
+			sameSite: isProduction ? 'none' : 'lax',
+		});
+
+		res.clearCookie('access_token', {
+			httpOnly: true,
+			secure: isProduction,
+			sameSite: isProduction ? 'none' : 'lax',
+		});
+
+		return {
+			message: 'Logged out successfully',
+		};
 	}
 
 	@Post('refresh')

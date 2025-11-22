@@ -4,6 +4,7 @@ import { UserPayload } from '../interfaces/userPayload.interface';
 import { jwtConstants, redisToken } from 'src/constants';
 import Redis from 'ioredis';
 import * as argon2 from 'argon2';
+import { User } from 'src/user/user.entity';
 
 @Injectable()
 export class TokenService {
@@ -36,6 +37,17 @@ export class TokenService {
 		return await this.redis.get(`refreshHash:${userId}`);
 	}
 
+	async getTokenPayload(token: string) {
+		return await this.jwtService.verifyAsync(token, {
+			secret: jwtConstants.refreshSecret,
+			algorithms: ['HS256'],
+		});
+	}
+
+	async deleteRefreshToken(userId: string) {
+		return await this.redis.del(`refreshHash:${userId}`);
+	}
+
 	async generateAndStoreRefreshToken(payload: UserPayload) {
 		const refreshToken = await this.jwtService.signAsync(payload, {
 			expiresIn: '15d',
@@ -50,12 +62,7 @@ export class TokenService {
 	}
 
 	async refresh(token: string) {
-		console.log('refresh');
-		const tokenPayload = await this.jwtService.verifyAsync(token, {
-			secret: jwtConstants.refreshSecret,
-			algorithms: ['HS256'],
-		});
-
+		const tokenPayload = await this.getTokenPayload(token);
 		const hash = await this.findByUser(tokenPayload.userId);
 
 		if (!hash)

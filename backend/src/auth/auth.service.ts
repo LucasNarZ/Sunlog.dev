@@ -55,4 +55,10 @@ export class AuthService {
 				await this.tokenService.generateAndStoreRefreshToken(payload),
 		};
 	}
+
+	async logout(token: string) {
+		const payload = await this.tokenService.getTokenPayload(token);
+
+		return this.tokenService.deleteRefreshToken(payload.userId);
+	}
 }
