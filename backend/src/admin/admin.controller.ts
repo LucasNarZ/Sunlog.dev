@@ -1,12 +1,34 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import {
+	Controller,
+	Body,
+	Get,
+	Param,
+	Patch,
+	Query,
+	UseGuards,
+} from '@nestjs/common';
 import { AdminService } from './admin.service';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { UpdatePostStatusDto } from './dtos/updatePostStatus.dto';
+import { AdminGuard } from 'src/auth/guards/admin.guard';
 
 @Controller('admin')
 export class AdminController {
 	constructor(private readonly adminService: AdminService) {}
 
+	
+	@UseGuards(AuthGuard, AdminGuard)
 	@Get('posts')
 	async getPostsByStatus(@Query('status') status: string) {
 		return await this.adminService.getPostsByStatus(status);
+	}
+
+	@UseGuards(AuthGuard, AdminGuard)
+	@Patch('posts/:id')
+	async updatePostStatus(
+		@Param('id') postId: string,
+		@Body() body: UpdatePostStatusDto,
+	) {
+		return await this.adminService.updatePostStatus(postId, body.status);
 	}
 }

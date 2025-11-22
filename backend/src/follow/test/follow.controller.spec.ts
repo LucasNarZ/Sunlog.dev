@@ -79,12 +79,14 @@ describe('UsersController', () => {
 		});
 
 		it('should call usersService.getFollowUser and return result', async () => {
-			const req = { user: { userId: '123' } } as AuthRequest;
-			const validUuid = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
+			const req = {
+				user: { userId: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa' },
+			} as AuthRequest;
+			const validUuid = 'd02cc816-b60b-49c9-b0a8-0acf5caebafc';
 			followService.getFollowUser!.mockResolvedValue(true);
 			expect(await controller.getFollowUser(req, validUuid)).toBe(true);
 			expect(followService.getFollowUser).toHaveBeenCalledWith(
-				'123',
+				'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
 				validUuid,
 			);
 		});

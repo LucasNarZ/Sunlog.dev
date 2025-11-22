@@ -5,17 +5,17 @@ import { LoginDto } from 'src/user/dtos/login.dto';
 import * as argon2 from 'argon2';
 import { UniqueConstraintException } from 'src/exceptions/uniqueContraint.exception';
 import { InvalidPasswordEmailException } from 'src/exceptions/InvalidPasswordEmail.exception';
-import { JwtService } from '@nestjs/jwt';
+import { UserPayload } from '../interfaces/userPayload.interface';
+import { TokenService } from './token.service';
 
 @Injectable()
 export class AuthService {
 	constructor(
 		private usersService: UsersService,
-		private jwtService: JwtService,
+		private tokenService: TokenService,
 	) {}
 
 	async register(body: createUserDto) {
-		console.log(body.password);
 		try {
 			let data = body;
 			data = {
@@ -36,24 +36,29 @@ export class AuthService {
 		const { email, password } = body;
 		const user = await this.usersService.getUserByEmail(email);
 		if (!user) {
-			console.log('user not found');
 			throw new InvalidPasswordEmailException();
 		}
 		const passwordRight = await argon2.verify(user.password, password);
 		if (!passwordRight) {
-			console.log(password);
-			console.log('password not right');
 			throw new InvalidPasswordEmailException();
 		}
-		const payload = {
+		const payload: UserPayload = {
 			userId: user.id,
 			username: user.name,
-			profileImageUrl: user.profileImgUrl,
+			profileImgUrl: user.profileImgUrl,
 			isAdmin: user.isAdmin,
 		};
 
 		return {
-			accessToken: await this.jwtService.signAsync(payload),
+			accessToken: await this.tokenService.generateAccessToken(payload),
+			refreshToken:
+				await this.tokenService.generateAndStoreRefreshToken(payload),
 		};
+	}
+
+	async logout(token: string) {
+		const payload = await this.tokenService.getTokenPayload(token);
+
+		return this.tokenService.deleteRefreshToken(payload.userId);
 	}
 }

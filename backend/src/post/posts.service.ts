@@ -3,7 +3,6 @@ import {
 	Inject,
 	UnauthorizedException,
 	NotFoundException,
-	ConflictException,
 } from '@nestjs/common';
 import { Post } from './post.entity';
 import { createPostDto } from 'src/post/dtos/post.dto';
@@ -11,6 +10,7 @@ import { postsRepositoryToken } from 'src/constants';
 import { EditPostDto } from 'src/post/dtos/editPost.dto';
 import { Like } from '../like/like.entity';
 import { col, fn, Op } from 'sequelize';
+import { PostStatus } from './postStatus.entity';
 
 @Injectable()
 export class PostsService {
@@ -23,7 +23,6 @@ export class PostsService {
 		if (!input) return [];
 		return Array.isArray(input) ? input : [input];
 	}
-
 	async findPostsByTagAndCategory(
 		tag?: string | string[],
 		category?: string,
@@ -47,7 +46,20 @@ export class PostsService {
 
 		const where = conditions.length > 0 ? { [Op.or]: conditions } : {};
 
-		return this.postsRepository.findAll({ where });
+		return this.postsRepository.findAll({
+			where,
+			include: [
+				{
+					model: PostStatus,
+					as: 'status',
+					attributes: [],
+					required: true,
+					where: {
+						name: 'APPROVED',
+					},
+				},
+			],
+		});
 	}
 
 	async createPost(
@@ -79,6 +91,17 @@ export class PostsService {
 			where: {
 				id: postId,
 			},
+			include: [
+				{
+					model: PostStatus,
+					as: 'status',
+					attributes: [],
+					required: true,
+					where: {
+						name: 'APPROVED',
+					},
+				},
+			],
 		});
 	}
 
@@ -172,6 +195,15 @@ export class PostsService {
 						},
 					},
 					duplicating: false,
+				},
+				{
+					model: PostStatus,
+					as: 'status',
+					attributes: [],
+					required: true,
+					where: {
+						name: 'APPROVED',
+					},
 				},
 			],
 			group: ['Post.id'],
