@@ -20,13 +20,16 @@ apiClient.interceptors.response.use(
     const status = error.response?.status;
     const original = error.config;
 
+    if (original.url.includes("/auth/refresh")) {
+      return Promise.reject(error);
+    }
+
     if (status === 401 && !original._retry) {
       if (isRefreshing) {
         return new Promise((resolve) => {
           queue.push(() => resolve(apiClient(original)));
         });
       }
-
       original._retry = true;
       isRefreshing = true;
 
@@ -37,13 +40,11 @@ apiClient.interceptors.response.use(
         isRefreshing = false;
         return apiClient(original);
       } catch (err) {
-        console.log(err);
         isRefreshing = false;
         queue = [];
-        return Promise.reject(err);
+        return error;
       }
     }
-
-    return Promise.reject(error);
+    return error;
   },
 );
