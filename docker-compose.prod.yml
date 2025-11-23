@@ -20,7 +20,7 @@ services:
       dockerfile: Dockerfile
       args:
         BRANCH: ${BRANCH:-dev}
-    image: ${AWS_ECR_PREFIX}/sunlog.dev/frontend:latest
+    image: ${AWS_ECR_PREFIX}/sunlog.dev/api:latest
     environment:
       - PORT=3000
       - POSTGRES_USER=${POSTGRES_USER}
