@@ -2,9 +2,7 @@ services:
   front-end:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
-      args:
-        BRANCH: ${BRANCH:-dev}
+      dockerfile: Dockerfile.dev
     environment:
       - NODE_ENV=${NODE_ENV}
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
@@ -16,9 +14,7 @@ services:
   api:
     build:
       context: ./backend
-      dockerfile: Dockerfile
-      args:
-          BRANCH: ${BRANCH:-dev} 
+      dockerfile: Dockerfile.dev
     environment:
       - PORT=3000
       - POSTGRES_USER=${POSTGRES_USER}

@@ -3,8 +3,6 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      args:
-        BRANCH: ${BRANCH:-dev}
     image: ${AWS_ECR_PREFIX}/sunlog.dev/frontend:latest
     environment:
       - NODE_ENV=${NODE_ENV}
@@ -18,8 +16,6 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-      args:
-        BRANCH: ${BRANCH:-dev}
     image: ${AWS_ECR_PREFIX}/sunlog.dev/api:latest
     environment:
       - PORT=3000
