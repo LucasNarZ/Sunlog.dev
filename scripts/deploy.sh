@@ -1,10 +1,18 @@
 #!/bin/bash
+set -e
 
 cd ~/The-Learning-Experience
-git checkout -- .
-git pull --rebase origin main
-sudo docker compose down
+
+git fetch origin
+git reset --hard origin/main
+
+sudo docker compose -f docker-compose.prod.yml down
+
 npm run install-all
-sudo BRANCH=main docker compose -f docker-compose.prod.yml up -d --build
+
+sudo BRANCH=main docker compose -f docker-compose.prod.yml pull
+sudo BRANCH=main docker compose -f docker-compose.prod.yml up -d
+
 cd backend
 npx sequelize-cli db:migrate
+
