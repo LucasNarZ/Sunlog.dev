@@ -5,6 +5,7 @@ services:
       dockerfile: Dockerfile
       args:
         BRANCH: ${BRANCH:-dev}
+    image: ${AWS_ECR_PREFIX}/sunlog.dev/frontend:latest
     environment:
       - NODE_ENV=${NODE_ENV}
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
@@ -19,6 +20,7 @@ services:
       dockerfile: Dockerfile
       args:
         BRANCH: ${BRANCH:-dev}
+    image: ${AWS_ECR_PREFIX}/sunlog.dev/frontend:latest
     environment:
       - PORT=3000
       - POSTGRES_USER=${POSTGRES_USER}
