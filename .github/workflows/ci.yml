@@ -9,21 +9,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    services:
-      docker:
-        image: docker:20.10.16
-        options: --privileged
-        ports:
-          - 8080:8080
-
     steps:
       - name: Check out code
         uses: actions/checkout@v2
-
-      - name: Set up Docker Compose
-        run: |
-          sudo curl -L "https://github.com/docker/compose/releases/download/$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep 'tag_name' | cut -d\" -f4)/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
 
       - name: Set up Node
         uses: actions/setup-node@v3
@@ -32,17 +20,6 @@ jobs:
 
       - name: Install dependencies
         run: npm run install-all
-
-      - name: Build and Run Docker Compose
-        env:
-          POSTGRES_USER: ${{secrets.POSTGRES_USER}}
-          POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
-          POSTGRES_DB: ${{secrets.POSTGRES_DB}}
-          SESSION_SECRET: ${{secrets.JWT_SECRET}}
-          HTTP_PORT: 3000
-          NODE_ENV: "development"
-
-        run: docker compose -f docker-compose.dev.yml up -d --build
 
       - name: Run tests
         run: npm run test
