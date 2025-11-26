@@ -95,10 +95,13 @@ describe('PostsController', () => {
 
 	it('should update a post', async () => {
 		const req = { user: { userId: '1' } } as AuthRequest;
-		const dto: EditPostDto = {
+		const dto = {
 			title: 'new',
 			description: 'desc',
 			content: 'content',
+			category: 'asdasd',
+			slug: 'asdasd',
+			authorId: 'asdad',
 		};
 		mockPostsService.updatePost.mockResolvedValue({ id: '1', ...dto });
 		await expect(controller.updatePost('1', req, dto)).resolves.toEqual({
