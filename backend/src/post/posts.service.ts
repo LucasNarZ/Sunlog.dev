@@ -119,10 +119,10 @@ export class PostsService {
 		return post;
 	}
 
-	async updatePost(postId: string, userId: string, data: EditPostDto) {
+	async updatePost(postId: string, userId: string, data: createPostDto) {
 		const post = await this.postsRepository.findOne({
 			where: {
-				postId,
+				id: postId,
 			},
 		});
 
