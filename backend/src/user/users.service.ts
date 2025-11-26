@@ -68,6 +68,7 @@ export class UsersService {
 			where: {
 				userId: id,
 			},
+			order: [['createdAt', 'ASC']],
 		});
 		if (posts.length == 0) {
 			throw new NotFoundException("User doesn't have posts");
