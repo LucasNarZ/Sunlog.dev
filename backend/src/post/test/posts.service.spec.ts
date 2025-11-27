@@ -75,6 +75,9 @@ describe('PostsService', () => {
 			title: 'New Title',
 			description: 'New Description',
 			content: 'New Content',
+            category: "",
+            slug: "asdasds",
+            authorId: "hiuh"
 		};
 
 		it('should throw if post not found', async () => {

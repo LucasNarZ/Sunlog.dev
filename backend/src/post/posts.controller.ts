@@ -10,6 +10,7 @@ import {
 	BadRequestException,
 	Query,
 	Delete,
+	Put,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { createPostDto } from 'src/post/dtos/post.dto';
@@ -51,12 +52,13 @@ export class PostsController {
 	}
 
 	@UseGuards(AuthGuard)
-	@Patch(':postId')
+	@Put(':postId')
 	async updatePost(
 		@Param('postId') postId: string,
 		@Req() req: AuthRequest,
-		@Body() body: EditPostDto,
+		@Body() body: createPostDto,
 	) {
+		console.log('post:', body);
 		const { userId } = req.user;
 		return await this.postsService.updatePost(postId, userId, body);
 	}
