@@ -24,6 +24,10 @@ import { AdminController } from './admin/admin.controller';
 import { AdminService } from './admin/admin.service';
 import { adminProviders } from './admin/admin.providers';
 import { RedisModule } from './redis/redis.module';
+import { CommentService } from './comment/comment.service';
+import { commentProviders } from './comment/comment.providers';
+import { CommentController } from './comment/comment.controller';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
 	imports: [
@@ -35,6 +39,7 @@ import { RedisModule } from './redis/redis.module';
 		AuthModule,
 		FollowModule,
 		LikeModule,
+		CommentModule,
 	],
 	controllers: [
 		AppController,
@@ -43,6 +48,7 @@ import { RedisModule } from './redis/redis.module';
 		UsersController,
 		FollowController,
 		LikeController,
+		CommentController,
 	],
 	providers: [
 		AppService,
@@ -56,6 +62,8 @@ import { RedisModule } from './redis/redis.module';
 		...followProviders,
 		LikeService,
 		...likeProviders,
+		CommentService,
+		...commentProviders,
 	],
 })
 export class AppModule {}
