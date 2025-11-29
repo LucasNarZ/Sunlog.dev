@@ -4,6 +4,7 @@ import { User } from 'src/user/user.entity';
 import { Follow } from 'src/follow/follow.entity';
 import { Like } from 'src/like/like.entity';
 import { PostStatus } from 'src/post/postStatus.entity';
+import { Comment } from 'src/comment/comment.entity';
 
 export const databaseProviders = [
 	{
@@ -17,7 +18,14 @@ export const databaseProviders = [
 				password: process.env.POSTGRES_PASSWORD,
 				database: process.env.POSTGRES_DB,
 			});
-			sequelize.addModels([Post, User, Follow, Like, PostStatus]);
+			sequelize.addModels([
+				Post,
+				User,
+				Follow,
+				Like,
+				PostStatus,
+				Comment,
+			]);
 			return sequelize;
 		},
 	},
