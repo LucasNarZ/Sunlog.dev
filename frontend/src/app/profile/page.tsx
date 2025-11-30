@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import Header from "@components/Header";
 import useAuthor from "@hooks/getAuthor";
 import usePostsByAuthor from "@hooks/getUserPosts";
-import CardPostClient from "@components/CardPostClient";
+import CardPostClient from "@/features/devlogs/components/CardPostClient";
 import { apiClient } from "@lib/apiClient";
 import { Post } from "@/types/post";
 

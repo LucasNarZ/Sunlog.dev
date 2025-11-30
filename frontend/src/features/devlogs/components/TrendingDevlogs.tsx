@@ -1,5 +1,5 @@
 import { getTrendingDevlogs } from "@/lib/getTrendingDevlogs";
-import CardPost from "./CardPost";
+import CardPost from "@/features/devlogs/components/CardPost";
 
 const TrendingDevlogs = async () => {
   const devlogs = await getTrendingDevlogs();

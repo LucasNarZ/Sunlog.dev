@@ -7,9 +7,9 @@ import Image from "next/image";
 import { getAuthor } from "@/lib/fetchAuthorPost";
 import { getPost } from "@/lib/getPost";
 import { getFollow } from "@/lib/getFollow";
-import PostInteractions from "@/components/PostInteractions";
+import PostInteractions from "@/features/devlogs/components/PostInteractions";
 import { Metadata } from "next";
-import CommentsSection from "@/components/commentSection";
+import CommentsSection from "@/features/devlogs/components/commentSection";
 
 export async function generateMetadata({
     params,

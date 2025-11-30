@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import Header from "@components/Header";
 import useUser from "@hooks/getUser";
 import usePostsByAuthor from "@hooks/getUserPosts";
-import CardPostClient from "@components/CardPostClient";
+import CardPostClient from "@/features/devlogs/components/CardPostClient";
 import useFollow from "@hooks/getFollow";
 import { apiClient } from "@lib/apiClient";
 import { AxiosError } from "axios";

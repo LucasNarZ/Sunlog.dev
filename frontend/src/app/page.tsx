@@ -1,8 +1,8 @@
 import Header from "@components/Header";
-import CardPost from "@components/CardPost";
-import TrendingUsers from "@components/TrendingUsers";
-import TrendingDevlogs from "@components/TrendingDevlogs";
-import FilterSection from "@/components/FilterSection";
+import CardPost from "@/features/devlogs/components/CardPost";
+import TrendingUsers from "@/features/users/components/TrendingUsers";
+import TrendingDevlogs from "@/features/devlogs/components/TrendingDevlogs";
+import FilterSection from "@/features/devlogs/components/FilterSection";
 import { fetchFilteredPosts } from "@lib/fetchPostsByTagNCategory";
 import type { Post } from "@/types/post";
 import HeroSection from "@/components/HeroSection";
