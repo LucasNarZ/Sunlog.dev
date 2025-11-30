@@ -21,7 +21,7 @@ import { AuthRequest } from 'src/interfaces/authRequest.interface';
 import { LikePostDto } from '../like/dtos/likePost.dto';
 import { isUUID } from 'class-validator';
 
-@Controller('post')
+@Controller('posts')
 export class PostsController {
 	constructor(private readonly postsService: PostsService) {}
 
@@ -40,13 +40,18 @@ export class PostsController {
 		return await this.postsService.createPost(userId, body);
 	}
 
-	@Get('/id/:id')
+	@Get('trending')
+	async getTrendingDevlogs() {
+		return await this.postsService.getTrendingDevlogs();
+	}
+
+	@Get(':postId')
 	async findPost(@Req() req: Request) {
-		const postId = req.params.id;
+		const postId = req.params.postId;
 		return await this.postsService.findPost(postId);
 	}
 
-	@Get(':slug')
+	@Get('slug/:slug')
 	async findPostSlug(@Param('slug') slug: string) {
 		return await this.postsService.findPostSlug(slug);
 	}
@@ -72,10 +77,5 @@ export class PostsController {
 		const { userId } = req.user;
 
 		return this.postsService.deletePost(postId, userId);
-	}
-
-	@Get('/trending/trending-devlogs')
-	async getTrendingDevlogs() {
-		return await this.postsService.getTrendingDevlogs();
 	}
 }
