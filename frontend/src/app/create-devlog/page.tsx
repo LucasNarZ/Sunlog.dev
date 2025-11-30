@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, memo } from "react";
 import ReactMarkdown from "react-markdown";
 import Header from "@components/Header";
 import { apiClient } from "@lib/apiClient";
@@ -10,15 +10,20 @@ import { useIsMobile } from "@/features/devlogs/hooks/useIsMobile";
 import { CreateDevlogSchema, CreateDevlogDTO } from "@/features/devlogs/schemas/createDevlog.schema";
 import useAuthor from "@/hooks/getAuthor";
 import { useRouter } from "next/navigation";
+import { useResizableWidth } from "@/features/devlogs/hooks/useResizableWidth";
+
+function parseList(value?: string) {
+  return value?.split(",").map(v => v.trim()).filter(Boolean) ?? [];
+}
+
 
 function CreatePostPage() {
     const router = useRouter()
     const [user, error] = useAuthor();
     const [step, setStep] = useState(1);
-    const [leftWidth, setLeftWidth] = useState(50);
-    const containerRef = useRef<HTMLDivElement | null>(null);
-    const isResizingRef = useRef(false);
     const isMobile = useIsMobile();
+
+    const { width: leftWidth, containerRef, startResizing } = useResizableWidth(50);
 
     const {
         register,
@@ -40,6 +45,10 @@ function CreatePostPage() {
     const watchedTitle = watch("title");
     const watchedContent = watch("content");
     const watchedPreviewImgUrl = watch("previewImgUrl") as string | undefined;
+
+    const Preview = memo(({ title, content }:{title: string, content: string}) => {
+        return <ReactMarkdown>{`# ${title}\n\n${content}`}</ReactMarkdown>;
+    });
 
     useEffect(() => {
         const generatedSlug = watchedTitle
@@ -69,14 +78,8 @@ function CreatePostPage() {
             previewImgUrl:
                 data?.previewImgUrl?.trim() === "" ? undefined : data?.previewImgUrl?.trim(),
             description: data?.description?.trim(),
-            projects: data?.projects
-                ?.split(",")
-                ?.map((p) => p.trim())
-                ?.filter((p) => p),
-            skills: data?.skills
-                ?.split(",")
-                ?.map((s) => s.trim())
-                ?.filter((s) => s),
+            projects: parseList(data?.projects),
+            skills: parseList(data?.skills),
             category: data?.category?.trim() || "General",
             content: data.content,
             authorId: user?.id,
@@ -87,27 +90,6 @@ function CreatePostPage() {
         }
     };
 
-    const handleMouseMove = (e: MouseEvent) => {
-        if (!isResizingRef.current || !containerRef.current) return;
-        const rect = containerRef.current.getBoundingClientRect();
-        const width = ((e.clientX - rect.left) / rect.width) * 100;
-        if (width > 20 && width < 80) setLeftWidth(width);
-    };
-
-    const stopResizing = () => {
-        isResizingRef.current = false;
-        document.removeEventListener("mousemove", handleMouseMove);
-        document.removeEventListener("mouseup", stopResizing);
-    };
-
-    const startResizing = () => {
-        isResizingRef.current = true;
-        document.addEventListener("mousemove", handleMouseMove);
-        document.addEventListener("mouseup", stopResizing);
-    };
-
-    useEffect(() => () => stopResizing(), []);
-
     return (
         <>
             <Header />
@@ -116,7 +98,6 @@ function CreatePostPage() {
                     {step === 1 && (
                         <div className="bg-white rounded-xl shadow-2xl max-w-5xl w-full p-10 space-y-4 flex flex-col">
                             <h1 className="text-4xl font-bold select-none text-primary mb-6">Devlog Entry Metadata</h1>
-
                             <input
                                 type="text"
                                 placeholder="Entry title"
@@ -125,7 +106,6 @@ function CreatePostPage() {
                                     }`}
                             />
                             {errors.title && <p className="text-danger text-sm">{errors.title.message}</p>}
-
                             <input
                                 type="text"
                                 placeholder="Slug"
@@ -134,7 +114,6 @@ function CreatePostPage() {
                                     }`}
                             />
                             {errors.slug && <p className="text-danger text-sm">{errors.slug.message}</p>}
-
                             <input
                                 type="text"
                                 placeholder="Preview image URL"
@@ -143,34 +122,29 @@ function CreatePostPage() {
                                     }`}
                             />
                             {errors.previewImgUrl && <p className="text-danger text-sm">{errors.previewImgUrl.message}</p>}
-
                             <input
                                 type="text"
                                 placeholder="Projects"
                                 {...register("projects")}
                                 className="p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary transition"
                             />
-
                             <input
                                 type="text"
                                 placeholder="Skills"
                                 {...register("skills")}
                                 className="p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary transition"
                             />
-
                             <input
                                 type="text"
                                 placeholder="Category"
                                 {...register("category")}
                                 className="p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary transition"
                             />
-
                             <textarea
                                 placeholder="Short description..."
                                 {...register("description")}
                                 className="p-3 border rounded-lg resize-none h-28 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary transition"
                             />
-
                             <button
                                 type="button"
                                 onClick={handleNext}
@@ -208,7 +182,7 @@ function CreatePostPage() {
                                                 onError={(e) => (e.currentTarget.style.display = "none")}
                                             />
                                         )}
-                                        <ReactMarkdown>{`# ${watchedTitle}\n\n${watchedContent}`}</ReactMarkdown>
+                                        <Preview title={watchedTitle} content={watchedContent}/>
                                     </div>
                                 </div>
                             </div>
