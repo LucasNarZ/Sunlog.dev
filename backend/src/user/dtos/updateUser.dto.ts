@@ -6,7 +6,6 @@ export class updateUserDto {
 	readonly name: string;
 
 	@IsString()
-	@IsNotEmpty()
 	readonly bio: string;
 
 	@IsString()
