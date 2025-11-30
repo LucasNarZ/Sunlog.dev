@@ -42,8 +42,6 @@ export class UsersService {
 			'profileImgUrl',
 			'bio',
 			'followersNumber',
-			'createdAt',
-			'updatedAt',
 		]);
 	}
 
