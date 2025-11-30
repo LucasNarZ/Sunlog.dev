@@ -7,7 +7,6 @@ import {
 import { Post } from './post.entity';
 import { createPostDto } from 'src/post/dtos/post.dto';
 import { postsRepositoryToken } from 'src/constants';
-import { EditPostDto } from 'src/post/dtos/editPost.dto';
 import { Like } from '../like/like.entity';
 import { col, fn, Op } from 'sequelize';
 import { PostStatus } from './postStatus.entity';
@@ -86,7 +85,7 @@ export class PostsService {
 		});
 	}
 
-	async findPost(postId: string) {
+	async findApprovedPost(postId: string) {
 		return await this.postsRepository.findOne<Post>({
 			where: {
 				id: postId,
@@ -102,6 +101,14 @@ export class PostsService {
 					},
 				},
 			],
+		});
+	}
+
+	async findPost(postId: string) {
+		return await this.postsRepository.findOne<Post>({
+			where: {
+				id: postId,
+			},
 		});
 	}
 
