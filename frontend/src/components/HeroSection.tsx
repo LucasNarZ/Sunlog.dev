@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import HeroCard from "./HeroCard";
-import useAuthor from "@/hooks/getAuthor";
+import useUserProfile from "@/features/users/hooks/useUserProfile";
 
 const HeroSection = () => {
-    const [user, error, loading] = useAuthor();
+    const [user, error, loading] = useUserProfile();
 
     return (
         <>

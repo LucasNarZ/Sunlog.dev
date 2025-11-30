@@ -1,8 +1,8 @@
-import { apiClient } from "./apiClient";
+import { apiClient } from "../../../lib/apiClient";
 
 export async function getIsUserLoggedUser() {
   try {
-    const { data } = await apiClient.get("/user/me/id", {
+    const { data } = await apiClient.get("/users/me/id", {
       withCredentials: true,
     });
     return data;

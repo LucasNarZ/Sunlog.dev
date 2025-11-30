@@ -1,4 +1,4 @@
-import { apiClient } from "./apiClient";
+import { apiClient } from "@/lib/apiClient";
 
 export async function getLike(likedId: string) {
   try {

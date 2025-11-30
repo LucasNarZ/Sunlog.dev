@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { apiClient } from "@/lib/apiClient";
-import useAuthor from "@/hooks/getAuthor";
+import useUserProfile from "@/features/users/hooks/useUserProfile";
 
 interface Comment {
     id: string;
@@ -19,15 +19,11 @@ interface Comment {
 
 interface CommentsProps {
     postId: string;
-    currentUser: {
-        name: string;
-        profileImgUrl?: string;
-    };
 }
 
 const CommentsSection = ({ postId }: CommentsProps) => {
     const [comments, setComments] = useState<Comment[]>([]);
-    const [userData] = useAuthor();
+    const [userData] = useUserProfile();
     const [newComment, setNewComment] = useState("");
     const [loading, setLoading] = useState(false);
     const [replyTo, setReplyTo] = useState<{ id: string; name: string } | null>(null);
@@ -172,7 +168,7 @@ const CommentsSection = ({ postId }: CommentsProps) => {
                     <button
                         onClick={() => handleSubmit(replyTo?.id)}
                         disabled={loading}
-                        className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-400"
+                        className="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-400"
                     >
                         {loading ? "Sending..." : "Comment"}
                     </button>

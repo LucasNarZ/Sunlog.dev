@@ -1,5 +1,6 @@
 import { useEffect, useState, Dispatch, SetStateAction } from "react";
 import { apiClient } from "@lib/apiClient";
+import { fetchFollow } from "@/features/users/services/fetchFollow";
 
 const useFollow = (
   followedId: string | undefined,
@@ -10,8 +11,8 @@ const useFollow = (
     (async () => {
       if (!followedId) return;
       try {
-        const response = await apiClient.get(`/follow/${followedId}`);
-        setResponse(response.data);
+        const data = await fetchFollow(followedId);
+        setResponse(data);
       } catch (err) {
         setError(err);
       }

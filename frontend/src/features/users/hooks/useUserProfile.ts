@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { apiClient } from "@lib/apiClient";
-import type { User } from "@/types/user";
+import type { User } from "@/features/users/types/user";
+import { fetchUserProfile } from "@/features/users/services/fetchUserProfile";
 
-const useAuthor = (): [User | null, unknown, boolean] => {
+const useUserProfile = (): [User | null, unknown, boolean] => {
   const [error, setError] = useState<unknown>(null);
   const [response, setResponse] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -10,15 +11,13 @@ const useAuthor = (): [User | null, unknown, boolean] => {
     (async () => {
       try {
         setLoading(true);
-        const response = await apiClient.get(`/user/profile`, {
-          withCredentials: true,
-        });
-        setResponse(response.data);
-        setLoading(false);
+        const data = await fetchUserProfile()
+        setResponse(data);
       } catch (err) {
-        setLoading(false);
         console.log(err);
         setError(err);
+      } finally {
+        setLoading(false)
       }
     })();
   }, []);
@@ -26,4 +25,4 @@ const useAuthor = (): [User | null, unknown, boolean] => {
   return [response, error, loading];
 };
 
-export default useAuthor;
+export default useUserProfile;

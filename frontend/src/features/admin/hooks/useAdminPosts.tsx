@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { apiClient } from "@/lib/apiClient";
-import { Post } from "@/types/post";
+import { Post } from "@/features/devlogs/types/post";
 import { useRouter } from "next/navigation";
 
 export function useAdminPosts() {

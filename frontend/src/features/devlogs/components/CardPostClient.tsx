@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { Post } from "@/types/post";
+import { Post } from "@/features/devlogs/types/post";
 import { Heart, X, Pencil } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { getAuthor } from "@/lib/fetchAuthorPost";
+import { fetchPublicUser } from "@/features/users/services/fetchPublicUser";
 
 interface CardPostProps {
     post: Post;
@@ -23,7 +23,7 @@ const CardPost = ({ post, onDeleteClick }: CardPostProps) => {
 
     useEffect(() => {
         const fetchAuthor = async () => {
-            const data = await getAuthor(post.userId);
+            const data = await fetchPublicUser(post.userId);
             setAuthor(data);
         };
         fetchAuthor();

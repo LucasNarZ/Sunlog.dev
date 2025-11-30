@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { apiClient } from "@lib/apiClient";
-import type { User } from "@/types/user";
+import type { User } from "@/features/users/types/user";
+import { fetchPublicUser } from "@/features/users/services/fetchPublicUser";
 
-const useUser = (
+const usePublicUser = (
   userId: string | undefined,
   refreshUserKey?: number,
 ): [User | null, unknown] => {
@@ -12,8 +12,8 @@ const useUser = (
     (async () => {
       if (!userId) return;
       try {
-        const response = await apiClient.get(`/user/public/` + userId);
-        setResponse(response.data);
+        const data = await fetchPublicUser(userId);
+        setResponse(data);
       } catch (err) {
         console.log(err);
         setError(err);
@@ -24,4 +24,4 @@ const useUser = (
   return [response, error];
 };
 
-export default useUser;
+export default usePublicUser;

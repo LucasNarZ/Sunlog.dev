@@ -1,6 +1,6 @@
-import { apiClient } from "./apiClient";
+import { apiClient } from "@/lib/apiClient";
 
-export async function getFollow(followerdId: string) {
+export async function fetchFollow(followerdId: string) {
   try {
     const { data } = await apiClient.get(`/follow/${followerdId}`);
     return data;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { apiClient } from "@lib/apiClient";
-import type { Post } from "@/types/post";
+import type { Post } from "@/features/devlogs/types/post";
 
 export const usePostsByTag = (tags: string[], categorys: string[]) => {
   const [posts, setPosts] = useState<Post[] | null>(null);
@@ -12,7 +12,7 @@ export const usePostsByTag = (tags: string[], categorys: string[]) => {
         const params = new URLSearchParams();
         tags.forEach((tag) => params.append("tag", tag));
         categorys.forEach((cat) => params.append("category", cat));
-        const { data } = await apiClient.get(`/post?${params}`);
+        const { data } = await apiClient.get(`/posts?${params}`);
         setPosts(data);
         setError(null);
       } catch (err) {

@@ -1,9 +1,9 @@
 import { apiClient } from "@lib/apiClient";
-import type { User } from "@/types/user";
+import type { User } from "@/features/users/types/user";
 
-export const fetchUser = async (): Promise<User | null> => {
+export const fetchUserProfile = async (): Promise<User | null> => {
   try {
-    const response = await apiClient.get("/user/profile", {
+    const response = await apiClient.get("/users/me", {
       withCredentials: true,
     });
     return response.data;

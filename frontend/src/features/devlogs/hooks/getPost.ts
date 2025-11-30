@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { apiClient } from "@lib/apiClient";
-import type { Post } from "@/types/post";
+import type { Post } from "@/features/devlogs/types/post";
 
 const usePost = (slug: string | undefined): [Post | null, unknown] => {
   const [error, setError] = useState<unknown>(null);
@@ -9,7 +9,7 @@ const usePost = (slug: string | undefined): [Post | null, unknown] => {
     (async () => {
       if (!slug) return;
       try {
-        const response = await apiClient.get(`/post/${slug}`);
+        const response = await apiClient.get(`/posts/${slug}`);
         console.log(response.data);
         setResponse(response.data);
       } catch (err) {

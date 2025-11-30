@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Post } from "@/types/post";
+import { Post } from "@/features/devlogs/types/post";
 import { apiClient } from "@lib/apiClient";
 
 const usePostsByAuthor = (
@@ -12,7 +12,7 @@ const usePostsByAuthor = (
     (async () => {
       if (!userId) return;
       try {
-        const response = await apiClient.get("/user/" + userId + "/posts");
+        const response = await apiClient.get("/users/" + userId + "/posts");
         setPosts(response.data);
       } catch (err) {
         setError(err);

@@ -3,8 +3,8 @@ import CardPost from "@/features/devlogs/components/CardPost";
 import TrendingUsers from "@/features/users/components/TrendingUsers";
 import TrendingDevlogs from "@/features/devlogs/components/TrendingDevlogs";
 import FilterSection from "@/features/devlogs/components/FilterSection";
-import { fetchFilteredPosts } from "@lib/fetchPostsByTagNCategory";
-import type { Post } from "@/types/post";
+import { fetchFilteredDevlogs } from "@/features/devlogs/services/fetchFilteredDevlogs";
+import type { Post } from "@/features/devlogs/types/post";
 import HeroSection from "@/components/HeroSection";
 
 const allTags = ["react", "node", "javascript", "typescript"];
@@ -27,7 +27,7 @@ const Home = async ({
       ? [searchParamsNew.category]
       : [];
 
-  const posts = await fetchFilteredPosts(tags, categories);
+  const posts = await fetchFilteredDevlogs(tags, categories);
 
   return (
     <div>

@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import useAuthor from "@/hooks/getAuthor";
+import useUserProfile from "@/features/users/hooks/useUserProfile";
 import { useState, useRef, useEffect } from "react";
 import { apiClient } from "@/lib/apiClient";
 
 const UserButtons = () => {
-    const [userData, error, loading] = useAuthor();
+    const [userData, error, loading] = useUserProfile();
     const [open, setOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement | null>(null);
 

@@ -3,10 +3,10 @@
 import { useRouter, useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import Header from "@components/Header";
-import useUser from "@hooks/getUser";
-import usePostsByAuthor from "@hooks/getUserPosts";
+import usePublicUser from "@/features/users/hooks/usePublicUser";
+import usePostsByAuthor from "@/features/users/hooks/usePostsByAuthor";
 import CardPostClient from "@/features/devlogs/components/CardPostClient";
-import useFollow from "@hooks/getFollow";
+import useFollow from "@/features/users/hooks/useFollow";
 import { apiClient } from "@lib/apiClient";
 import { AxiosError } from "axios";
 
@@ -20,7 +20,7 @@ const PublicUser = () => {
   const [refreshUserKey, setRefreshUserKey] = useState(0);
   const [loggedUserId, setLoggedUserId] = useState(null);
   const [error, setError] = useState<unknown>(null);
-  const [user, errorUser] = useUser(id, refreshUserKey);
+  const [user, errorUser] = usePublicUser(id, refreshUserKey);
 
   if (errorUser) {
     if (

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-// import { fetchFilteredPosts } from "@lib/fetchPostsByTagNCategory"
+// import { fetchFilteredDevlogs } from "@lib/fetchPostsByTagNCategory"
 // import { Post } from '@/types/post'
 
 // ${posts
@@ -13,7 +13,7 @@ import { NextResponse } from "next/server";
 //   .join('')}
 
 export async function GET() {
-  // const posts = await fetchFilteredPosts([], [])
+  // const posts = await fetchFilteredDevlogs([], [])
   const baseUrl = "http://satorix.duckdns.org/";
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>

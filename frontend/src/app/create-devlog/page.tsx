@@ -7,19 +7,19 @@ import { apiClient } from "@lib/apiClient";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useIsMobile } from "@/features/devlogs/hooks/useIsMobile";
-import { CreateDevlogSchema, CreateDevlogDTO } from "@/features/devlogs/schemas/createDevlog.schema";
-import useAuthor from "@/hooks/getAuthor";
+import { createDevlogSchema, CreateDevlogDTO } from "@/features/devlogs/schemas/createDevlog.schema";
+import useUserProfile from "@/features/users/hooks/useUserProfile";
 import { useRouter } from "next/navigation";
 import { useResizableWidth } from "@/features/devlogs/hooks/useResizableWidth";
 
 function parseList(value?: string) {
-  return value?.split(",").map(v => v.trim()).filter(Boolean) ?? [];
+    return value?.split(",").map(v => v.trim()).filter(Boolean) ?? [];
 }
 
 
 function CreatePostPage() {
     const router = useRouter()
-    const [user, error] = useAuthor();
+    const [user, error] = useUserProfile();
     const [step, setStep] = useState(1);
     const isMobile = useIsMobile();
 
@@ -33,7 +33,7 @@ function CreatePostPage() {
         setValue,
         formState: { errors, isSubmitting },
     } = useForm<CreateDevlogDTO>({
-        resolver: zodResolver(CreateDevlogSchema),
+        resolver: zodResolver(createDevlogSchema("")),
         mode: "onTouched",
         defaultValues: {
             title: "",
@@ -46,17 +46,17 @@ function CreatePostPage() {
     const watchedContent = watch("content");
     const watchedPreviewImgUrl = watch("previewImgUrl") as string | undefined;
 
-    const Preview = memo(({ title, content }:{title: string, content: string}) => {
+    const Preview = memo(({ title, content }: { title: string, content: string }) => {
         return <ReactMarkdown>{`# ${title}\n\n${content}`}</ReactMarkdown>;
     });
 
     useEffect(() => {
         const generatedSlug = watchedTitle
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, "");
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/(^-|-$)/g, "");
         setValue("slug", generatedSlug);
     }, [watchedTitle, setValue]);
 
@@ -84,7 +84,7 @@ function CreatePostPage() {
             content: data.content,
             authorId: user?.id,
         };
-        const response = await apiClient.post("/post", post, { withCredentials: true });
+        const response = await apiClient.post("/posts", post, { withCredentials: true });
         if ([200, 201].includes(response.status)) {
             router.push(`/devlog/${data.slug}`);
         }
@@ -182,7 +182,7 @@ function CreatePostPage() {
                                                 onError={(e) => (e.currentTarget.style.display = "none")}
                                             />
                                         )}
-                                        <Preview title={watchedTitle} content={watchedContent}/>
+                                        <Preview title={watchedTitle} content={watchedContent} />
                                     </div>
                                 </div>
                             </div>
