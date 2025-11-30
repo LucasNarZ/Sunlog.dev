@@ -18,6 +18,7 @@ export class LikeService {
 				likerId,
 				likedId,
 			},
+			attributes: ['id'],
 		});
 
 		if (relation) {
