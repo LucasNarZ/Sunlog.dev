@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { LikeService } from '../like.service';
-import { postsRepositoryToken, likesRepositoryToken } from 'src/constants';
+import { devlogEventRepositoryToken, likesRepositoryToken } from 'src/constants';
 import { ConflictException } from '@nestjs/common';
 
 describe('LikeService', () => {
 	let service: LikeService;
-	let postsRepository: {
+	let devlogEventRepository: {
 		increment: jest.Mock;
 		decrement: jest.Mock;
 	};
@@ -16,7 +16,7 @@ describe('LikeService', () => {
 	};
 
 	beforeEach(async () => {
-		postsRepository = {
+		devlogEventRepository = {
 			increment: jest.fn(),
 			decrement: jest.fn(),
 		};
@@ -29,7 +29,7 @@ describe('LikeService', () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
 				LikeService,
-				{ provide: postsRepositoryToken, useValue: postsRepository },
+				{ provide: devlogEventRepositoryToken, useValue: devlogEventRepository },
 				{ provide: likesRepositoryToken, useValue: likesRepository },
 			],
 		}).compile();
@@ -47,7 +47,7 @@ describe('LikeService', () => {
 
 		it('should like post and return message', async () => {
 			likesRepository.findOne.mockResolvedValue(null);
-			postsRepository.increment.mockResolvedValue(null);
+			devlogEventRepository.increment.mockResolvedValue(null);
 			likesRepository.create.mockResolvedValue(null);
 
 			await expect(service.likePost('uid', 'pid')).resolves.toEqual({
@@ -66,7 +66,7 @@ describe('LikeService', () => {
 
 		it('should unlike post and return message', async () => {
 			likesRepository.findOne.mockResolvedValue({});
-			postsRepository.decrement.mockResolvedValue(null);
+			devlogEventRepository.decrement.mockResolvedValue(null);
 			likesRepository.destroy.mockResolvedValue(null);
 
 			await expect(service.unlikePost('uid', 'pid')).resolves.toEqual({

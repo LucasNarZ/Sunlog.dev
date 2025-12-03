@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import {
 	usersRepositoryToken,
-	postsRepositoryToken,
+	devlogEventRepositoryToken,
 	followsRepositoryToken,
 } from 'src/constants';
 

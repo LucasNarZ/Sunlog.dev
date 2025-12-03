@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class LikePostDto {
+export class CreateProjectDto {
 	@IsString()
 	@IsNotEmpty()
-	likedId: string;
+	readonly name: string;
 }

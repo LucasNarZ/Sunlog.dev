@@ -16,7 +16,7 @@ export default function AdminPostCard({ post, onUpdateStatus }: AdminPostCardPro
     setLoading(true);
     try {
       await apiClient.patch(
-        `admin/posts/${post.id}`,
+        `admin/devlogEvents/${post.id}`,
         { status: newStatus },
         { withCredentials: true }
       );

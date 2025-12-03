@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
-import { PostsModule } from './post/posts.module';
-import { PostsController } from './post/posts.controller';
-import { PostsService } from './post/posts.service';
-import { postsProviders } from './post/posts.providers';
+import { DevlogEventsModule } from './devlog-event/devlog-event.module';
+import { DevlogEventsController } from './devlog-event/devlog-event.controller';
+import { DevlogEventsService } from './devlog-event/devlog-event.service';
+import { devlogEventsProviders } from './devlog-event/devlog-event.providers';
 import { UsersController } from './user/users.controller';
 import { UsersModule } from './user/users.module';
 import { UsersService } from './user/users.service';
@@ -28,34 +28,40 @@ import { CommentService } from './comment/comment.service';
 import { commentProviders } from './comment/comment.providers';
 import { CommentController } from './comment/comment.controller';
 import { CommentModule } from './comment/comment.module';
+import { ProjectModule } from './project/project.module';
+import { ProjectController } from './project/project.controller';
+import { ProjectService } from './project/project.service';
+import { projectProviders } from './project/project.providers';
 
 @Module({
 	imports: [
 		DatabaseModule,
 		RedisModule,
 		AdminModule,
-		PostsModule,
+		DevlogEventsModule,
 		UsersModule,
 		AuthModule,
 		FollowModule,
 		LikeModule,
 		CommentModule,
+		ProjectModule,
 	],
 	controllers: [
 		AppController,
 		AdminController,
-		PostsController,
+		DevlogEventsController,
 		UsersController,
 		FollowController,
 		LikeController,
 		CommentController,
+		ProjectController
 	],
 	providers: [
 		AppService,
 		AdminService,
 		...adminProviders,
-		PostsService,
-		...postsProviders,
+		DevlogEventsService,
+		...devlogEventsProviders,
 		UsersService,
 		...usersProviders,
 		FollowService,
@@ -64,6 +70,8 @@ import { CommentModule } from './comment/comment.module';
 		...likeProviders,
 		CommentService,
 		...commentProviders,
+		ProjectService,
+		...projectProviders
 	],
 })
 export class AppModule {}

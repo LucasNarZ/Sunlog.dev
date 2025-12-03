@@ -1,18 +1,18 @@
 import { Injectable, Inject, ConflictException } from '@nestjs/common';
-import { Post } from 'src/post/post.entity';
-import { likesRepositoryToken, postsRepositoryToken } from 'src/constants';
+import { DevlogEvent } from 'src/devlog-event/devlog-event.entity';
+import { likesRepositoryToken, devlogEventRepositoryToken } from 'src/constants';
 import { Like } from '../like/like.entity';
 
 @Injectable()
 export class LikeService {
 	constructor(
-		@Inject(postsRepositoryToken)
-		private postsRepository: typeof Post,
+		@Inject(devlogEventRepositoryToken)
+		private devlogEventRepository: typeof DevlogEvent,
 		@Inject(likesRepositoryToken)
 		private likesRepository: typeof Like,
 	) {}
 
-	async likePost(likerId: string, likedId: string) {
+	async likeDevlogEvent(likerId: string, likedId: string) {
 		const relation = await this.likesRepository.findOne({
 			where: {
 				likerId,
@@ -25,7 +25,7 @@ export class LikeService {
 			throw new ConflictException('You already liked this.');
 		}
 
-		await this.postsRepository.increment('likesNumber', {
+		await this.devlogEventRepository.increment('likesNumber', {
 			where: {
 				id: likedId,
 			},
@@ -39,7 +39,7 @@ export class LikeService {
 		return { message: 'Liked successfully' };
 	}
 
-	async unlikePost(likerId: string, likedId: string) {
+	async unlikeDevlogEvent(likerId: string, likedId: string) {
 		const relation = await this.likesRepository.findOne({
 			where: {
 				likerId,
@@ -51,7 +51,7 @@ export class LikeService {
 			throw new ConflictException("You haven't liked this post.");
 		}
 
-		await this.postsRepository.decrement('likesNumber', {
+		await this.devlogEventRepository.decrement('likesNumber', {
 			where: {
 				id: likedId,
 			},
@@ -67,7 +67,7 @@ export class LikeService {
 		return { message: 'Unliked successfully' };
 	}
 
-	async getLikePost(likerId: string, likedId: string) {
+	async getLikeDevlogEvent(likerId: string, likedId: string) {
 		return !!(await this.likesRepository.findOne({
 			where: {
 				likerId,

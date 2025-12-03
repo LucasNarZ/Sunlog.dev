@@ -109,7 +109,7 @@ function EditPostPage() {
       authorId: user?.id
     }
     try {
-      const response = await apiClient.put(`/posts/${postId}`, post, { withCredentials: true })
+      const response = await apiClient.put(`/devlogEvents/${postId}`, post, { withCredentials: true })
       if ([200, 201].includes(response.status)) router.push(`/devlog/${data.slug}`)
       else alert("Failed to update devlog. Please try again.")
     } catch {

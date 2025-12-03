@@ -1,6 +1,6 @@
 import { IsString, IsNotEmpty } from 'class-validator';
 
-export class EditPostDto {
+export class editDevlogEventDto {
 	@IsString()
 	@IsNotEmpty()
 	readonly title: string;

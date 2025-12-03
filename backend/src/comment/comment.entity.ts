@@ -6,12 +6,9 @@ import {
 	PrimaryKey,
 	ForeignKey,
 	BelongsTo,
-	CreatedAt,
-	AllowNull,
-	UpdatedAt,
 } from 'sequelize-typescript';
 import { User } from 'src/user/user.entity';
-import { Post } from 'src/post/post.entity';
+import { DevlogEvent } from 'src/devlog-event/devlog-event.entity';
 
 @Table({ tableName: 'Comments', timestamps: true })
 export class Comment extends Model {
@@ -39,15 +36,15 @@ export class Comment extends Model {
 	@BelongsTo(() => User)
 	author: User;
 
-	@ForeignKey(() => Post)
+	@ForeignKey(() => DevlogEvent)
 	@Column({
 		type: DataType.UUID,
 		allowNull: false,
 	})
 	postId: string;
 
-	@BelongsTo(() => Post)
-	post: Post;
+	@BelongsTo(() => DevlogEvent)
+	post: DevlogEvent;
 
 	@ForeignKey(() => Comment)
 	@Column({

@@ -2,16 +2,16 @@ import { Post } from "@/features/devlogs/types/post";
 import CardPostClient from '@/features/devlogs/components/CardPostClient'
 
 
-type PostsListProps = {
-    posts: Post[];
+type DevlogEventsListProps = {
+    devlogEvents: Post[];
     onDeleteClick: (post: Post) => void;
 };
 
-export const PostsList = ({ posts, onDeleteClick }: PostsListProps) => (
+export const DevlogEventsList = ({ devlogEvents, onDeleteClick }: DevlogEventsListProps) => (
     <>
-        {posts.length > 0 ? (
+        {devlogEvents.length > 0 ? (
             <div className="relative pl-6 border-l border-gray-300 space-y-10">
-                {posts.map((post, i) => (
+                {devlogEvents.map((post, i) => (
                     <div key={i} className="relative group">
                         <div className="absolute -left-3 top-1 w-3 h-3 bg-blue-600 rounded-full border-2 border-white shadow"></div>
                         <div className="mb-1 text-sm text-gray-500">

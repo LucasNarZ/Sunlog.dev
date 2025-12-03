@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { apiClient } from "@lib/apiClient";
 import type { Post } from "@/features/devlogs/types/post";
 
-export const usePostsByTag = (tags: string[], categorys: string[]) => {
-  const [posts, setPosts] = useState<Post[] | null>(null);
+export const useDevlogEventsByTag = (tags: string[], categorys: string[]) => {
+  const [devlogEvents, setDevlogEvents] = useState<Post[] | null>(null);
   const [error, setError] = useState<unknown>(null);
 
   useEffect(() => {
@@ -12,8 +12,8 @@ export const usePostsByTag = (tags: string[], categorys: string[]) => {
         const params = new URLSearchParams();
         tags.forEach((tag) => params.append("tag", tag));
         categorys.forEach((cat) => params.append("category", cat));
-        const { data } = await apiClient.get(`/posts?${params}`);
-        setPosts(data);
+        const { data } = await apiClient.get(`/devlogEvents?${params}`);
+        setDevlogEvents(data);
         setError(null);
       } catch (err) {
         setError(err);
@@ -22,5 +22,5 @@ export const usePostsByTag = (tags: string[], categorys: string[]) => {
     fetch();
   }, [tags, categorys]);
 
-  return [posts, error] as const;
+  return [devlogEvents, error] as const;
 };

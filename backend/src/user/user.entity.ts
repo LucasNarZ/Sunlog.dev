@@ -1,4 +1,4 @@
-import { Post } from 'src/post/post.entity';
+import { DevlogEvent } from 'src/devlog-event/devlog-event.entity';
 import {
 	DataType,
 	Model,
@@ -69,8 +69,8 @@ export class User extends Model {
 	})
 	bio: string;
 
-	@HasMany(() => Post)
-	posts: Post[];
+	@HasMany(() => DevlogEvent)
+	devlogs: DevlogEvent[];
 
 	@Column({
 		type: DataType.BOOLEAN,

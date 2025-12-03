@@ -88,8 +88,8 @@
 		"collectCoverageFrom": [
 			"src/user/users.controller.ts",
 			"src/user/users.service.ts",
-			"src/post/posts.controller.ts",
-			"src/post/posts.service.ts"
+			"src/post/devlogEvents.controller.ts",
+			"src/post/devlogEvents.service.ts"
 		],
 		"coverageDirectory": "../coverage",
 		"testEnvironment": "node",

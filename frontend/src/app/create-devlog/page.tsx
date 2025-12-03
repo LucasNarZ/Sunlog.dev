@@ -84,7 +84,7 @@ function CreatePostPage() {
             content: data.content,
             authorId: user?.id,
         };
-        const response = await apiClient.post("/posts", post, { withCredentials: true });
+        const response = await apiClient.post("/devlogEvents", post, { withCredentials: true });
         if ([200, 201].includes(response.status)) {
             router.push(`/devlog/${data.slug}`);
         }

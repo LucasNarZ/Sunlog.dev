@@ -2,11 +2,11 @@
 
 import Header from "@/components/Header";
 import { Post } from "@/features/devlogs/types/post";
-import usePostsByAuthor from "@/features/users/hooks/usePostsByAuthor";
+import useDevlogEventsByAuthor from "@/features/users/hooks/useDevlogEventsByAuthor";
 import useUserProfile from "@/features/users/hooks/useUserProfile";
 import { apiClient } from "@/lib/apiClient";
 import { useRouter } from "next/navigation";
-import { PostsList } from '@/features/users/components/postsList'
+import { DevlogEventsList } from '@/features/users/components/devlogEventsList'
 import { useEffect, useState } from 'react'
 import { ProfileEditor } from "@/features/users/components/profileEditor";
 import { ConfirmModal } from "@/features/users/components/confirmModal";
@@ -14,7 +14,7 @@ import { ConfirmModal } from "@/features/users/components/confirmModal";
 const Profile = () => {
     const router = useRouter();
     const [user, errorUser] = useUserProfile();
-    const [posts] = usePostsByAuthor(user?.id);
+    const [devlogEvents] = useDevlogEventsByAuthor(user?.id);
 
     const [isEditing, setIsEditing] = useState(false);
     const [editedName, setEditedName] = useState("");
@@ -63,7 +63,7 @@ const Profile = () => {
     const handleDeletePost = async () => {
         if (!postToDelete) return;
         try {
-            const res = await apiClient.delete(`/posts/${postToDelete.id}`);
+            const res = await apiClient.delete(`/devlogEvents/${postToDelete.id}`);
             if (res.status === 200) {
                 window.location.reload();
             }
@@ -115,7 +115,7 @@ const Profile = () => {
                 </div>
 
                 <h3 className="text-xl font-semibold mb-6 text-gray-800">Your Devlog Entries</h3>
-                <PostsList posts={posts || []} onDeleteClick={(p) => { setPostToDelete(p); setShowModal(true); }} />
+                <DevlogEventsList devlogEvents={devlogEvents || []} onDeleteClick={(p) => { setPostToDelete(p); setShowModal(true); }} />
             </div>
 
             {showModal && postToDelete && (

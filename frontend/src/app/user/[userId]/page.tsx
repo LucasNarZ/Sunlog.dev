@@ -4,7 +4,7 @@ import { useRouter, useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import Header from "@components/Header";
 import usePublicUser from "@/features/users/hooks/usePublicUser";
-import usePostsByAuthor from "@/features/users/hooks/usePostsByAuthor";
+import useDevlogEventsByAuthor from "@/features/users/hooks/useDevlogEventsByAuthor";
 import CardPostClient from "@/features/devlogs/components/CardPostClient";
 import useFollow from "@/features/users/hooks/useFollow";
 import { apiClient } from "@lib/apiClient";
@@ -15,7 +15,7 @@ const PublicUser = () => {
   const id = userId as string;
   const router = useRouter();
 
-  const [posts] = usePostsByAuthor(id);
+  const [devlogEvents] = useDevlogEventsByAuthor(id);
   const [following, setFollowing] = useFollow(id);
   const [refreshUserKey, setRefreshUserKey] = useState(0);
   const [loggedUserId, setLoggedUserId] = useState(null);
@@ -111,13 +111,13 @@ const PublicUser = () => {
           </div>
         </div>
         <div className="w-full">
-          {posts && posts.length > 0 ? (
+          {devlogEvents && devlogEvents.length > 0 ? (
             <>
               <h3 className="text-xl font-medium mb-4">
-                Posts by {user?.name}
+                DevlogEvents by {user?.name}
               </h3>
               <div className="grid gap-6">
-                {posts.map((post, index) => (
+                {devlogEvents.map((post, index) => (
                   <CardPostClient key={index} post={post} />
                 ))}
               </div>
@@ -125,7 +125,7 @@ const PublicUser = () => {
           ) : (
             <div className="flex flex-col items-center justify-center text-center mt-10 gap-4">
               <p className="text-lg font-medium">
-                This user hasn’t published any posts yet
+                This user hasn’t published any devlogEvents yet
               </p>
             </div>
           )}

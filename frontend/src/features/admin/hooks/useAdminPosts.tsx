@@ -3,10 +3,10 @@ import { apiClient } from "@/lib/apiClient";
 import { Post } from "@/features/devlogs/types/post";
 import { useRouter } from "next/navigation";
 
-export function useAdminPosts() {
+export function useAdminDevlogEvents() {
   const router = useRouter();
   const [status, setStatus] = useState("PENDENT");
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [devlogEvents, setDevlogEvents] = useState<Post[]>([]);
   const [loading, setLoading] = useState(false);
 
   const handleApiError = useCallback(
@@ -17,11 +17,11 @@ export function useAdminPosts() {
     [router]
   );
 
-  const fetchPosts = useCallback(async () => {
+  const fetchDevlogEvents = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await apiClient.get(`/admin/posts?status=${status}`, { withCredentials: true });
-      setPosts(res.data as Post[]);
+      const res = await apiClient.get(`/admin/devlogEvents?status=${status}`, { withCredentials: true });
+      setDevlogEvents(res.data as Post[]);
     } catch (err: any) {
       handleApiError(err);
     } finally {
@@ -30,12 +30,12 @@ export function useAdminPosts() {
   }, [status, handleApiError]);
 
   const updatePostLocally = useCallback((updatedPost: Post) => {
-    setPosts((prev) => prev.map((p) => (p.id === updatedPost.id ? updatedPost : p)));
+    setDevlogEvents((prev) => prev.map((p) => (p.id === updatedPost.id ? updatedPost : p)));
   }, []);
 
   useEffect(() => {
-    fetchPosts();
-  }, [fetchPosts]);
+    fetchDevlogEvents();
+  }, [fetchDevlogEvents]);
 
-  return { status, setStatus, posts, loading, fetchPosts, updatePostLocally };
+  return { status, setStatus, devlogEvents, loading, fetchDevlogEvents, updatePostLocally };
 }

@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PostsController } from '../posts.controller';
-import { PostsService } from '../posts.service';
+import { DevlogEventsController } from '../devlog-event.controller';
+import { DevlogEventsService } from '../devlog-event.service';
 import { AuthRequest } from 'src/interfaces/authRequest.interface';
-import { createPostDto } from '../dtos/post.dto';
-import { EditPostDto } from '../dtos/editPost.dto';
-import { LikePostDto } from '../../like/dtos/likePost.dto';
+import { createPostDto } from '../dtos/devlogEvent.dto';
+import { EditPostDto } from '../dtos/editDevlogEvent.dto';
+import { LikePostDto } from '../../like/dtos/likeDevlogEvent.dto';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { BadRequestException } from '@nestjs/common';
@@ -13,12 +13,12 @@ interface TestRequest extends AuthRequest {
 	params: { postId: string };
 }
 
-describe('PostsController', () => {
-	let controller: PostsController;
-	let service: PostsService;
+describe('DevlogEventsController', () => {
+	let controller: DevlogEventsController;
+	let service: DevlogEventsService;
 
-	const mockPostsService = {
-		findPostsByTagAndCategory: jest.fn(),
+	const mockDevlogEventsService = {
+		findDevlogEventsByTagAndCategory: jest.fn(),
 		createPost: jest.fn(),
 		findPost: jest.fn(),
 		findPostSlug: jest.fn(),
@@ -36,9 +36,9 @@ describe('PostsController', () => {
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
-			controllers: [PostsController],
+			controllers: [DevlogEventsController],
 			providers: [
-				{ provide: PostsService, useValue: mockPostsService },
+				{ provide: DevlogEventsService, useValue: mockDevlogEventsService },
 				{ provide: JwtService, useValue: mockJwtService },
 			],
 		})
@@ -46,19 +46,19 @@ describe('PostsController', () => {
 			.useValue(mockAuthGuard)
 			.compile();
 
-		controller = module.get<PostsController>(PostsController);
-		service = module.get<PostsService>(PostsService);
+		controller = module.get<DevlogEventsController>(DevlogEventsController);
+		service = module.get<DevlogEventsService>(DevlogEventsService);
 	});
 
-	it('should return filtered posts by tags and categories', async () => {
+	it('should return filtered devlogEvents by tags and categories', async () => {
 		const query = { tag: ['react'], category: 'frontend' };
-		mockPostsService.findPostsByTagAndCategory.mockResolvedValue([
+		mockDevlogEventsService.findDevlogEventsByTagAndCategory.mockResolvedValue([
 			'filteredPost',
 		]);
 		await expect(
-			controller.findPostsByTagAndCategory(query.tag, query.category),
+			controller.findDevlogEventsByTagAndCategory(query.tag, query.category),
 		).resolves.toEqual(['filteredPost']);
-		expect(mockPostsService.findPostsByTagAndCategory).toHaveBeenCalledWith(
+		expect(mockDevlogEventsService.findDevlogEventsByTagAndCategory).toHaveBeenCalledWith(
 			query.tag,
 			query.category,
 		);
@@ -76,18 +76,18 @@ describe('PostsController', () => {
 			slug: '',
 			previewImgUrl: '',
 		};
-		mockPostsService.createPost.mockResolvedValue(dto);
+		mockDevlogEventsService.createPost.mockResolvedValue(dto);
 		await expect(controller.createPost(req, dto)).resolves.toEqual(dto);
 	});
 
 	it('should return a post by id', async () => {
 		const req = { params: { id: '1' } } as any;
-		mockPostsService.findPost.mockResolvedValue({ id: '1' });
+		mockDevlogEventsService.findPost.mockResolvedValue({ id: '1' });
 		await expect(controller.findPost(req)).resolves.toEqual({ id: '1' });
 	});
 
 	it('should return post by slug', async () => {
-		mockPostsService.findPostSlug.mockResolvedValue({ slug: 'slug' });
+		mockDevlogEventsService.findPostSlug.mockResolvedValue({ slug: 'slug' });
 		await expect(controller.findPostSlug('slug')).resolves.toEqual({
 			slug: 'slug',
 		});
@@ -103,7 +103,7 @@ describe('PostsController', () => {
 			slug: 'asdasd',
 			authorId: 'asdad',
 		};
-		mockPostsService.updatePost.mockResolvedValue({ id: '1', ...dto });
+		mockDevlogEventsService.updatePost.mockResolvedValue({ id: '1', ...dto });
 		await expect(controller.updatePost('1', req, dto)).resolves.toEqual({
 			id: '1',
 			...dto,
@@ -126,7 +126,7 @@ describe('PostsController', () => {
 			user: { userId: '1' },
 		} as TestRequest;
 
-		mockPostsService.deletePost.mockResolvedValue({
+		mockDevlogEventsService.deletePost.mockResolvedValue({
 			id: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb',
 			userId: '1',
 		});

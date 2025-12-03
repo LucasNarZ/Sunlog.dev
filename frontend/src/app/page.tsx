@@ -27,7 +27,7 @@ const Home = async ({
       ? [searchParamsNew.category]
       : [];
 
-  const posts = await fetchFilteredDevlogs(tags, categories);
+  const devlogEvents = await fetchFilteredDevlogs(tags, categories);
 
   return (
     <div>
@@ -53,17 +53,17 @@ const Home = async ({
         </div>
 
         <div className="w-full max-w-6xl mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
-          {!posts ? (
+          {!devlogEvents ? (
             <div className="text-red-600 text-center col-span-full">
-              Error loading posts. Please try again later.
+              Error loading devlogEvents. Please try again later.
             </div>
-          ) : posts.length > 0 ? (
-            posts.map((post: Post, index: number) => (
+          ) : devlogEvents.length > 0 ? (
+            devlogEvents.map((post: Post, index: number) => (
               <CardPost key={index} post={post} />
             ))
           ) : (
             <div className="text-gray-600 text-center col-span-full">
-              No posts found for this filter.
+              No devlogEvents found for this filter.
             </div>
           )}
         </div>

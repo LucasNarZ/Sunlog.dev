@@ -9,7 +9,7 @@ const usePost = (slug: string | undefined): [Post | null, unknown] => {
     (async () => {
       if (!slug) return;
       try {
-        const response = await apiClient.get(`/posts/${slug}`);
+        const response = await apiClient.get(`/devlogEvents/${slug}`);
         console.log(response.data);
         setResponse(response.data);
       } catch (err) {

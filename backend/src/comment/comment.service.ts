@@ -12,7 +12,7 @@ export class CommentService {
 	) {}
 
 	async getPostComments(postId: string) {
-		const posts = await this.commentsRepository.findAll({
+		const devlogEvents = await this.commentsRepository.findAll({
 			where: {
 				postId,
 			},
@@ -27,7 +27,7 @@ export class CommentService {
 			attributes: ['id', 'content', 'commentParentId', 'createdAt'],
 		});
 
-		return posts;
+		return devlogEvents;
 	}
 
 	async createComment(

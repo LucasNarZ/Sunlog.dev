@@ -1,7 +1,6 @@
-import { postsRepositoryToken, postStatusesRepositryToken, usersRepositoryToken } from 'src/constants';
+import { devlogEventRepositoryToken, usersRepositoryToken } from 'src/constants';
 import { User } from 'src/user/user.entity';
-import { Post } from 'src/post/post.entity';
-import { PostStatus } from 'src/post/postStatus.entity';
+import { DevlogEvent } from 'src/devlog-event/devlog-event.entity';
 
 export const adminProviders = [
 	{
@@ -9,11 +8,7 @@ export const adminProviders = [
 		useValue: User,
 	},
 	{
-		provide: postsRepositoryToken,
-		useValue: Post,
-	},
-    {
-        provide: postStatusesRepositryToken,
-        useValue: PostStatus
-    }
+		provide: devlogEventRepositoryToken,
+		useValue: DevlogEvent,
+	}
 ];

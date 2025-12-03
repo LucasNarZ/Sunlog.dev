@@ -2,7 +2,6 @@ import {
 	Req,
 	Controller,
 	Get,
-	Post,
 	Body,
 	UseGuards,
 	Param,
@@ -11,30 +10,30 @@ import {
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { LikeService } from './like.service';
 import { AuthRequest } from 'src/interfaces/authRequest.interface';
-import { LikePostDto } from './dtos/likePost.dto';
+// import { LikeDevlogEventDto } from './dtos/likeDevlogEvent.dto';
 import { isUUID } from 'class-validator';
 
 @Controller('like')
 export class LikeController {
 	constructor(private readonly likeService: LikeService) {}
 
-	@UseGuards(AuthGuard)
-	@Post('/likePost')
-	async followUser(@Req() req: AuthRequest, @Body() body: LikePostDto) {
-		const likerId = req?.user?.userId;
-		return await this.likeService.likePost(likerId, body.likedId);
-	}
+	// @UseGuards(AuthGuard)
+	// @DevlogEvent('/likeDevlogEvent')
+	// async followUser(@Req() req: AuthRequest, @Body() body: LikeDevlogEventDto) {
+	// 	const likerId = req?.user?.userId;
+	// 	return await this.likeService.likeDevlogEvent(likerId, body.likedId);
+	// }
 
-	@UseGuards(AuthGuard)
-	@Post('/unlikePost')
-	async unlikePost(@Req() req: AuthRequest, @Body() body: LikePostDto) {
-		const likerId = req?.user?.userId;
-		return await this.likeService.unlikePost(likerId, body.likedId);
-	}
+	// @UseGuards(AuthGuard)
+	// @DevlogEvent('/unlikeDevlogEvent')
+	// async unlikeDevlogEvent(@Req() req: AuthRequest, @Body() body: LikeDevlogEventDto) {
+	// 	const likerId = req?.user?.userId;
+	// 	return await this.likeService.unlikeDevlogEvent(likerId, body.likedId);
+	// }
 
 	@UseGuards(AuthGuard)
 	@Get('/:likerId')
-	async getLikePost(
+	async getLikeDevlogEvent(
 		@Req() req: AuthRequest,
 		@Param('likerId') likedId: string,
 	) {
@@ -43,6 +42,6 @@ export class LikeController {
 			throw new BadRequestException('The followedId must be an uuid.');
 		}
 
-		return await this.likeService.getLikePost(likerId, likedId);
+		return await this.likeService.getLikeDevlogEvent(likerId, likedId);
 	}
 }

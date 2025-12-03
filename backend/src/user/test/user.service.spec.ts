@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import {
 	usersRepositoryToken,
-	postsRepositoryToken,
+	devlogEventRepositoryToken,
 	followsRepositoryToken,
 } from 'src/constants';
 
@@ -21,7 +21,7 @@ describe('UsersService', () => {
 		decrement: jest.Mock;
 		findAll: jest.Mock;
 	};
-	let postsRepository: {
+	let devlogEventRepository: {
 		findAll: jest.Mock;
 	};
 
@@ -34,7 +34,7 @@ describe('UsersService', () => {
 			decrement: jest.fn(),
 			findAll: jest.fn(),
 		};
-		postsRepository = {
+		devlogEventRepository = {
 			findAll: jest.fn(),
 		};
 
@@ -42,7 +42,7 @@ describe('UsersService', () => {
 			providers: [
 				UsersService,
 				{ provide: usersRepositoryToken, useValue: usersRepository },
-				{ provide: postsRepositoryToken, useValue: postsRepository },
+				{ provide: devlogEventRepositoryToken, useValue: devlogEventRepository },
 			],
 		}).compile();
 
@@ -91,14 +91,14 @@ describe('UsersService', () => {
 	});
 
 	describe('getPostByUser', () => {
-		it('should return posts if found', async () => {
-			const posts = [{ id: 'p1' }, { id: 'p2' }];
-			postsRepository.findAll.mockResolvedValue(posts);
-			await expect(service.getPostByUser('1')).resolves.toEqual(posts);
+		it('should return devlogEvents if found', async () => {
+			const devlogEvents = [{ id: 'p1' }, { id: 'p2' }];
+			devlogEventRepository.findAll.mockResolvedValue(devlogEvents);
+			await expect(service.getPostByUser('1')).resolves.toEqual(devlogEvents);
 		});
 
-		it('should throw NotFoundException if no posts found', async () => {
-			postsRepository.findAll.mockResolvedValue([]);
+		it('should throw NotFoundException if no devlogEvents found', async () => {
+			devlogEventRepository.findAll.mockResolvedValue([]);
 			await expect(service.getPostByUser('1')).rejects.toThrow(
 				NotFoundException,
 			);

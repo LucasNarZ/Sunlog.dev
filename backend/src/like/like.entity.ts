@@ -6,7 +6,7 @@ import {
 	ForeignKey,
 	CreatedAt,
 } from 'sequelize-typescript';
-import { Post } from 'src/post/post.entity';
+import { DevlogEvent } from 'src/devlog-event/devlog-event.entity';
 import { User } from 'src/user/user.entity';
 
 @Table({ timestamps: false })
@@ -26,7 +26,7 @@ export class Like extends Model {
 	})
 	likerId: string;
 
-	@ForeignKey(() => Post)
+	@ForeignKey(() => DevlogEvent)
 	@Column({
 		type: DataType.UUID,
 		allowNull: false,

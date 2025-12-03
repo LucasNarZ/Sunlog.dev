@@ -8,7 +8,7 @@ export const fetchFilteredDevlogs = async (
     const params = new URLSearchParams();
     tags.forEach((tag) => params.append("tag", tag));
     categories.forEach((cat) => params.append("category", cat));
-    const { data } = await apiClient.get(`/posts?${params.toString()}`);
+    const { data } = await apiClient.get(`/devlogEvents?${params.toString()}`);
     return data;
   } catch (err) {
     console.log(err);

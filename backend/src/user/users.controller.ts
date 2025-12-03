@@ -43,14 +43,14 @@ export class UsersController {
 		return await this.usersService.findUserPublic(userId);
 	}
 
-	@Get(':id/posts')
-	async getUserPosts(@Req() req: Request) {
+	@Get(':id/devlogEvents')
+	async getUserDevlogEvents(@Req() req: Request) {
 		const { id } = req.params;
 		if (!isUUID(id)) {
 			throw new BadRequestException('UserId must be an UUID.');
 		}
-		const posts = await this.usersService.getPostByUser(id);
-		return posts;
+		const devlogEvents = await this.usersService.getPostByUser(id);
+		return devlogEvents;
 	}
 
 	@UseGuards(AuthGuard)

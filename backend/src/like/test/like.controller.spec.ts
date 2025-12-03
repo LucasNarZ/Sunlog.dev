@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { LikeController } from '../like.controller';
 import { LikeService } from '../like.service';
 import { AuthRequest } from 'src/interfaces/authRequest.interface';
-import { LikePostDto } from '../../like/dtos/likePost.dto';
+import { LikePostDto } from '../dtos/likeDevlogEvent.dto';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { BadRequestException } from '@nestjs/common';
@@ -11,7 +11,7 @@ interface TestRequest extends AuthRequest {
 	params: { postId: string };
 }
 
-describe('PostsController', () => {
+describe('DevlogEventsController', () => {
 	let controller: LikeController;
 	let service: LikeService;
 

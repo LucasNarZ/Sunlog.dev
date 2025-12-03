@@ -1,11 +1,11 @@
 "use client";
 
-import { useAdminPosts } from "@/features/admin/hooks/useAdminPosts";
+import { useAdminDevlogEvents } from "@/features/admin/hooks/useAdminDevlogEvents";
 import Header from "@/components/Header";
 import AdminPostCard from "@/features/admin/components/adminPostCard";
 
 export default function AdminDashboard() {
-  const { status, setStatus, posts, loading, fetchPosts, updatePostLocally } = useAdminPosts();
+  const { status, setStatus, devlogEvents, loading, fetchDevlogEvents, updatePostLocally } = useAdminDevlogEvents();
 
   return (
     <>
@@ -25,7 +25,7 @@ export default function AdminDashboard() {
           </select>
 
           <button
-            onClick={fetchPosts}
+            onClick={fetchDevlogEvents}
             className="px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
           >
             Buscar
@@ -34,11 +34,11 @@ export default function AdminDashboard() {
 
         {loading ? (
           <p className="text-gray-700">Carregando...</p>
-        ) : posts.length === 0 ? (
+        ) : devlogEvents.length === 0 ? (
           <p className="text-gray-600">Nenhum post encontrado.</p>
         ) : (
           <div className="space-y-5">
-            {posts.map((post) => (
+            {devlogEvents.map((post) => (
               <AdminPostCard key={post.id} post={post} onUpdateStatus={updatePostLocally} />
             ))}
           </div>
