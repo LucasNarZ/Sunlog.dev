@@ -5,14 +5,20 @@ import {
 	NotFoundException,
 } from '@nestjs/common';
 import { Project } from './project.entity';
-import { projectRepositoryToken } from 'src/constants';
+import {
+	devlogEventRepositoryToken,
+	projectRepositoryToken,
+} from 'src/constants';
 import { CreateProjectDto } from './dtos/createProject.dto';
+import { DevlogEvent } from 'src/devlog-event/devlog-event.entity';
 
 @Injectable()
 export class ProjectService {
 	constructor(
 		@Inject(projectRepositoryToken)
 		private readonly projectRepository: typeof Project,
+		@Inject(devlogEventRepositoryToken)
+		private readonly devlogEventRepository: typeof DevlogEvent,
 	) {}
 
 	async createProject(userId: string, data: CreateProjectDto) {
@@ -75,5 +81,15 @@ export class ProjectService {
 		}
 
 		return this.projectRepository.destroy({ where: { id } });
+	}
+
+	async getProjectDevlogs(projectId: string) {
+		const devlogs = await this.devlogEventRepository.findAll({
+			where: {
+				projectId,
+			},
+		});
+
+		return devlogs;
 	}
 }

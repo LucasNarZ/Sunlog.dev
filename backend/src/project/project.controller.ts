@@ -60,4 +60,9 @@ export class ProjectController {
 		const userId = req.user.userId;
 		return await this.projectService.deleteProject(id, userId);
 	}
+
+	@Get(':id/devlogs')
+	async getProjectDevlogs(@Param('id') id: string) {
+		return await this.projectService.getProjectDevlogs(id);
+	}
 }
