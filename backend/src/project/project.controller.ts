@@ -33,6 +33,22 @@ export class ProjectController {
 		return await this.projectService.findProject(id);
 	}
 
+	@Get(':id/devlog-events')
+	async getProjectDevlogs(@Param('id') id: string) {
+		return await this.projectService.getProjectDevlogs(id);
+	}
+
+	@Get(':username/:projectName')
+	async findProjectByName(
+		@Param('username') username: string,
+		@Param('projectName') projectName: string,
+	) {
+		return await this.projectService.findProjectByName(
+			username,
+			projectName,
+		);
+	}
+
 	@Get('user/:userId')
 	async findProjectsByUser(@Param('userId') userId: string) {
 		return await this.projectService.findProjectsByUser(userId);
@@ -59,10 +75,5 @@ export class ProjectController {
 	async deleteProject(@Req() req: AuthRequest, @Param('id') id: string) {
 		const userId = req.user.userId;
 		return await this.projectService.deleteProject(id, userId);
-	}
-
-	@Get(':id/devlogs')
-	async getProjectDevlogs(@Param('id') id: string) {
-		return await this.projectService.getProjectDevlogs(id);
 	}
 }

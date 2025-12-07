@@ -1,16 +1,14 @@
 "use client";
 
 import { useState, useRef, useEffect, memo } from "react";
-import ReactMarkdown from "react-markdown";
+import { MarkdownEditor } from "@/components/MarkdownEditor";
 import Header from "@components/Header";
 import { apiClient } from "@lib/apiClient";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useIsMobile } from "@/features/devlogs/hooks/useIsMobile";
 import { createDevlogSchema, CreateDevlogDTO } from "@/features/devlogs/schemas/createDevlog.schema";
 import useUserProfile from "@/features/users/hooks/useUserProfile";
 import { useRouter } from "next/navigation";
-import { useResizableWidth } from "@/features/devlogs/hooks/useResizableWidth";
 
 function parseList(value?: string) {
     return value?.split(",").map(v => v.trim()).filter(Boolean) ?? [];
@@ -21,10 +19,6 @@ function CreatePostPage() {
     const router = useRouter()
     const [user, error] = useUserProfile();
     const [step, setStep] = useState(1);
-    const isMobile = useIsMobile();
-
-    const { width: leftWidth, containerRef, startResizing } = useResizableWidth(50);
-
     const {
         register,
         handleSubmit,
@@ -43,12 +37,6 @@ function CreatePostPage() {
     });
 
     const watchedTitle = watch("title");
-    const watchedContent = watch("content");
-    const watchedPreviewImgUrl = watch("previewImgUrl") as string | undefined;
-
-    const Preview = memo(({ title, content }: { title: string, content: string }) => {
-        return <ReactMarkdown>{`# ${title}\n\n${content}`}</ReactMarkdown>;
-    });
 
     useEffect(() => {
         const generatedSlug = watchedTitle
@@ -157,36 +145,8 @@ function CreatePostPage() {
 
                     {step === 2 && (
                         <div className="bg-white rounded-xl shadow-2xl w-screen sm:w-[90vw] h-[90vh] p-6 flex flex-col">
-                            <div ref={containerRef} className="flex-1 w-full flex flex-col sm:flex-row relative overflow-hidden rounded-xl border border-gray-300">
-                                <div className="sm:h-full h-1/2 flex flex-col" style={{ width: isMobile ? "100%" : `${leftWidth}%` }}>
-                                    <div className="bg-gray-100 p-2 text-sm font-semibold text-muted border-b">Markdown</div>
-                                    <textarea
-                                        placeholder="Write your devlog entry content..."
-                                        {...register("content")}
-                                        className="w-full h-full p-4 font-mono resize-none focus:outline-none focus:ring-2 focus:ring-primary"
-                                        spellCheck={false}
-                                    />
-                                    {errors.content && <p className="text-danger text-sm p-2">{errors.content.message}</p>}
-                                </div>
 
-                                <div onMouseDown={startResizing} className="w-0 sm:w-2 bg-gray-300 cursor-col-resize hover:bg-primary transition duration-300" />
-
-                                <div className="flex-1 flex flex-col sm:h-full h-1/2" style={{ width: isMobile ? "100%" : `${100 - leftWidth}%` }}>
-                                    <div className="bg-gray-100 p-2 text-sm font-semibold text-muted border-b">Preview</div>
-                                    <div className="flex-1 overflow-y-auto p-6 prose max-w-none break-words">
-                                        {watchedPreviewImgUrl && watchedPreviewImgUrl !== "" && (
-                                            <img
-                                                src={watchedPreviewImgUrl}
-                                                alt=""
-                                                className="mb-8 max-h-96 w-full object-contain rounded-lg shadow-lg"
-                                                onError={(e) => (e.currentTarget.style.display = "none")}
-                                            />
-                                        )}
-                                        <Preview title={watchedTitle} content={watchedContent} />
-                                    </div>
-                                </div>
-                            </div>
-
+                            <MarkdownEditor register={register} errors={errors} watch={watch} />
                             <div className="mt-6 flex justify-between flex-col sm:flex-row gap-3">
                                 <button
                                     type="button"

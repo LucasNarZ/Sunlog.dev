@@ -11,6 +11,7 @@ import {
 } from 'src/constants';
 import { CreateProjectDto } from './dtos/createProject.dto';
 import { DevlogEvent } from 'src/devlog-event/devlog-event.entity';
+import { User } from 'src/user/user.entity';
 
 @Injectable()
 export class ProjectService {
@@ -22,22 +23,47 @@ export class ProjectService {
 	) {}
 
 	async createProject(userId: string, data: CreateProjectDto) {
-		return this.projectRepository.create({
+		console.log(data);
+		return await this.projectRepository.create({
 			...data,
 			userId,
 		});
 	}
 
 	async findProject(id: string) {
-		return this.projectRepository.findByPk(id);
+		return await this.projectRepository.findByPk(id);
 	}
 
 	async findProjectsByUser(userId: string) {
-		return this.projectRepository.findAll({ where: { userId } });
+		return await this.projectRepository.findAll({ where: { userId } });
+	}
+
+	async findProjectByName(username: string, projectName: string) {
+		return await this.projectRepository.findOne({
+			where: {
+				name: username + '/' + projectName,
+			},
+			attributes: ['name', 'id', 'description', 'readme'],
+			include: [
+				{
+					model: User,
+					attributes: [['name', 'username']],
+					required: true,
+				},
+			],
+		});
 	}
 
 	async findAllProjects() {
-		return this.projectRepository.findAll();
+		return await this.projectRepository.findAll({
+			include: [
+				{
+					model: User,
+					required: true,
+					attributes: [['name', 'username']],
+				},
+			],
+		});
 	}
 
 	async updateProject(id: string, userId: string, data: any) {
@@ -80,7 +106,7 @@ export class ProjectService {
 			);
 		}
 
-		return this.projectRepository.destroy({ where: { id } });
+		return await this.projectRepository.destroy({ where: { id } });
 	}
 
 	async getProjectDevlogs(projectId: string) {
@@ -89,6 +115,7 @@ export class ProjectService {
 				projectId,
 			},
 		});
+		console.log('devlogs ', devlogs);
 
 		return devlogs;
 	}

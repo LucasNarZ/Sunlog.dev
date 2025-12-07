@@ -1,4 +1,4 @@
-export const devlogEventRepositoryToken = 'POSTS_REPOSITORY';
+export const devlogEventRepositoryToken = 'DEVLOGEVENT_REPOSITORY';
 export const usersRepositoryToken = 'USERS_REPOSITORY';
 export const followsRepositoryToken = 'FOLLOW_REPOSITORY';
 export const likesRepositoryToken = 'LIKES_REPOSITORY';
