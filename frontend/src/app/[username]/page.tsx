@@ -185,11 +185,9 @@ const User = () => {
                         <div className="text-gray-500">Loading projects...</div>
                     )}
 
-                    {!loading && projects?.length && projects?.length > 0 && (
-                        projects?.map((project: Project) => (
-                            <ProjectCard key={project.id} project={project} />
-                        ))
-                    )}
+                    {projects?.map((project: Project) => (
+                        <ProjectCard key={project.id} project={project} />
+                    ))}
 
                     {!loading && (!projects || projects.length === 0) && (
                         <div className="text-gray-500 col-span-full">No projects yet.</div>
