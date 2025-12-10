@@ -10,7 +10,10 @@ import useUserProfile from '@/features/users/hooks/useUserProfile'
 import Header from '@/components/Header'
 
 const Schema = z.object({
-    name: z.string().min(3).max(60),
+    name: z.string()
+        .min(3)
+        .max(60)
+        .regex(/^[^/]+$/, "Name cannot contain '/'"),
     description: z.string().optional(),
     content: z.string().optional()
 })
@@ -22,8 +25,8 @@ export default function CreateProjectPage() {
     const router = useRouter()
     const [user, error] = useUserProfile()
 
-    if (!user) {
-        // router.push('/sign-in')
+    if (error) {
+        router.push('/sign-in')
     }
 
     const {
@@ -40,13 +43,14 @@ export default function CreateProjectPage() {
             const project = {
                 ...data,
                 readme: data.content,
-                name: user?.name + "/" + data.name,
+                name: data.name,
             }
             const res = await apiClient.post('projects', project, { withCredentials: true })
 
+            if(res.status === 201){
+                router.push(`/${project.name}`)
+            }
 
-            const json = await res.data()
-            router.push(`/projects/${json.id}`)
         } catch {
         }
     }
@@ -78,7 +82,7 @@ export default function CreateProjectPage() {
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
+                        className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-5 cursor-pointer"
                     >
                         {isSubmitting ? 'Creating...' : 'Create'}
                     </button>

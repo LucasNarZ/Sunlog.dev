@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { apiClient } from "@lib/apiClient";
-import type { Post } from "@/features/devlogs/types/post";
+import type { Post } from "@/features/devlogs/types/devlog";
 
 export const useDevlogEventsByTag = (tags: string[], categorys: string[]) => {
   const [devlogEvents, setDevlogEvents] = useState<Post[] | null>(null);

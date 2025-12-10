@@ -49,11 +49,6 @@ export class ProjectController {
 		);
 	}
 
-	@Get('user/:userId')
-	async findProjectsByUser(@Param('userId') userId: string) {
-		return await this.projectService.findProjectsByUser(userId);
-	}
-
 	@Get()
 	async findAllProjects() {
 		return await this.projectService.findAllProjects();

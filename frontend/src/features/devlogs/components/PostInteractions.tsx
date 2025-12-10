@@ -5,7 +5,7 @@ import { apiClient } from "@/lib/apiClient";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { User } from "@/features/users/types/user";
-import { Post } from "@/features/devlogs/types/post";
+import { Post } from "@/features/devlogs/types/devlog";
 import useLike from "@/features/users/hooks/useLike";
 
 export default function PostInteractions({

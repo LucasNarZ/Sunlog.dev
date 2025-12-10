@@ -1,4 +1,4 @@
-import { Post } from "@/features/devlogs/types/post";
+import { Post } from "@/features/devlogs/types/devlog";
 import CardPostClient from '@/features/devlogs/components/CardPostClient'
 
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { Post } from "@/features/devlogs/types/post";
+import { Post } from "@/features/devlogs/types/devlog";
 import { apiClient } from "@/lib/apiClient";
 import { useState } from "react";
 

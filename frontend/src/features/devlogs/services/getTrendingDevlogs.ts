@@ -1,5 +1,5 @@
 import { apiClient } from "@/lib/apiClient";
-import type { Post } from "@/features/devlogs/types/post";
+import type { Post } from "@/features/devlogs/types/devlog";
 
 export const getTrendingDevlogs = async (): Promise<Post[]> => {
   try {

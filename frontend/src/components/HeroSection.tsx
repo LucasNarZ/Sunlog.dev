@@ -26,13 +26,13 @@ const HeroSection = () => {
                     </p>
                     <div className="flex justify-center gap-4">
                         <Link
-                            href="/create-devlog"
+                            href="/devlogs/create"
                             className="px-6 py-2 bg-primary text-white rounded hover:bg-secondary transition"
                         >
                             New Devlog
                         </Link>
                         <Link
-                            href="/profile"
+                            href={`/${user?.name}`}
                             className="px-6 py-2 border border-primary text-primary rounded hover:bg-primary hover:text-white transition"
                         >
                             My Profile

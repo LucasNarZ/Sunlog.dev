@@ -3,6 +3,7 @@ import {
 	Injectable,
 	UnauthorizedException,
 	NotFoundException,
+	ConflictException,
 } from '@nestjs/common';
 import { Project } from './project.entity';
 import {
@@ -23,7 +24,18 @@ export class ProjectService {
 	) {}
 
 	async createProject(userId: string, data: CreateProjectDto) {
-		console.log(data);
+		const project = await this.projectRepository.findOne({
+			where:{
+				name: data.name,
+				userId
+			},
+			attributes:["id"]
+		})
+
+		if(project){
+			throw new ConflictException("Project already exists.")
+		}
+
 		return await this.projectRepository.create({
 			...data,
 			userId,
@@ -34,14 +46,11 @@ export class ProjectService {
 		return await this.projectRepository.findByPk(id);
 	}
 
-	async findProjectsByUser(userId: string) {
-		return await this.projectRepository.findAll({ where: { userId } });
-	}
-
 	async findProjectByName(username: string, projectName: string) {
 		return await this.projectRepository.findOne({
 			where: {
-				name: username + '/' + projectName,
+				name: projectName,
+				
 			},
 			attributes: ['name', 'id', 'description', 'readme'],
 			include: [
@@ -49,6 +58,9 @@ export class ProjectService {
 					model: User,
 					attributes: [['name', 'username']],
 					required: true,
+					where: {
+						name: username
+					}
 				},
 			],
 		});

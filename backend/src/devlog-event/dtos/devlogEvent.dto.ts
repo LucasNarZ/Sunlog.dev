@@ -6,5 +6,8 @@ export class createDevlogEventDto {
 	readonly summary: string;
 	@IsString()
 	@IsOptional()
+	readonly description: string;
+	@IsString()
+	@IsOptional()
 	readonly content: string;
 }

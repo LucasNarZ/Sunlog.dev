@@ -34,6 +34,7 @@ export class DevlogEventsController {
 	@UseGuards(AuthGuard)
 	@Post()
 	async createPost(@Req() req: AuthRequest, @Body() body: createDevlogEventDto) {
+		console.log("POST")
 		const { userId } = req.user;
 		return await this.devlogEventsService.createDevlogEvent(userId, body);
 	}

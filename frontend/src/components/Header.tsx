@@ -68,7 +68,7 @@ const UserButtons = () => {
             {open && (
                 <div className="absolute right-0 mt-3 w-40 bg-white shadow-lg rounded-xl p-2 flex flex-col text-sm z-50">
                     <Link
-                        href="/profile"
+                        href={`/${userData.name}`}
                         className="px-3 py-2 rounded-lg hover:bg-gray-100 transition"
                     >
                         My profile
@@ -91,9 +91,9 @@ const Header = () => {
             <div className="flex items-center space-x-4">
                 <Link
                     href="/"
-                    className="text-lg lg:text-xl font-family-garamond sm:w-auto w-32 font-semibold text-gray-800 hover:text-secondary transition"
+                    className="text-lg lg:text-xl font-family-garamond sm:w-auto w-20 font-semibold text-gray-800 hover:text-secondary transition"
                 >
-                    <Image src="/logo.svg" alt="logo" width={150} height={300} />
+                    <Image src="/logo.png" alt="logo" width={80} height={80} />
                 </Link>
             </div>
 

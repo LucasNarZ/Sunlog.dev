@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { Post } from "@/features/devlogs/types/post";
+import { Devlog } from "@/features/devlogs/types/devlog";
 import { apiClient } from "@lib/apiClient";
 
 const useDevlogEventsByAuthor = (
   userId: string | undefined,
-): [Post[] | null, unknown | null] => {
-  const [devlogEvents, setDevlogEvents] = useState<Post[] | null>(null);
+): [Devlog[] | null, unknown | null] => {
+  const [devlogEvents, setDevlogEvents] = useState<Devlog[]| null>(null);
   const [error, setError] = useState<unknown | null>(null);
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { apiClient } from "@lib/apiClient";
-import type { Post } from "@/features/devlogs/types/post";
+import type { Post } from "@/features/devlogs/types/devlog";
 
 const usePost = (slug: string | undefined): [Post | null, unknown] => {
   const [error, setError] = useState<unknown>(null);

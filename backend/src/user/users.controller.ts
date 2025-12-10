@@ -43,6 +43,14 @@ export class UsersController {
 		return await this.usersService.findUserPublic(userId);
 	}
 
+	@Get(':userId/projects')
+	async findUserProjects(@Param('userId') userId: string) {
+		if (!isUUID(userId)) {
+			throw new BadRequestException('UserId must be an UUID.');
+		}
+		return await this.usersService.findUserProjects(userId);
+	}
+
 	@Get(':id/devlogEvents')
 	async getUserDevlogEvents(@Req() req: Request) {
 		const { id } = req.params;
