@@ -20,12 +20,18 @@ export class User extends Model {
 	})
 	id: string;
 
-	@Unique
 	@Column({
 		type: DataType.STRING,
 		allowNull: false,
 	})
 	name: string;
+
+	@Column({
+		type: DataType.STRING,
+		allowNull: false,
+		unique: true,
+	})
+	slug: string;
 
 	@Unique
 	@Column({

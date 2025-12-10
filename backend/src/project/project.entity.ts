@@ -34,9 +34,15 @@ export class Project extends Model {
 	@Column({
 		type: DataType.STRING,
 		allowNull: false,
-		unique: true,
 	})
 	name: string;
+
+	@Column({
+		type: DataType.STRING,
+		allowNull: false,
+		unique: true,
+	})
+	slug: string;
 
 	@Column({
 		type: DataType.STRING,
