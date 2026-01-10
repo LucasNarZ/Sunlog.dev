@@ -13,7 +13,7 @@ export class RabbitmqService implements OnModuleInit {
   }
 
   async consume(queue: string, callback: (msg: any) => Promise<void>) {
-    await this.connection.assertQueue(queue, { durable: true });
+    await this.channel.assertQueue(queue, { durable: true });
 
     this.channel.consume(queue, async (msg: any) => {
       if (!msg) return;
