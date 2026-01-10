@@ -30,6 +30,30 @@ services:
       - ./backend/src:/app/src
     ports:
       - "${HTTP_PORT}:3000"
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+  worker:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile.dev
+    environment:
+      - PORT=3000
+      - NODE_ENV=${NODE_ENV}
+      - RABBITMQ_URL=${RABBITMQ_URL}
+    depends_on:
+        - rabbitmq
+    volumes:
+      - ./worker/src:/app/src
+    ports:
+      - "3002:3000"
   postgres:
     image: postgres:16.3
     restart: on-failure
@@ -83,3 +107,5 @@ volumes:
   pgadmin_data:
   front-end:
   redis_data:
+  rabbitmq_data:
+
