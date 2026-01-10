@@ -48,6 +48,11 @@ services:
       - PORT=3000
       - NODE_ENV=${NODE_ENV}
       - RABBITMQ_URL=${RABBITMQ_URL}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - SES_FROM=${SES_FROM}
     depends_on:
         - rabbitmq
     volumes:
