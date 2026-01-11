@@ -5,6 +5,7 @@ import { Follow } from 'src/follow/follow.entity';
 import { Like } from 'src/like/like.entity';
 import { Comment } from 'src/comment/comment.entity';
 import { Project } from 'src/project/project.entity';
+import { logger } from 'src/logger/logger';
 
 export const databaseProviders = [
 	{
@@ -17,6 +18,14 @@ export const databaseProviders = [
 				username: process.env.POSTGRES_USER,
 				password: process.env.POSTGRES_PASSWORD,
 				database: process.env.POSTGRES_DB,
+				benchmark: true,	
+				logging: (sql, timing) => {
+					logger.log('Sequelize query', {
+					type: 'db',
+					query: sql,
+					duration: timing,
+					})
+				}
 			});
 			sequelize.addModels([
 				DevlogEvent,

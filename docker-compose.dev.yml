@@ -11,6 +11,10 @@ services:
       - ./frontend/src:/app/src
     ports:
       - "3001:3000"
+    labels:
+      logging: "promtail"
+      service: "frontend"
+
   api:
     build:
       context: ./backend
@@ -30,16 +34,10 @@ services:
       - ./backend/src:/app/src
     ports:
       - "${HTTP_PORT}:3000"
-  rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
+    labels:
+      logging: "promtail"
+      service: "api"
+
   worker:
     build:
       context: ./worker
@@ -54,11 +52,29 @@ services:
       - SMTP_PASS=${SMTP_PASS}
       - SES_FROM=${SES_FROM}
     depends_on:
-        - rabbitmq
+      - rabbitmq
     volumes:
       - ./worker/src:/app/src
     ports:
       - "3002:3000"
+    labels:
+      logging: "promtail"
+      service: "worker"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    labels:
+      logging: "promtail"
+      service: "rabbitmq"
+
   postgres:
     image: postgres:16.3
     restart: on-failure
@@ -70,6 +86,27 @@ services:
       - postgres:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    labels:
+      logging: "promtail"
+      service: "postgres"
+
+  redis:
+    image: redis:8.4
+    container_name: redis
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    command: >
+      redis-server
+      --save 86400 1
+      --appendonly no
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    labels:
+      logging: "promtail"
+      service: "redis"
+
   nginx:
     image: nginx
     volumes:
@@ -80,19 +117,10 @@ services:
     ports:
       - "80:80"
       - "443:443"
-  redis:
-    image: redis:8.4
-    container_name: redis
-    environment:
-      REDIS_PASSWORD: ${REDIS_PASSWORD} 
-    command: >
-      redis-server
-      --save 86400 1
-      --appendonly no
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
+    labels:
+      logging: "promtail"
+      service: "nginx"
+
   pgadmin:
     image: dpage/pgadmin4:latest
     container_name: pgadmin
@@ -106,11 +134,42 @@ services:
     network_mode: host
     volumes:
       - pgadmin_data:/var/lib/pgadmin
+    labels:
+      logging: "promtail"
+      service: "pgadmin"
+
+  loki:
+    image: grafana/loki:2.9.0
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "3100:3100"
+    volumes:
+      - loki_data:/loki
+
+  promtail:
+    image: grafana/promtail:2.9.0
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./promtail-config.yml:/etc/promtail/config.yml
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      - loki
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3003:3000"
+    environment:
+      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s/grafana/
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+    volumes:
+      - grafana_data:/var/lib/grafana
 
 volumes:
   postgres:
   pgadmin_data:
-  front-end:
   redis_data:
   rabbitmq_data:
-
+  loki_data:
+  grafana_data:
