@@ -34,6 +34,7 @@ import { ProjectService } from './project/project.service';
 import { projectProviders } from './project/project.providers';
 import { LoggingMiddleware } from './middlewares/logging.middleware';
 import { LoggerModule } from './logger/logger.module';
+import { MetricsModule } from './metrics/metrics.module';
 
 @Module({
 	imports: [
@@ -48,6 +49,7 @@ import { LoggerModule } from './logger/logger.module';
 		CommentModule,
 		ProjectModule,
 		LoggerModule,
+		MetricsModule,
 	],
 	controllers: [
 		AppController,
