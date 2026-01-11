@@ -8,6 +8,8 @@ import {
 	Delete,
 	Req,
 	UseGuards,
+	LoggerService,
+	Inject,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { AuthRequest } from 'src/interfaces/authRequest.interface';
@@ -16,7 +18,11 @@ import { CreateProjectDto } from './dtos/createProject.dto';
 
 @Controller('projects')
 export class ProjectController {
-	constructor(private readonly projectService: ProjectService) {}
+	constructor(
+		private readonly projectService: ProjectService, 
+		@Inject('LOGGER')
+		private readonly logger: LoggerService
+	) {}
 
 	@UseGuards(AuthGuard)
 	@Post()
@@ -51,6 +57,7 @@ export class ProjectController {
 
 	@Get()
 	async findAllProjects() {
+		this.logger.log("Good log!!!!")
 		return await this.projectService.findAllProjects();
 	}
 
