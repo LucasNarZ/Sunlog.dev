@@ -28,13 +28,19 @@ export class DevlogEventsController {
 		@Query('tag') tag: string | string[] | undefined,
 		@Query('category') category: string | undefined,
 	) {
-		return await this.devlogEventsService.findDevlogEventsByTagAndCategory(tag, category);
+		return await this.devlogEventsService.findDevlogEventsByTagAndCategory(
+			tag,
+			category,
+		);
 	}
 
 	@UseGuards(AuthGuard)
 	@Post()
-	async createPost(@Req() req: AuthRequest, @Body() body: createDevlogEventDto) {
-		console.log("POST")
+	async createPost(
+		@Req() req: AuthRequest,
+		@Body() body: createDevlogEventDto,
+	) {
+		console.log('POST');
 		const { userId } = req.user;
 		return await this.devlogEventsService.createDevlogEvent(userId, body);
 	}
@@ -57,17 +63,27 @@ export class DevlogEventsController {
 		@Body() body: createDevlogEventDto,
 	) {
 		const { userId } = req.user;
-		return await this.devlogEventsService.updateDevlogEvent(devlogEventId, userId, body);
+		return await this.devlogEventsService.updateDevlogEvent(
+			devlogEventId,
+			userId,
+			body,
+		);
 	}
 
 	@UseGuards(AuthGuard)
 	@Delete(':devlogEventId')
-	async deleteDevlogEvent(@Param('devlogEventId') devlogEventId: string, @Req() req: AuthRequest) {
+	async deleteDevlogEvent(
+		@Param('devlogEventId') devlogEventId: string,
+		@Req() req: AuthRequest,
+	) {
 		if (!isUUID(devlogEventId)) {
 			throw new BadRequestException('devlogEventId must be an UUID.');
 		}
 		const { userId } = req.user;
 
-		return this.devlogEventsService.deleteDevlogEvent(devlogEventId, userId);
+		return this.devlogEventsService.deleteDevlogEvent(
+			devlogEventId,
+			userId,
+		);
 	}
 }

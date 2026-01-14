@@ -19,7 +19,9 @@ export class AdminService {
 		const devlogEvents = await this.postRepository.findAll();
 
 		if (!devlogEvents) {
-			throw new NotFoundException('No DevlogEvents found for this status.');
+			throw new NotFoundException(
+				'No DevlogEvents found for this status.',
+			);
 		}
 
 		return devlogEvents;
@@ -32,7 +34,7 @@ export class AdminService {
 	// 		},
 	// 		attributes: ['id'],
 	// 	});
-		
+
 	// 	if (!status) {
 	// 		throw new NotFoundException('DevlogEvent Status not found.');
 	// 	}

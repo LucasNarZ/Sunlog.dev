@@ -25,15 +25,15 @@ export class ProjectService {
 
 	async createProject(userId: string, data: CreateProjectDto) {
 		const project = await this.projectRepository.findOne({
-			where:{
+			where: {
 				name: data.name,
-				userId
+				userId,
 			},
-			attributes:["id"]
-		})
+			attributes: ['id'],
+		});
 
-		if(project){
-			throw new ConflictException("Project already exists.")
+		if (project) {
+			throw new ConflictException('Project already exists.');
 		}
 
 		return await this.projectRepository.create({
@@ -50,7 +50,6 @@ export class ProjectService {
 		return await this.projectRepository.findOne({
 			where: {
 				name: projectName,
-				
 			},
 			attributes: ['name', 'id', 'description', 'readme'],
 			include: [
@@ -59,8 +58,8 @@ export class ProjectService {
 					attributes: [['name', 'username']],
 					required: true,
 					where: {
-						name: username
-					}
+						name: username,
+					},
 				},
 			],
 		});

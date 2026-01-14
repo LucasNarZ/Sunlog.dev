@@ -48,16 +48,12 @@ export class DevlogEventsService {
 		});
 	}
 
-	async createDevlogEvent(
-		userId: string,
-		data: createDevlogEventDto,
-	) {
+	async createDevlogEvent(userId: string, data: createDevlogEventDto) {
 		return await this.devlogEventRepository.create({
 			...data,
-			userId
+			userId,
 		});
 	}
-
 
 	async findDevlogEvent(devlogEventId: string) {
 		return await this.devlogEventRepository.findOne<DevlogEvent>({
@@ -81,7 +77,11 @@ export class DevlogEventsService {
 		return post;
 	}
 
-	async updateDevlogEvent(devlogEventId: string, userId: string, data: createDevlogEventDto) {
+	async updateDevlogEvent(
+		devlogEventId: string,
+		userId: string,
+		data: createDevlogEventDto,
+	) {
 		const post = await this.devlogEventRepository.findOne({
 			where: {
 				id: devlogEventId,
@@ -127,5 +127,4 @@ export class DevlogEventsService {
 
 		return post;
 	}
-
 }

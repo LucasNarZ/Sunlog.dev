@@ -1,5 +1,9 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { devlogEventRepositoryToken, projectRepositoryToken, usersRepositoryToken } from 'src/constants';
+import {
+	devlogEventRepositoryToken,
+	projectRepositoryToken,
+	usersRepositoryToken,
+} from 'src/constants';
 import { User } from './user.entity';
 import { createUserDto } from 'src/user/dtos/user.dto';
 import { DevlogEvent } from 'src/devlog-event/devlog-event.entity';
@@ -84,7 +88,7 @@ export class UsersService {
 				{
 					model: User,
 					attributes: [['name', 'username']],
-					required: true
+					required: true,
 				},
 			],
 			order: [['createdAt', 'ASC']],

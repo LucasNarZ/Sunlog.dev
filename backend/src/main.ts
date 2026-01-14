@@ -19,7 +19,7 @@ async function bootstrap() {
 	});
 	app.useGlobalPipes(new ValidationPipe());
 	app.useGlobalFilters(new GlobalFilter());
-	app.useGlobalInterceptors(new HttpMetricsInterceptor);
+	app.useGlobalInterceptors(new HttpMetricsInterceptor());
 
 	const config = new DocumentBuilder()
 		.setTitle('Sunlog.dev API Docs')

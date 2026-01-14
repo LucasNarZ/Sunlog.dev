@@ -16,7 +16,6 @@ import { AdminGuard } from 'src/auth/guards/admin.guard';
 export class AdminController {
 	constructor(private readonly adminService: AdminService) {}
 
-	
 	@UseGuards(AuthGuard, AdminGuard)
 	@Get('devlogEvents')
 	async getDevlogEventsByStatus(@Query('status') status: string) {

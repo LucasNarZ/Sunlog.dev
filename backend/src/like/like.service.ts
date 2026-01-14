@@ -1,6 +1,9 @@
 import { Injectable, Inject, ConflictException } from '@nestjs/common';
 import { DevlogEvent } from 'src/devlog-event/devlog-event.entity';
-import { likesRepositoryToken, devlogEventRepositoryToken } from 'src/constants';
+import {
+	likesRepositoryToken,
+	devlogEventRepositoryToken,
+} from 'src/constants';
 import { Like } from '../like/like.entity';
 
 @Injectable()

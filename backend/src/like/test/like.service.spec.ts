@@ -1,6 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { LikeService } from '../like.service';
-import { devlogEventRepositoryToken, likesRepositoryToken } from 'src/constants';
+import {
+	devlogEventRepositoryToken,
+	likesRepositoryToken,
+} from 'src/constants';
 import { ConflictException } from '@nestjs/common';
 
 describe('LikeService', () => {
@@ -29,7 +32,10 @@ describe('LikeService', () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
 				LikeService,
-				{ provide: devlogEventRepositoryToken, useValue: devlogEventRepository },
+				{
+					provide: devlogEventRepositoryToken,
+					useValue: devlogEventRepository,
+				},
 				{ provide: likesRepositoryToken, useValue: likesRepository },
 			],
 		}).compile();

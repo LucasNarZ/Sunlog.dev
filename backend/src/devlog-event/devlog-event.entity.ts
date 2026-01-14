@@ -5,7 +5,7 @@ import {
 	DataType,
 	Default,
 	ForeignKey,
-	BelongsTo
+	BelongsTo,
 } from 'sequelize-typescript';
 import { User } from '../user/user.entity';
 import { Project } from '../project/project.entity';
@@ -71,4 +71,3 @@ export class DevlogEvent extends Model {
 	})
 	updatedAt: Date;
 }
-

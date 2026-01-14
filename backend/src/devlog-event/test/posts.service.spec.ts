@@ -31,7 +31,10 @@ describe('DevlogEventsService', () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
 				DevlogEventsService,
-				{ provide: devlogEventRepositoryToken, useValue: devlogEventRepository },
+				{
+					provide: devlogEventRepositoryToken,
+					useValue: devlogEventRepository,
+				},
 			],
 		}).compile();
 
@@ -75,9 +78,9 @@ describe('DevlogEventsService', () => {
 			title: 'New Title',
 			description: 'New Description',
 			content: 'New Content',
-            category: "",
-            slug: "asdasds",
-            authorId: "hiuh"
+			category: '',
+			slug: 'asdasds',
+			authorId: 'hiuh',
 		};
 
 		it('should throw if post not found', async () => {
@@ -88,14 +91,18 @@ describe('DevlogEventsService', () => {
 		});
 
 		it('should throw if user is not author', async () => {
-			devlogEventRepository.findOne.mockResolvedValue({ userId: 'other' });
+			devlogEventRepository.findOne.mockResolvedValue({
+				userId: 'other',
+			});
 			await expect(
 				service.updatePost('pid', 'uid', validPostData),
 			).rejects.toThrow(UnauthorizedException);
 		});
 
 		it('should update post if user is author', async () => {
-			devlogEventRepository.findOne.mockResolvedValue({ userId: 'user-id' });
+			devlogEventRepository.findOne.mockResolvedValue({
+				userId: 'user-id',
+			});
 			devlogEventRepository.update.mockResolvedValue({});
 
 			await expect(
@@ -220,7 +227,10 @@ describe('DevlogEventsService', () => {
 		it('should search only by tags if categories are undefined', async () => {
 			devlogEventRepository.findAll.mockResolvedValue(['tagOnly']);
 
-			await service.findDevlogEventsByTagAndCategory(['react'], undefined);
+			await service.findDevlogEventsByTagAndCategory(
+				['react'],
+				undefined,
+			);
 
 			expect(devlogEventRepository.findAll).toHaveBeenCalledWith({
 				where: {

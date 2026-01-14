@@ -42,7 +42,10 @@ describe('UsersService', () => {
 			providers: [
 				UsersService,
 				{ provide: usersRepositoryToken, useValue: usersRepository },
-				{ provide: devlogEventRepositoryToken, useValue: devlogEventRepository },
+				{
+					provide: devlogEventRepositoryToken,
+					useValue: devlogEventRepository,
+				},
 			],
 		}).compile();
 
@@ -94,7 +97,9 @@ describe('UsersService', () => {
 		it('should return devlogEvents if found', async () => {
 			const devlogEvents = [{ id: 'p1' }, { id: 'p2' }];
 			devlogEventRepository.findAll.mockResolvedValue(devlogEvents);
-			await expect(service.getPostByUser('1')).resolves.toEqual(devlogEvents);
+			await expect(service.getPostByUser('1')).resolves.toEqual(
+				devlogEvents,
+			);
 		});
 
 		it('should throw NotFoundException if no devlogEvents found', async () => {

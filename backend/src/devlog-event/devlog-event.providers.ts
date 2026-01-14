@@ -1,6 +1,9 @@
 import { Like } from '../like/like.entity';
 import { DevlogEvent } from './devlog-event.entity';
-import { likesRepositoryToken, devlogEventRepositoryToken } from 'src/constants';
+import {
+	likesRepositoryToken,
+	devlogEventRepositoryToken,
+} from 'src/constants';
 
 export const devlogEventsProviders = [
 	{

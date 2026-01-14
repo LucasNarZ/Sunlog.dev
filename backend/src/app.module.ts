@@ -59,7 +59,7 @@ import { MetricsModule } from './metrics/metrics.module';
 		FollowController,
 		LikeController,
 		CommentController,
-		ProjectController
+		ProjectController,
 	],
 	providers: [
 		AppService,
@@ -76,13 +76,11 @@ import { MetricsModule } from './metrics/metrics.module';
 		CommentService,
 		...commentProviders,
 		ProjectService,
-		...projectProviders
+		...projectProviders,
 	],
 })
-export class AppModule  implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(LoggingMiddleware)
-      .forRoutes('*');
-  }
+export class AppModule implements NestModule {
+	configure(consumer: MiddlewareConsumer) {
+		consumer.apply(LoggingMiddleware).forRoutes('*');
+	}
 }

@@ -38,7 +38,10 @@ describe('DevlogEventsController', () => {
 		const module: TestingModule = await Test.createTestingModule({
 			controllers: [DevlogEventsController],
 			providers: [
-				{ provide: DevlogEventsService, useValue: mockDevlogEventsService },
+				{
+					provide: DevlogEventsService,
+					useValue: mockDevlogEventsService,
+				},
 				{ provide: JwtService, useValue: mockJwtService },
 			],
 		})
@@ -52,16 +55,18 @@ describe('DevlogEventsController', () => {
 
 	it('should return filtered devlogEvents by tags and categories', async () => {
 		const query = { tag: ['react'], category: 'frontend' };
-		mockDevlogEventsService.findDevlogEventsByTagAndCategory.mockResolvedValue([
-			'filteredPost',
-		]);
-		await expect(
-			controller.findDevlogEventsByTagAndCategory(query.tag, query.category),
-		).resolves.toEqual(['filteredPost']);
-		expect(mockDevlogEventsService.findDevlogEventsByTagAndCategory).toHaveBeenCalledWith(
-			query.tag,
-			query.category,
+		mockDevlogEventsService.findDevlogEventsByTagAndCategory.mockResolvedValue(
+			['filteredPost'],
 		);
+		await expect(
+			controller.findDevlogEventsByTagAndCategory(
+				query.tag,
+				query.category,
+			),
+		).resolves.toEqual(['filteredPost']);
+		expect(
+			mockDevlogEventsService.findDevlogEventsByTagAndCategory,
+		).toHaveBeenCalledWith(query.tag, query.category);
 	});
 
 	it('should create a post', async () => {
@@ -87,7 +92,9 @@ describe('DevlogEventsController', () => {
 	});
 
 	it('should return post by slug', async () => {
-		mockDevlogEventsService.findPostSlug.mockResolvedValue({ slug: 'slug' });
+		mockDevlogEventsService.findPostSlug.mockResolvedValue({
+			slug: 'slug',
+		});
 		await expect(controller.findPostSlug('slug')).resolves.toEqual({
 			slug: 'slug',
 		});
@@ -103,7 +110,10 @@ describe('DevlogEventsController', () => {
 			slug: 'asdasd',
 			authorId: 'asdad',
 		};
-		mockDevlogEventsService.updatePost.mockResolvedValue({ id: '1', ...dto });
+		mockDevlogEventsService.updatePost.mockResolvedValue({
+			id: '1',
+			...dto,
+		});
 		await expect(controller.updatePost('1', req, dto)).resolves.toEqual({
 			id: '1',
 			...dto,

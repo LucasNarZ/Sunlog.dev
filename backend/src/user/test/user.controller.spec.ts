@@ -93,7 +93,9 @@ describe('UsersController', () => {
 				{ id: 'd02cc816-b60b-49c9-b0a8-0acf5caebafc' },
 			];
 			usersService.getPostByUser!.mockResolvedValue(devlogEvents);
-			expect(await controller.getUserDevlogEvents(req)).toEqual(devlogEvents);
+			expect(await controller.getUserDevlogEvents(req)).toEqual(
+				devlogEvents,
+			);
 			expect(usersService.getPostByUser).toHaveBeenCalledWith(
 				'd02cc816-b60b-49c9-b0a8-0acf5caebafb',
 			);
