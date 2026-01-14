@@ -5,7 +5,14 @@ import Header from "@/components/Header";
 import AdminPostCard from "@/features/admin/components/adminPostCard";
 
 export default function AdminDashboard() {
-  const { status, setStatus, devlogEvents, loading, fetchDevlogEvents, updatePostLocally } = useAdminDevlogEvents();
+  const {
+    status,
+    setStatus,
+    devlogEvents,
+    loading,
+    fetchDevlogEvents,
+    updatePostLocally,
+  } = useAdminDevlogEvents();
 
   return (
     <>
@@ -39,7 +46,11 @@ export default function AdminDashboard() {
         ) : (
           <div className="space-y-5">
             {devlogEvents.map((post) => (
-              <AdminPostCard key={post.id} post={post} onUpdateStatus={updatePostLocally} />
+              <AdminPostCard
+                key={post.id}
+                post={post}
+                onUpdateStatus={updatePostLocally}
+              />
             ))}
           </div>
         )}

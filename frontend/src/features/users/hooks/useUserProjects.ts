@@ -7,7 +7,7 @@ const useUserProjects = (
 ): [Project[] | null, unknown, boolean] => {
   const [error, setError] = useState<unknown>(null);
   const [response, setResponse] = useState<Project[] | null>(null);
-  const [ loading, setLoading ] = useState<boolean>(true)
+  const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
     (async () => {
       if (!userId) return;
@@ -17,7 +17,7 @@ const useUserProjects = (
       } catch (err) {
         setError(err);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     })();
   }, [userId]);

@@ -11,13 +11,13 @@ const useUserProfile = (): [User | null, unknown, boolean] => {
     (async () => {
       try {
         setLoading(true);
-        const data = await fetchUserProfile()
+        const data = await fetchUserProfile();
         setResponse(data);
       } catch (err) {
         console.log(err);
         setError(err);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     })();
   }, []);

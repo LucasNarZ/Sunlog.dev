@@ -1,5 +1,8 @@
 import { useState } from "react";
-import { CreateDevlogSchema, CreatePostDto } from "../schemas/createDevlog.schema";
+import {
+  CreateDevlogSchema,
+  CreatePostDto,
+} from "../schemas/createDevlog.schema";
 import { devlogApi } from "../services/devlogApi";
 
 export function useCreateDevlog() {
@@ -10,7 +13,7 @@ export function useCreateDevlog() {
 
     if (!parsed.success) {
       const formErrors: Record<string, string> = {};
-      parsed.error.issues.forEach(issue => {
+      parsed.error.issues.forEach((issue) => {
         formErrors[issue.path[0] as string] = issue.message;
       });
       setErrors(formErrors);

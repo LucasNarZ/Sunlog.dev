@@ -7,9 +7,7 @@ export const createDevlogSchema = () =>
       .min(3, "Title must be at least 3 characters")
       .max(100, "Title is too long"),
 
-    projectId: z
-      .string()
-      .uuid("Invalid project"),
+    projectId: z.string().uuid("Invalid project"),
 
     description: z
       .string()
@@ -17,9 +15,7 @@ export const createDevlogSchema = () =>
       .optional()
       .or(z.literal("")),
 
-    content: z
-      .string()
-      .optional(),
+    content: z.string().optional(),
   });
 
 export type CreateDevlogDTO = z.infer<ReturnType<typeof createDevlogSchema>>;

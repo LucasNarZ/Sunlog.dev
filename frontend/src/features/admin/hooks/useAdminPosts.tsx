@@ -14,13 +14,15 @@ export function useAdminDevlogEvents() {
       if (err.response?.status === 403) router.push("/");
       else console.error(err);
     },
-    [router]
+    [router],
   );
 
   const fetchDevlogEvents = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await apiClient.get(`/admin/devlogEvents?status=${status}`, { withCredentials: true });
+      const res = await apiClient.get(`/admin/devlogEvents?status=${status}`, {
+        withCredentials: true,
+      });
       setDevlogEvents(res.data as Post[]);
     } catch (err: any) {
       handleApiError(err);
@@ -30,12 +32,21 @@ export function useAdminDevlogEvents() {
   }, [status, handleApiError]);
 
   const updatePostLocally = useCallback((updatedPost: Post) => {
-    setDevlogEvents((prev) => prev.map((p) => (p.id === updatedPost.id ? updatedPost : p)));
+    setDevlogEvents((prev) =>
+      prev.map((p) => (p.id === updatedPost.id ? updatedPost : p)),
+    );
   }, []);
 
   useEffect(() => {
     fetchDevlogEvents();
   }, [fetchDevlogEvents]);
 
-  return { status, setStatus, devlogEvents, loading, fetchDevlogEvents, updatePostLocally };
+  return {
+    status,
+    setStatus,
+    devlogEvents,
+    loading,
+    fetchDevlogEvents,
+    updatePostLocally,
+  };
 }
