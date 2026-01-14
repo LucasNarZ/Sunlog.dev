@@ -1,12 +1,12 @@
-import { apiClient } from "@/lib/apiClient";
-import type { Post } from "@/features/devlogs/types/devlog";
+import { apiClient } from '@/lib/apiClient';
+import type { Post } from '@/features/devlogs/types/devlog';
 
 export const getTrendingDevlogs = async (): Promise<Post[]> => {
-  try {
-    const res = await apiClient.get("/devlogEvents/trending");
-    return res.data;
-  } catch (err) {
-    console.error(err);
-    return [];
-  }
+	try {
+		const res = await apiClient.get('/devlogEvents/trending');
+		return res.data;
+	} catch (err) {
+		console.error(err);
+		return [];
+	}
 };

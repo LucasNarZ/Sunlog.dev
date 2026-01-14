@@ -1,10 +1,10 @@
-import { apiClient } from "@/lib/apiClient";
+import { apiClient } from '@/lib/apiClient';
 
 export async function fetchProject(slug: string) {
-  try {
-    const { data } = await apiClient.get(`/projects/${slug}`);
-    return data;
-  } catch {
-    return null;
-  }
+	try {
+		const { data } = await apiClient.get(`/projects/${slug}`);
+		return data;
+	} catch {
+		return null;
+	}
 }
