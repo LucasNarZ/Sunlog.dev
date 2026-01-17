@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-cd ~/The-Learning-Experience
+cd ~/Sunlog.dev
 
 git fetch origin
 git reset --hard origin/main
