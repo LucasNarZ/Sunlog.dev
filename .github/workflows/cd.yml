@@ -45,8 +45,8 @@ jobs:
           ssh-keyscan 46.202.150.9 >> ~/.ssh/known_hosts
 
       - name: Set execute permission on deploy script
-        run: ssh root@46.202.150.9 'chmod +x ./Sunlog.dev/scripts/deploy.sh'
+        run: ssh deploy@46.202.150.9 'chmod +x ./Sunlog.dev/scripts/deploy.sh'
 
       # Deploy to the server
       - name: Deploy using script
-        run: ssh root@46.202.150.9 './Sunlog.dev/scripts/deploy.sh'
+        run: ssh deploy@46.202.150.9 './Sunlog.dev/scripts/deploy.sh'
