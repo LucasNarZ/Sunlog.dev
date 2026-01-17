@@ -7,6 +7,9 @@ networks:
 
 services:
   front-end:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     image: ${AWS_ECR_PREFIX}/sunlog.dev/frontend:latest
     restart: unless-stopped
     environment:
@@ -17,6 +20,9 @@ services:
       - internal
 
   api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     image: ${AWS_ECR_PREFIX}/sunlog.dev/api:latest
     restart: unless-stopped
     environment:
@@ -34,6 +40,9 @@ services:
       - internal
 
   worker:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
     image: ${AWS_ECR_PREFIX}/sunlog.dev/worker:latest
     restart: unless-stopped
     environment:
