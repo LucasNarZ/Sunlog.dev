@@ -46,7 +46,7 @@ describe('LikeService', () => {
 	describe('likePost', () => {
 		it('should throw if already liked', async () => {
 			likesRepository.findOne.mockResolvedValue({});
-			await expect(service.likePost('uid', 'pid')).rejects.toThrow(
+			await expect(service.likeDevlogEvent('uid', 'pid')).rejects.toThrow(
 				ConflictException,
 			);
 		});
@@ -56,7 +56,9 @@ describe('LikeService', () => {
 			devlogEventRepository.increment.mockResolvedValue(null);
 			likesRepository.create.mockResolvedValue(null);
 
-			await expect(service.likePost('uid', 'pid')).resolves.toEqual({
+			await expect(
+				service.likeDevlogEvent('uid', 'pid'),
+			).resolves.toEqual({
 				message: 'Liked successfully',
 			});
 		});
@@ -65,9 +67,9 @@ describe('LikeService', () => {
 	describe('unlikePost', () => {
 		it('should throw if not liked', async () => {
 			likesRepository.findOne.mockResolvedValue(null);
-			await expect(service.unlikePost('uid', 'pid')).rejects.toThrow(
-				ConflictException,
-			);
+			await expect(
+				service.unlikeDevlogEvent('uid', 'pid'),
+			).rejects.toThrow(ConflictException);
 		});
 
 		it('should unlike post and return message', async () => {
@@ -75,7 +77,9 @@ describe('LikeService', () => {
 			devlogEventRepository.decrement.mockResolvedValue(null);
 			likesRepository.destroy.mockResolvedValue(null);
 
-			await expect(service.unlikePost('uid', 'pid')).resolves.toEqual({
+			await expect(
+				service.unlikeDevlogEvent('uid', 'pid'),
+			).resolves.toEqual({
 				message: 'Unliked successfully',
 			});
 		});
@@ -84,14 +88,16 @@ describe('LikeService', () => {
 	describe('getLikePost', () => {
 		it('should return true if liked', async () => {
 			likesRepository.findOne.mockResolvedValue({});
-			await expect(service.getLikePost('uid', 'pid')).resolves.toBe(true);
+			await expect(
+				service.getLikeDevlogEvent('uid', 'pid'),
+			).resolves.toBe(true);
 		});
 
 		it('should return false if not liked', async () => {
 			likesRepository.findOne.mockResolvedValue(null);
-			await expect(service.getLikePost('uid', 'pid')).resolves.toBe(
-				false,
-			);
+			await expect(
+				service.getLikeDevlogEvent('uid', 'pid'),
+			).resolves.toBe(false);
 		});
 	});
 });

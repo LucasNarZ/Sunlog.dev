@@ -5,11 +5,7 @@ import {
 	ConflictException,
 	NotFoundException,
 } from '@nestjs/common';
-import {
-	usersRepositoryToken,
-	devlogEventRepositoryToken,
-	followsRepositoryToken,
-} from 'src/constants';
+import { usersRepositoryToken, followsRepositoryToken } from 'src/constants';
 
 describe('FollowService', () => {
 	let service: FollowService;

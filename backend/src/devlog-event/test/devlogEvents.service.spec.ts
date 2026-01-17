@@ -3,7 +3,7 @@ import { DevlogEventsService } from '../devlog-event.service';
 import { devlogEventRepositoryToken } from 'src/constants';
 import { UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { Op } from 'sequelize';
-import { PostStatus } from '../postStatus.entity';
+import { createDevlogEventDto } from '../dtos/devlogEvent.dto';
 
 describe('DevlogEventsService', () => {
 	let service: DevlogEventsService;
@@ -43,18 +43,15 @@ describe('DevlogEventsService', () => {
 
 	describe('createPost', () => {
 		it('should create a post', async () => {
-			const dto = {
-				title: 't',
+			const dto: createDevlogEventDto = {
+				summary: 'a',
 				content: 'c',
-				authorId: '1',
-				tags: [],
-				category: '',
-				previewImgUrl: '',
 				description: '',
-				slug: 'test',
 			};
 			devlogEventRepository.create.mockResolvedValue(dto);
-			await expect(service.createPost('1', dto)).resolves.toEqual(dto);
+			await expect(service.createDevlogEvent('1', dto)).resolves.toEqual(
+				dto,
+			);
 		});
 	});
 
@@ -62,31 +59,30 @@ describe('DevlogEventsService', () => {
 		it('should return post if found', async () => {
 			const post = { id: '1' };
 			devlogEventRepository.findOne.mockResolvedValue(post);
-			await expect(service.findPostSlug('slug')).resolves.toEqual(post);
+			await expect(service.findDevlogEventSlug('slug')).resolves.toEqual(
+				post,
+			);
 		});
 
 		it('should throw if post not found', async () => {
 			devlogEventRepository.findOne.mockResolvedValue(null);
-			await expect(service.findPostSlug('slug')).rejects.toThrow(
+			await expect(service.findDevlogEventSlug('slug')).rejects.toThrow(
 				NotFoundException,
 			);
 		});
 	});
 
-	describe('updatePost', () => {
-		const validPostData = {
-			title: 'New Title',
+	describe('updateDevlogEvent', () => {
+		const validPostData: createDevlogEventDto = {
+			summary: 'a',
 			description: 'New Description',
 			content: 'New Content',
-			category: '',
-			slug: 'asdasds',
-			authorId: 'hiuh',
 		};
 
 		it('should throw if post not found', async () => {
 			devlogEventRepository.findOne.mockResolvedValue(null);
 			await expect(
-				service.updatePost('pid', 'uid', validPostData),
+				service.updateDevlogEvent('pid', 'uid', validPostData),
 			).rejects.toThrow(NotFoundException);
 		});
 
@@ -95,7 +91,7 @@ describe('DevlogEventsService', () => {
 				userId: 'other',
 			});
 			await expect(
-				service.updatePost('pid', 'uid', validPostData),
+				service.updateDevlogEvent('pid', 'uid', validPostData),
 			).rejects.toThrow(UnauthorizedException);
 		});
 
@@ -106,22 +102,22 @@ describe('DevlogEventsService', () => {
 			devlogEventRepository.update.mockResolvedValue({});
 
 			await expect(
-				service.updatePost('post-id', 'user-id', validPostData),
+				service.updateDevlogEvent('post-id', 'user-id', validPostData),
 			).resolves.toEqual({});
 		});
 	});
 
-	describe('deletePost', () => {
+	describe('deleteDevlogEvent', () => {
 		it('should throw UnauthorizedException', async () => {
 			devlogEventRepository.findOne.mockResolvedValue({ userId: '2' });
-			await expect(service.deletePost('1', '1')).rejects.toThrow(
+			await expect(service.deleteDevlogEvent('1', '1')).rejects.toThrow(
 				UnauthorizedException,
 			);
 		});
 
 		it('should throw NotFoundException for post not found', async () => {
 			devlogEventRepository.findOne.mockResolvedValue(null);
-			await expect(service.deletePost('1', '1')).rejects.toThrow(
+			await expect(service.deleteDevlogEvent('1', '1')).rejects.toThrow(
 				NotFoundException,
 			);
 		});
@@ -129,7 +125,7 @@ describe('DevlogEventsService', () => {
 		it('should delete a post successfully', async () => {
 			devlogEventRepository.findOne.mockResolvedValue({ userId: '1' });
 			devlogEventRepository.destroy.mockResolvedValue(1);
-			await expect(service.deletePost('1', '1')).resolves.toEqual({
+			await expect(service.deleteDevlogEvent('1', '1')).resolves.toEqual({
 				userId: '1',
 			});
 		});
@@ -152,17 +148,6 @@ describe('DevlogEventsService', () => {
 						{ category: 'frontend' },
 					],
 				},
-				include: [
-					{
-						model: PostStatus,
-						as: 'status',
-						attributes: [],
-						required: true,
-						where: {
-							name: 'APPROVED',
-						},
-					},
-				],
 			});
 			expect(result).toEqual(mockDevlogEvents);
 		});
@@ -183,17 +168,6 @@ describe('DevlogEventsService', () => {
 						{ category: 'backend' },
 					],
 				},
-				include: [
-					{
-						model: PostStatus,
-						as: 'status',
-						attributes: [],
-						required: true,
-						where: {
-							name: 'APPROVED',
-						},
-					},
-				],
 			});
 			expect(result).toEqual(mockDevlogEvents);
 		});
@@ -209,17 +183,6 @@ describe('DevlogEventsService', () => {
 
 			expect(devlogEventRepository.findAll).toHaveBeenCalledWith({
 				where: {},
-				include: [
-					{
-						model: PostStatus,
-						as: 'status',
-						attributes: [],
-						required: true,
-						where: {
-							name: 'APPROVED',
-						},
-					},
-				],
 			});
 			expect(result).toEqual(mockDevlogEvents);
 		});
@@ -236,17 +199,6 @@ describe('DevlogEventsService', () => {
 				where: {
 					[Op.or]: [{ tags: { [Op.overlap]: ['react'] } }],
 				},
-				include: [
-					{
-						model: PostStatus,
-						as: 'status',
-						attributes: [],
-						required: true,
-						where: {
-							name: 'APPROVED',
-						},
-					},
-				],
 			});
 		});
 
@@ -259,17 +211,6 @@ describe('DevlogEventsService', () => {
 				where: {
 					[Op.or]: [{ category: 'design' }],
 				},
-				include: [
-					{
-						model: PostStatus,
-						as: 'status',
-						attributes: [],
-						required: true,
-						where: {
-							name: 'APPROVED',
-						},
-					},
-				],
 			});
 		});
 	});

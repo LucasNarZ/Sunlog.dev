@@ -2,9 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DevlogEventsController } from '../devlog-event.controller';
 import { DevlogEventsService } from '../devlog-event.service';
 import { AuthRequest } from 'src/interfaces/authRequest.interface';
-import { createPostDto } from '../dtos/devlogEvent.dto';
-import { EditPostDto } from '../dtos/editDevlogEvent.dto';
-import { LikePostDto } from '../../like/dtos/likeDevlogEvent.dto';
+import { createDevlogEventDto } from '../dtos/devlogEvent.dto';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { BadRequestException } from '@nestjs/common';
@@ -19,11 +17,11 @@ describe('DevlogEventsController', () => {
 
 	const mockDevlogEventsService = {
 		findDevlogEventsByTagAndCategory: jest.fn(),
-		createPost: jest.fn(),
-		findPost: jest.fn(),
-		findPostSlug: jest.fn(),
-		updatePost: jest.fn(),
-		deletePost: jest.fn(),
+		createDevlogEvent: jest.fn(),
+		findDevlogEvent: jest.fn(),
+		findDevlogEventSlug: jest.fn(),
+		updateDevlogEvent: jest.fn(),
+		deleteDevlogEvent: jest.fn(),
 	};
 
 	const mockJwtService = {
@@ -71,28 +69,23 @@ describe('DevlogEventsController', () => {
 
 	it('should create a post', async () => {
 		const req = { user: { userId: '123' } } as AuthRequest;
-		const dto: createPostDto = {
-			title: 't',
+		const dto: createDevlogEventDto = {
+			summary: 'summary',
 			content: 'c',
-			authorId: '123',
-			tags: [],
-			category: '',
 			description: '',
-			slug: '',
-			previewImgUrl: '',
 		};
-		mockDevlogEventsService.createPost.mockResolvedValue(dto);
+		mockDevlogEventsService.createDevlogEvent.mockResolvedValue(dto);
 		await expect(controller.createPost(req, dto)).resolves.toEqual(dto);
 	});
 
 	it('should return a post by id', async () => {
 		const req = { params: { id: '1' } } as any;
-		mockDevlogEventsService.findPost.mockResolvedValue({ id: '1' });
+		mockDevlogEventsService.findDevlogEvent.mockResolvedValue({ id: '1' });
 		await expect(controller.findPost(req)).resolves.toEqual({ id: '1' });
 	});
 
 	it('should return post by slug', async () => {
-		mockDevlogEventsService.findPostSlug.mockResolvedValue({
+		mockDevlogEventsService.findDevlogEventSlug.mockResolvedValue({
 			slug: 'slug',
 		});
 		await expect(controller.findPostSlug('slug')).resolves.toEqual({
@@ -103,18 +96,17 @@ describe('DevlogEventsController', () => {
 	it('should update a post', async () => {
 		const req = { user: { userId: '1' } } as AuthRequest;
 		const dto = {
-			title: 'new',
-			description: 'desc',
-			content: 'content',
-			category: 'asdasd',
-			slug: 'asdasd',
-			authorId: 'asdad',
+			summary: 'summary',
+			content: 'c',
+			description: '',
 		};
-		mockDevlogEventsService.updatePost.mockResolvedValue({
+		mockDevlogEventsService.updateDevlogEvent.mockResolvedValue({
 			id: '1',
 			...dto,
 		});
-		await expect(controller.updatePost('1', req, dto)).resolves.toEqual({
+		await expect(
+			controller.updateDevlogEvent('1', req, dto),
+		).resolves.toEqual({
 			id: '1',
 			...dto,
 		});
@@ -126,7 +118,7 @@ describe('DevlogEventsController', () => {
 			user: { userId: '1' },
 		} as TestRequest;
 		await expect(
-			controller.deletePost(req.params.postId, req),
+			controller.deleteDevlogEvent(req.params.postId, req),
 		).rejects.toThrow(BadRequestException);
 	});
 
@@ -136,12 +128,12 @@ describe('DevlogEventsController', () => {
 			user: { userId: '1' },
 		} as TestRequest;
 
-		mockDevlogEventsService.deletePost.mockResolvedValue({
+		mockDevlogEventsService.deleteDevlogEvent.mockResolvedValue({
 			id: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb',
 			userId: '1',
 		});
 		await expect(
-			controller.deletePost(req.params.postId, req),
+			controller.deleteDevlogEvent(req.params.postId, req),
 		).resolves.toEqual({
 			id: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb',
 			userId: '1',

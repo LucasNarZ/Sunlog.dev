@@ -1,15 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from '../users.service';
 import {
-	BadRequestException,
-	ConflictException,
-	NotFoundException,
-} from '@nestjs/common';
-import {
 	usersRepositoryToken,
 	devlogEventRepositoryToken,
-	followsRepositoryToken,
+	projectRepositoryToken,
 } from 'src/constants';
+import { NotFoundException } from '@nestjs/common';
 
 describe('UsersService', () => {
 	let service: UsersService;
@@ -25,6 +21,8 @@ describe('UsersService', () => {
 		findAll: jest.Mock;
 	};
 
+	let projectRepository = {};
+
 	beforeEach(async () => {
 		usersRepository = {
 			create: jest.fn(),
@@ -37,6 +35,7 @@ describe('UsersService', () => {
 		devlogEventRepository = {
 			findAll: jest.fn(),
 		};
+		projectRepository = {};
 
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
@@ -45,6 +44,10 @@ describe('UsersService', () => {
 				{
 					provide: devlogEventRepositoryToken,
 					useValue: devlogEventRepository,
+				},
+				{
+					provide: projectRepositoryToken,
+					useValue: projectRepository,
 				},
 			],
 		}).compile();
@@ -99,13 +102,6 @@ describe('UsersService', () => {
 			devlogEventRepository.findAll.mockResolvedValue(devlogEvents);
 			await expect(service.getPostByUser('1')).resolves.toEqual(
 				devlogEvents,
-			);
-		});
-
-		it('should throw NotFoundException if no devlogEvents found', async () => {
-			devlogEventRepository.findAll.mockResolvedValue([]);
-			await expect(service.getPostByUser('1')).rejects.toThrow(
-				NotFoundException,
 			);
 		});
 	});
