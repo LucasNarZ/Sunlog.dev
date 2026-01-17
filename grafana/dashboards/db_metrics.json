@@ -1,0 +1,90 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": { "type": "grafana", "uid": "-- Grafana --" },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": { "type": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "ops", "custom": { "drawStyle": "line", "lineWidth": 2, "pointSize": 3 } }, "overrides": [] },
+      "gridPos": { "h": 10, "w": 12, "x": 0, "y": 0 },
+      "id": 1,
+      "targets": [
+        {
+          "expr": "sum by (model, type) (rate(db_query_total[1m])) * 60",
+          "legendFormat": "{{type}} {{model}}",
+          "refId": "A"
+        }
+      ],
+      "title": "DB Queries Total",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "ms", "custom": { "drawStyle": "line", "lineWidth": 2, "pointSize": 3 } }, "overrides": [] },
+      "gridPos": { "h": 10, "w": 12, "x": 12, "y": 0 },
+      "id": 2,
+      "targets": [
+        {
+          "expr": "rate(db_query_duration_seconds_sum[1m]) / rate(db_query_duration_seconds_count[1m]) * 1000",
+          "legendFormat": "{{type}} {{model}}",
+          "refId": "B"
+        }
+      ],
+      "title": "DB Query Duration",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "ops", "custom": { "drawStyle": "line", "lineWidth": 2, "pointSize": 3 } }, "overrides": [] },
+      "gridPos": { "h": 6, "w": 12, "x": 0, "y": 10 },
+      "id": 3,
+      "targets": [
+        {
+          "expr": "sum by (model, type) (rate(db_errors_total[1m])) * 60",
+          "legendFormat": "{{type}} {{model}}",
+          "refId": "C"
+        }
+      ],
+      "title": "DB Errors Total",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "connections", "custom": { "drawStyle": "line", "lineWidth": 2, "pointSize": 3 } }, "overrides": [] },
+      "gridPos": { "h": 6, "w": 12, "x": 12, "y": 10 },
+      "id": 4,
+      "targets": [
+        { "expr": "db_connections", "legendFormat": "Open Connections", "refId": "D" },
+        { "expr": "db_idle_connections", "legendFormat": "Idle Connections", "refId": "E" }
+      ],
+      "title": "DB Connection Pool",
+      "type": "timeseries"
+    }
+  ],
+  "preload": false,
+  "refresh": "5s",
+  "schemaVersion": 42,
+  "tags": ["database", "backend"],
+  "templating": { "list": [] },
+  "time": { "from": "now-6h", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Database Metrics",
+  "uid": "database-metrics-dashboard",
+  "version": 1
+}

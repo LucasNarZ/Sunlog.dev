@@ -4,11 +4,12 @@ import {
 	Table,
 	Column,
 	ForeignKey,
+	CreatedAt,
 } from 'sequelize-typescript';
-import { Post } from 'src/post/post.entity';
+import { DevlogEvent } from 'src/devlog-event/devlog-event.entity';
 import { User } from 'src/user/user.entity';
 
-@Table
+@Table({ timestamps: false })
 export class Like extends Model {
 	@Column({
 		type: DataType.UUID,
@@ -25,16 +26,14 @@ export class Like extends Model {
 	})
 	likerId: string;
 
-	@ForeignKey(() => Post)
+	@ForeignKey(() => DevlogEvent)
 	@Column({
 		type: DataType.UUID,
 		allowNull: false,
 	})
 	likedId: string;
 
-	@Column({
-		type: DataType.DATE,
-		allowNull: false,
-	})
+	@CreatedAt
+	@Column({ type: DataType.DATE, defaultValue: DataType.NOW })
 	createdAt: Date;
 }

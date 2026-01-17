@@ -83,17 +83,19 @@ describe('UsersController', () => {
 		});
 	});
 
-	describe('getUserPosts', () => {
+	describe('getUserDevlogEvents', () => {
 		it('should call usersService.getPostByUser with correct id', async () => {
 			const req = {
 				params: { id: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb' },
 			} as unknown as Request;
-			const posts = [
+			const devlogEvents = [
 				{ id: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb' },
 				{ id: 'd02cc816-b60b-49c9-b0a8-0acf5caebafc' },
 			];
-			usersService.getPostByUser!.mockResolvedValue(posts);
-			expect(await controller.getUserPosts(req)).toEqual(posts);
+			usersService.getPostByUser!.mockResolvedValue(devlogEvents);
+			expect(await controller.getUserDevlogEvents(req)).toEqual(
+				devlogEvents,
+			);
 			expect(usersService.getPostByUser).toHaveBeenCalledWith(
 				'd02cc816-b60b-49c9-b0a8-0acf5caebafb',
 			);

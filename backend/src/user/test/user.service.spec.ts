@@ -1,15 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from '../users.service';
 import {
-	BadRequestException,
-	ConflictException,
-	NotFoundException,
-} from '@nestjs/common';
-import {
 	usersRepositoryToken,
-	postsRepositoryToken,
-	followsRepositoryToken,
+	devlogEventRepositoryToken,
+	projectRepositoryToken,
 } from 'src/constants';
+import { NotFoundException } from '@nestjs/common';
 
 describe('UsersService', () => {
 	let service: UsersService;
@@ -21,9 +17,11 @@ describe('UsersService', () => {
 		decrement: jest.Mock;
 		findAll: jest.Mock;
 	};
-	let postsRepository: {
+	let devlogEventRepository: {
 		findAll: jest.Mock;
 	};
+
+	let projectRepository = {};
 
 	beforeEach(async () => {
 		usersRepository = {
@@ -34,15 +32,23 @@ describe('UsersService', () => {
 			decrement: jest.fn(),
 			findAll: jest.fn(),
 		};
-		postsRepository = {
+		devlogEventRepository = {
 			findAll: jest.fn(),
 		};
+		projectRepository = {};
 
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
 				UsersService,
 				{ provide: usersRepositoryToken, useValue: usersRepository },
-				{ provide: postsRepositoryToken, useValue: postsRepository },
+				{
+					provide: devlogEventRepositoryToken,
+					useValue: devlogEventRepository,
+				},
+				{
+					provide: projectRepositoryToken,
+					useValue: projectRepository,
+				},
 			],
 		}).compile();
 
@@ -91,16 +97,11 @@ describe('UsersService', () => {
 	});
 
 	describe('getPostByUser', () => {
-		it('should return posts if found', async () => {
-			const posts = [{ id: 'p1' }, { id: 'p2' }];
-			postsRepository.findAll.mockResolvedValue(posts);
-			await expect(service.getPostByUser('1')).resolves.toEqual(posts);
-		});
-
-		it('should throw NotFoundException if no posts found', async () => {
-			postsRepository.findAll.mockResolvedValue([]);
-			await expect(service.getPostByUser('1')).rejects.toThrow(
-				NotFoundException,
+		it('should return devlogEvents if found', async () => {
+			const devlogEvents = [{ id: 'p1' }, { id: 'p2' }];
+			devlogEventRepository.findAll.mockResolvedValue(devlogEvents);
+			await expect(service.getPostByUser('1')).resolves.toEqual(
+				devlogEvents,
 			);
 		});
 	});

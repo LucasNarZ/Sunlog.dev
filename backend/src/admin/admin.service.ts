@@ -1,59 +1,52 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import {
-	postsRepositoryToken,
-	postStatusesRepositryToken,
+	devlogEventRepositoryToken,
 	usersRepositoryToken,
 } from 'src/constants';
 import { User } from 'src/user/user.entity';
-import { Post } from 'src/post/post.entity';
-import { PostStatus } from 'src/post/postStatus.entity';
+import { DevlogEvent } from 'src/devlog-event/devlog-event.entity';
 
 @Injectable()
 export class AdminService {
 	constructor(
 		@Inject(usersRepositoryToken)
 		private usersRepository: typeof User,
-		@Inject(postsRepositoryToken)
-		private postRepository: typeof Post,
-		@Inject(postStatusesRepositryToken)
-		private postStatusRepository: typeof PostStatus,
+		@Inject(devlogEventRepositoryToken)
+		private postRepository: typeof DevlogEvent,
 	) {}
 
-	async getPostsByStatus(status: string) {
-		const posts = await this.postRepository.findAll({
-			include: [{ model: PostStatus, attributes: ['name'], required:true }],
-			where: {
-				'$status.name$': status,
-			},
-		});
+	async getDevlogEventsByStatus(status: string) {
+		const devlogEvents = await this.postRepository.findAll();
 
-		if (!posts) {
-			throw new NotFoundException('No Posts found for this status.');
+		if (!devlogEvents) {
+			throw new NotFoundException(
+				'No DevlogEvents found for this status.',
+			);
 		}
 
-		return posts;
+		return devlogEvents;
 	}
 
-	async updatePostStatus(postId: string, statusName: string) {
-		const status = await this.postStatusRepository.findOne({
-			where: {
-				name: statusName,
-			},
-			attributes: ['id'],
-		});
-		
-		if (!status) {
-			throw new NotFoundException('Post Status not found.');
-		}
-		const [affected] = await this.postRepository.update(
-			{ statusId: status.id },
-			{ where: { id: postId } },
-		);
+	// async updateDevlogEventStatus(postId: string, statusName: string) {
+	// 	const status = await this.postStatusRepository.findOne({
+	// 		where: {
+	// 			name: statusName,
+	// 		},
+	// 		attributes: ['id'],
+	// 	});
 
-		if (affected == 0) {
-			throw new NotFoundException('Post Not Found.');
-		}
+	// 	if (!status) {
+	// 		throw new NotFoundException('DevlogEvent Status not found.');
+	// 	}
+	// 	const [affected] = await this.postRepository.update(
+	// 		{ statusId: status.id },
+	// 		{ where: { id: postId } },
+	// 	);
 
-		return affected;
-	}
+	// 	if (affected == 0) {
+	// 		throw new NotFoundException('DevlogEvent Not Found.');
+	// 	}
+
+	// 	return affected;
+	// }
 }

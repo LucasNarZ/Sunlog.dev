@@ -16,19 +16,18 @@ import { AdminGuard } from 'src/auth/guards/admin.guard';
 export class AdminController {
 	constructor(private readonly adminService: AdminService) {}
 
-	
 	@UseGuards(AuthGuard, AdminGuard)
-	@Get('posts')
-	async getPostsByStatus(@Query('status') status: string) {
-		return await this.adminService.getPostsByStatus(status);
+	@Get('devlogEvents')
+	async getDevlogEventsByStatus(@Query('status') status: string) {
+		return await this.adminService.getDevlogEventsByStatus(status);
 	}
 
-	@UseGuards(AuthGuard, AdminGuard)
-	@Patch('posts/:id')
-	async updatePostStatus(
-		@Param('id') postId: string,
-		@Body() body: UpdatePostStatusDto,
-	) {
-		return await this.adminService.updatePostStatus(postId, body.status);
-	}
+	// @UseGuards(AuthGuard, AdminGuard)
+	// @Patch('devlogEvents/:id')
+	// async updatePostStatus(
+	// 	@Param('id') postId: string,
+	// 	@Body() body: UpdatePostStatusDto,
+	// ) {
+	// 	return await this.adminService.updatePostStatus(postId, body.status);
+	// }
 }

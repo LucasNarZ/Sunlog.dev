@@ -17,12 +17,12 @@ import { UserNotFoundException } from 'src/exceptions/UserNotFound.exception';
 import { AuthRequest } from 'src/interfaces/authRequest.interface';
 import { isUUID } from 'class-validator';
 
-@Controller('user')
+@Controller('users')
 export class UsersController {
 	constructor(private readonly usersService: UsersService) {}
 
 	@UseGuards(AuthGuard)
-	@Get('profile')
+	@Get('me')
 	async findUser(@Req() req: AuthRequest) {
 		const id = req.user.userId;
 		if (!id) {
@@ -35,7 +35,7 @@ export class UsersController {
 		return user;
 	}
 
-	@Get('public/:userId')
+	@Get(':userId')
 	async findUserPublic(@Param('userId') userId: string) {
 		if (!isUUID(userId)) {
 			throw new BadRequestException('UserId must be an UUID.');
@@ -43,18 +43,26 @@ export class UsersController {
 		return await this.usersService.findUserPublic(userId);
 	}
 
-	@Get(':id/posts')
-	async getUserPosts(@Req() req: Request) {
+	@Get(':userId/projects')
+	async findUserProjects(@Param('userId') userId: string) {
+		if (!isUUID(userId)) {
+			throw new BadRequestException('UserId must be an UUID.');
+		}
+		return await this.usersService.findUserProjects(userId);
+	}
+
+	@Get(':id/devlogEvents')
+	async getUserDevlogEvents(@Req() req: Request) {
 		const { id } = req.params;
 		if (!isUUID(id)) {
 			throw new BadRequestException('UserId must be an UUID.');
 		}
-		const posts = await this.usersService.getPostByUser(id);
-		return posts;
+		const devlogEvents = await this.usersService.getPostByUser(id);
+		return devlogEvents;
 	}
 
 	@UseGuards(AuthGuard)
-	@Put('update')
+	@Put('me')
 	async updateUser(@Req() req: AuthRequest, @Body() body: updateUserDto) {
 		const id = req?.user?.userId;
 		return await this.usersService.updateUser(id, body);
@@ -66,7 +74,7 @@ export class UsersController {
 		return req?.user?.userId;
 	}
 
-	@Get('/trending-users')
+	@Get('/trending')
 	async getTrendingUsers() {
 		return await this.usersService.getTrendingUsers();
 	}

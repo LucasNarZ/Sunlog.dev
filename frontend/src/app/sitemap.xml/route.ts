@@ -1,11 +1,11 @@
-import { NextResponse } from "next/server";
-// import { fetchFilteredPosts } from "@lib/fetchPostsByTagNCategory"
+import { NextResponse } from 'next/server';
+// import { fetchFilteredDevlogs } from "@lib/fetchDevlogEventsByTagNCategory"
 // import { Post } from '@/types/post'
 
-// ${posts
+// ${devlogEvents
 //   .map((post:Post) => `
 //     <url>
-//       <loc>${baseUrl}/posts/${post.slug}</loc>
+//       <loc>${baseUrl}/devlogEvents/${post.slug}</loc>
 //       <changefreq>weekly</changefreq>
 //       <priority>0.8</priority>
 //     </url>
@@ -13,10 +13,10 @@ import { NextResponse } from "next/server";
 //   .join('')}
 
 export async function GET() {
-  // const posts = await fetchFilteredPosts([], [])
-  const baseUrl = "http://satorix.duckdns.org/";
+	// const devlogEvents = await fetchFilteredDevlogs([], [])
+	const baseUrl = 'http://satorix.duckdns.org/';
 
-  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+	const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
       <loc>${baseUrl}</loc>
@@ -26,9 +26,9 @@ export async function GET() {
 
   </urlset>`;
 
-  return new NextResponse(sitemap, {
-    headers: {
-      "Content-Type": "application/xml",
-    },
-  });
+	return new NextResponse(sitemap, {
+		headers: {
+			'Content-Type': 'application/xml',
+		},
+	});
 }

@@ -1,11 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { LikeService } from '../like.service';
-import { postsRepositoryToken, likesRepositoryToken } from 'src/constants';
+import {
+	devlogEventRepositoryToken,
+	likesRepositoryToken,
+} from 'src/constants';
 import { ConflictException } from '@nestjs/common';
 
 describe('LikeService', () => {
 	let service: LikeService;
-	let postsRepository: {
+	let devlogEventRepository: {
 		increment: jest.Mock;
 		decrement: jest.Mock;
 	};
@@ -16,7 +19,7 @@ describe('LikeService', () => {
 	};
 
 	beforeEach(async () => {
-		postsRepository = {
+		devlogEventRepository = {
 			increment: jest.fn(),
 			decrement: jest.fn(),
 		};
@@ -29,7 +32,10 @@ describe('LikeService', () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
 				LikeService,
-				{ provide: postsRepositoryToken, useValue: postsRepository },
+				{
+					provide: devlogEventRepositoryToken,
+					useValue: devlogEventRepository,
+				},
 				{ provide: likesRepositoryToken, useValue: likesRepository },
 			],
 		}).compile();
@@ -40,17 +46,19 @@ describe('LikeService', () => {
 	describe('likePost', () => {
 		it('should throw if already liked', async () => {
 			likesRepository.findOne.mockResolvedValue({});
-			await expect(service.likePost('uid', 'pid')).rejects.toThrow(
+			await expect(service.likeDevlogEvent('uid', 'pid')).rejects.toThrow(
 				ConflictException,
 			);
 		});
 
 		it('should like post and return message', async () => {
 			likesRepository.findOne.mockResolvedValue(null);
-			postsRepository.increment.mockResolvedValue(null);
+			devlogEventRepository.increment.mockResolvedValue(null);
 			likesRepository.create.mockResolvedValue(null);
 
-			await expect(service.likePost('uid', 'pid')).resolves.toEqual({
+			await expect(
+				service.likeDevlogEvent('uid', 'pid'),
+			).resolves.toEqual({
 				message: 'Liked successfully',
 			});
 		});
@@ -59,17 +67,19 @@ describe('LikeService', () => {
 	describe('unlikePost', () => {
 		it('should throw if not liked', async () => {
 			likesRepository.findOne.mockResolvedValue(null);
-			await expect(service.unlikePost('uid', 'pid')).rejects.toThrow(
-				ConflictException,
-			);
+			await expect(
+				service.unlikeDevlogEvent('uid', 'pid'),
+			).rejects.toThrow(ConflictException);
 		});
 
 		it('should unlike post and return message', async () => {
 			likesRepository.findOne.mockResolvedValue({});
-			postsRepository.decrement.mockResolvedValue(null);
+			devlogEventRepository.decrement.mockResolvedValue(null);
 			likesRepository.destroy.mockResolvedValue(null);
 
-			await expect(service.unlikePost('uid', 'pid')).resolves.toEqual({
+			await expect(
+				service.unlikeDevlogEvent('uid', 'pid'),
+			).resolves.toEqual({
 				message: 'Unliked successfully',
 			});
 		});
@@ -78,14 +88,16 @@ describe('LikeService', () => {
 	describe('getLikePost', () => {
 		it('should return true if liked', async () => {
 			likesRepository.findOne.mockResolvedValue({});
-			await expect(service.getLikePost('uid', 'pid')).resolves.toBe(true);
+			await expect(
+				service.getLikeDevlogEvent('uid', 'pid'),
+			).resolves.toBe(true);
 		});
 
 		it('should return false if not liked', async () => {
 			likesRepository.findOne.mockResolvedValue(null);
-			await expect(service.getLikePost('uid', 'pid')).resolves.toBe(
-				false,
-			);
+			await expect(
+				service.getLikeDevlogEvent('uid', 'pid'),
+			).resolves.toBe(false);
 		});
 	});
 });
