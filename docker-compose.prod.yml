@@ -32,6 +32,7 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - JWT_ACCESS_SECRET=${JWT_ACCESS_SECRET}
       - JWT_REFLESH_SECRET=${JWT_REFRESH_SECRET}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
       - NODE_ENV=production
     depends_on:
       - postgres
