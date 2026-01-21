@@ -34,7 +34,12 @@ export class UsersService {
 	}
 
 	async createUser({ name, email, password }: createUserDto) {
-		return await this.usersRepository.create({ name, email, password });
+		return await this.usersRepository.create({
+			name,
+			email,
+			password,
+			slug: name.toLowerCase().replace(' ', '_'),
+		});
 	}
 
 	async getUserByEmail(email: string) {

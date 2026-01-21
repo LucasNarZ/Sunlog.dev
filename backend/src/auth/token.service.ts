@@ -4,7 +4,6 @@ import { UserPayload } from '../interfaces/userPayload.interface';
 import { jwtConstants, redisToken } from 'src/constants';
 import Redis from 'ioredis';
 import * as argon2 from 'argon2';
-import { User } from 'src/user/user.entity';
 
 @Injectable()
 export class TokenService {

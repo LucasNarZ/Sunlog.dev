@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { apiClient } from '@lib/apiClient';
 import type { User } from '@/features/users/types/user';
 import { fetchUserProfile } from '@/features/users/services/fetchUserProfile';
 

@@ -126,7 +126,6 @@ export class ProjectService {
 				projectId,
 			},
 		});
-		console.log('devlogs ', devlogs);
 
 		return devlogs;
 	}

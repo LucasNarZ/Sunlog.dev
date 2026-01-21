@@ -17,10 +17,9 @@ export class AuthService {
 
 	async register(body: createUserDto) {
 		try {
-			let data = body;
-			data = {
-				...data,
-				password: await argon2.hash(data.password),
+			const data = {
+				...body,
+				password: await argon2.hash(body.password),
 			};
 			return await this.usersService.createUser(data);
 		} catch (err) {
@@ -29,6 +28,7 @@ export class AuthService {
 					'Email already registered.',
 				);
 			}
+			throw err;
 		}
 	}
 
