@@ -42,9 +42,9 @@ apiClient.interceptors.response.use(
 			} catch (err) {
 				isRefreshing = false;
 				queue = [];
-				return error;
+				throw error;
 			}
 		}
-		return error;
+		throw error;
 	},
 );
