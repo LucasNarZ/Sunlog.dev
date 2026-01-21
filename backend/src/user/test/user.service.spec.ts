@@ -58,9 +58,10 @@ describe('UsersService', () => {
 	describe('createUser', () => {
 		it('should call usersRepository.create with correct params', async () => {
 			const dto = {
-				name: 'John',
+				name: 'John Boy',
 				email: 'john@example.com',
 				password: 'pass',
+				slug: 'john_boy',
 			};
 			usersRepository.create.mockResolvedValue(dto);
 			await expect(service.createUser(dto)).resolves.toEqual(dto);
