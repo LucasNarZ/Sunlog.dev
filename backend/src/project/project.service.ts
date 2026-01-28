@@ -38,6 +38,7 @@ export class ProjectService {
 
 		return await this.projectRepository.create({
 			...data,
+			slug: data.name.toLowerCase().replace(' ', '_'),
 			userId,
 		});
 	}
