@@ -42,9 +42,16 @@ export class User extends Model {
 
 	@Column({
 		type: DataType.STRING,
-		allowNull: false,
+		allowNull: true,
 	})
 	password: string;
+
+	@Column({
+		type: DataType.STRING,
+		allowNull: true,
+		unique: true,
+	})
+	googleId: string;
 
 	@Default(
 		'https://deepgrouplondon.com/wp-content/uploads/2019/06/person-placeholder-5.png',

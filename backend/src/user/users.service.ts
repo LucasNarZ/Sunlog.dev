@@ -11,6 +11,7 @@ import { Follow } from 'src/follow/follow.entity';
 import { updateUserDto } from 'src/user/dtos/updateUser.dto';
 import { fn, col, Op } from 'sequelize';
 import { Project } from 'src/project/project.entity';
+import { createUserGoogleDto } from './dtos/createUserGoogle.dto';
 
 @Injectable()
 export class UsersService {
@@ -37,13 +38,28 @@ export class UsersService {
 		return await this.usersRepository.create({
 			name,
 			email,
-			password,
+			password: password,
+			slug: name.toLowerCase().replace(' ', '_'),
+		});
+	}
+
+	async createUserGoogle({ name, email, googleId }: createUserGoogleDto) {
+		return await this.usersRepository.create({
+			name,
+			email,
+			googleId: googleId,
 			slug: name.toLowerCase().replace(' ', '_'),
 		});
 	}
 
 	async getUserByEmail(email: string) {
 		return await this.usersRepository.findOne({ where: { email } });
+	}
+
+	async findByGoogleId(googleId: string) {
+		return await this.usersRepository.findOne({
+			where: { googleId },
+		});
 	}
 
 	async findUser(id: string) {

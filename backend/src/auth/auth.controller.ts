@@ -15,12 +15,15 @@ import { Response } from 'express';
 import { TokenService } from './token.service';
 import { extractTokenFromCookie } from 'src/utils/jwt.util';
 import { AuthGuard } from './guards/auth.guard';
+import { LoginGoogleDto } from './dtos/loginGoogle.dto';
+import { GoogleAuthService } from './googleAuth.service';
 
 @Controller('auth')
 export class AuthController {
 	constructor(
 		private readonly authService: AuthService,
 		private tokenService: TokenService,
+		private googleAuthService: GoogleAuthService,
 	) {}
 
 	@Post('register')
@@ -111,5 +114,10 @@ export class AuthController {
 		});
 
 		return data;
+	}
+
+	@Post('login/google')
+	async loginGoogle(@Body() loginGoogleDto: LoginGoogleDto) {
+		return this.googleAuthService.loginWithGoogle(loginGoogleDto.idToken);
 	}
 }

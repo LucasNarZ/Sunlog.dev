@@ -7,6 +7,7 @@ import { TokenService } from './token.service';
 import { AuthGuard } from './guards/auth.guard';
 import { jwtConstants } from 'src/constants';
 import { RedisModule } from 'src/redis/redis.module';
+import { GoogleAuthService } from './googleAuth.service';
 
 @Module({
 	imports: [
@@ -19,7 +20,7 @@ import { RedisModule } from 'src/redis/redis.module';
 		RedisModule,
 	],
 	controllers: [AuthController],
-	providers: [AuthGuard, AuthService, TokenService],
+	providers: [AuthGuard, AuthService, TokenService, GoogleAuthService],
 	exports: [AuthService],
 })
 export class AuthModule {}
