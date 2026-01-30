@@ -76,6 +76,7 @@ describe('ProjectService', () => {
 			});
 			expect(projectRepository.create).toHaveBeenCalledWith({
 				...dto,
+				slug: 'my_project',
 				userId,
 			});
 		});
