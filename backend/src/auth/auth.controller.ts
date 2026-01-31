@@ -117,7 +117,23 @@ export class AuthController {
 	}
 
 	@Post('login/google')
-	async loginGoogle(@Body() loginGoogleDto: LoginGoogleDto) {
-		return this.googleAuthService.loginWithGoogle(loginGoogleDto.idToken);
+	async loginGoogle(@Res() res: Response, @Body() loginGoogleDto: LoginGoogleDto) {
+		const data = await this.googleAuthService.loginWithGoogle(loginGoogleDto.idToken);
+        const isProduction =
+			process.env.NODE_ENV === 'production' ? true : false;
+
+		res.cookie('refresh_token', data.refreshToken, {
+			httpOnly: true,
+			secure: isProduction,
+			sameSite: isProduction ? 'none' : 'lax',
+			maxAge: 15 * 24 * 60 * 60 * 1000,
+		});
+		res.cookie('access_token', data.accessToken, {
+			httpOnly: true,
+			secure: isProduction,
+			sameSite: isProduction ? 'none' : 'lax',
+			maxAge: 15 * 60 * 1000,
+		});
+		return data;
 	}
 }

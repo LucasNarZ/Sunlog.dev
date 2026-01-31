@@ -3,6 +3,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { TokenService } from './token.service';
 import { UserPayload } from '../interfaces/userPayload.interface';
 import { UsersService } from 'src/user/users.service';
+import { logger } from 'src/logger/logger';
 
 @Injectable()
 export class GoogleAuthService {
@@ -12,31 +13,44 @@ export class GoogleAuthService {
 		private readonly tokenService: TokenService,
 		private readonly userService: UsersService,
 	) {
-		this.client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+		const certsUrl = 'http://nginx/google-certs/';
+
+		this.client = new OAuth2Client({
+			clientId: process.env.GOOGLE_CLIENT_ID,
+			endpoints: {
+				oauth2FederatedSignonPemCertsUrl: certsUrl,
+			},
+		});
 	}
 
 	async loginWithGoogle(idToken: string) {
 		let payload;
+
 		try {
 			const ticket = await this.client.verifyIdToken({
 				idToken,
 				audience: process.env.GOOGLE_CLIENT_ID,
 			});
+
 			payload = ticket.getPayload();
 		} catch (err) {
+			logger.error('Error during token verification:');
+			logger.error(err);
+
 			throw new UnauthorizedException('Invalid Google token.');
 		}
 
-		if (!payload)
-			throw new UnauthorizedException('Google token payload missing');
 
 		let user = await this.userService.findByGoogleId(payload.sub);
+
 		if (!user) {
 			user = await this.userService.createUserGoogle({
 				googleId: payload.sub,
 				email: payload.email,
 				name: payload.name,
 			});
+		} else {
+			logger.log(`Existing user found: ${user.id}`);
 		}
 
 		const jwtPayload: UserPayload = {
