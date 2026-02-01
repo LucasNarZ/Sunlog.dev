@@ -9,6 +9,7 @@ import {
 	Unique,
 } from 'sequelize-typescript';
 import { Follow } from 'src/follow/follow.entity';
+import { Project } from 'src/project/project.entity';
 
 @Table
 export class User extends Model {
@@ -82,8 +83,8 @@ export class User extends Model {
 	})
 	bio: string;
 
-	@HasMany(() => DevlogEvent)
-	devlogs: DevlogEvent[];
+	@HasMany(() => Project)
+	projects: Project[];
 
 	@Column({
 		type: DataType.BOOLEAN,

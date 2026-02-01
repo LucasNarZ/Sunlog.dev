@@ -107,11 +107,11 @@ describe('ProjectService', () => {
 
 	describe('findProjectByName', () => {
 		it('should return project by username and project name', async () => {
-			const username = 'john';
-			const projectName = 'MyProject';
+			const userSlug = 'john';
+			const projectSlug = 'myproject';
 			const project = {
 				id: 'p1',
-				name: projectName,
+				name: 'MyProject',
 				description: 'desc',
 				readme: 'readme',
 			};
@@ -119,17 +119,21 @@ describe('ProjectService', () => {
 			projectRepository.findOne.mockResolvedValue(project);
 
 			await expect(
-				service.findProjectByName(username, projectName),
+				service.findProjectByName(userSlug, projectSlug),
 			).resolves.toEqual(project);
 			expect(projectRepository.findOne).toHaveBeenCalledWith({
-				where: { name: projectName },
+				where: {
+					slug: projectSlug,
+				},
 				attributes: ['name', 'id', 'description', 'readme'],
 				include: [
 					{
 						model: expect.anything(),
 						attributes: [['name', 'username']],
 						required: true,
-						where: { name: username },
+						where: {
+							slug: userSlug,
+						},
 					},
 				],
 			});
@@ -147,11 +151,23 @@ describe('ProjectService', () => {
 
 			await expect(service.findAllProjects()).resolves.toEqual(projects);
 			expect(projectRepository.findAll).toHaveBeenCalledWith({
+				attributes: [
+					'createdAt',
+					'description',
+					'slug',
+					'id',
+					'name',
+					'readme',
+					'stars',
+					'updatedAt',
+					[expect.anything(), 'authorSlug'],
+				],
+
 				include: [
 					{
 						model: expect.anything(),
 						required: true,
-						attributes: [['name', 'username']],
+						attributes: [],
 					},
 				],
 			});

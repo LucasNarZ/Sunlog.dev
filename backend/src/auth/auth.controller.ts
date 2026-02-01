@@ -17,6 +17,7 @@ import { extractTokenFromCookie } from 'src/utils/jwt.util';
 import { AuthGuard } from './guards/auth.guard';
 import { LoginGoogleDto } from './dtos/loginGoogle.dto';
 import { GoogleAuthService } from './googleAuth.service';
+import { logger } from 'src/logger/logger';
 
 @Controller('auth')
 export class AuthController {
@@ -116,10 +117,16 @@ export class AuthController {
 		return data;
 	}
 
+	@HttpCode(HttpStatus.OK)
 	@Post('login/google')
-	async loginGoogle(@Res() res: Response, @Body() loginGoogleDto: LoginGoogleDto) {
-		const data = await this.googleAuthService.loginWithGoogle(loginGoogleDto.idToken);
-        const isProduction =
+	async loginGoogle(
+		@Res({ passthrough: true }) res: Response,
+		@Body() loginGoogleDto: LoginGoogleDto,
+	) {
+		const data = await this.googleAuthService.loginWithGoogle(
+			loginGoogleDto.idToken,
+		);
+		const isProduction =
 			process.env.NODE_ENV === 'production' ? true : false;
 
 		res.cookie('refresh_token', data.refreshToken, {
