@@ -18,11 +18,7 @@ import { CreateProjectDto } from './dtos/createProject.dto';
 
 @Controller('projects')
 export class ProjectController {
-	constructor(
-		private readonly projectService: ProjectService,
-		@Inject('LOGGER')
-		private readonly logger: LoggerService,
-	) {}
+	constructor(private readonly projectService: ProjectService) {}
 
 	@UseGuards(AuthGuard)
 	@Post()
@@ -44,20 +40,19 @@ export class ProjectController {
 		return await this.projectService.getProjectDevlogs(id);
 	}
 
-	@Get(':username/:projectName')
+	@Get(':userSlug/:projectSlug')
 	async findProjectByName(
-		@Param('username') username: string,
-		@Param('projectName') projectName: string,
+		@Param('userSlug') userSlug: string,
+		@Param('projectSlug') projectSlug: string,
 	) {
 		return await this.projectService.findProjectByName(
-			username,
-			projectName,
+			userSlug,
+			projectSlug,
 		);
 	}
 
 	@Get()
 	async findAllProjects() {
-		this.logger.log('Good log!!!!');
 		return await this.projectService.findAllProjects();
 	}
 

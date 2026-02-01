@@ -1,9 +1,10 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import {
-	devlogEventRepositoryToken,
-	projectRepositoryToken,
-	usersRepositoryToken,
-} from 'src/constants';
+	BadRequestException,
+	Inject,
+	Injectable,
+	NotFoundException,
+} from '@nestjs/common';
+import { RESERVED_SLUGS, usersRepositoryToken } from 'src/constants';
 import { User } from './user.entity';
 import { createUserDto } from 'src/user/dtos/user.dto';
 import { DevlogEvent } from 'src/devlog-event/devlog-event.entity';
@@ -18,28 +19,20 @@ export class UsersService {
 	constructor(
 		@Inject(usersRepositoryToken)
 		private usersRepository: typeof User,
-		@Inject(devlogEventRepositoryToken)
-		private devlogEventRepository: typeof DevlogEvent,
-		@Inject(projectRepositoryToken)
-		private projectsRepository: typeof Project,
 	) {}
 
-	private async getUserById(id: string, attributes?: string[]) {
-		const user = await this.usersRepository.findOne({
-			where: { id },
-			...(attributes ? { attributes } : {}),
-		});
-
-		if (!user) throw new NotFoundException('User not found!');
-		return user;
-	}
-
 	async createUser({ name, email, password }: createUserDto) {
+		const slug = name.toLowerCase().replace(' ', '_');
+
+		if (RESERVED_SLUGS.includes(slug)) {
+			throw new BadRequestException('This slug is reserved.');
+		}
+
 		return await this.usersRepository.create({
 			name,
 			email,
 			password: password,
-			slug: name.toLowerCase().replace(' ', '_'),
+			slug,
 		});
 	}
 
@@ -62,60 +55,88 @@ export class UsersService {
 		});
 	}
 
-	async findUser(id: string) {
-		return await this.getUserById(id, [
-			'id',
-			'name',
-			'email',
-			'profileImgUrl',
-			'bio',
-			'followersNumber',
-		]);
-	}
-
-	async findUserPublic(id: string) {
-		const user = await this.getUserById(id, [
-			'id',
-			'name',
-			'profileImgUrl',
-			'bio',
-			'followersNumber',
-			'createdAt',
-		]);
-		if (!user) {
-			throw new NotFoundException('User not found!');
-		}
-
-		return user;
-	}
-
-	async getPostByUser(id: string) {
-		const devlogEvents = await this.devlogEventRepository.findAll({
+	async findLoggedUser(id: string) {
+		return await this.usersRepository.findOne({
 			where: {
-				userId: id,
+				id,
 			},
-			order: [['createdAt', 'ASC']],
+			attributes: [
+				'id',
+				'name',
+				'slug',
+				'email',
+				'profileImgUrl',
+				'bio',
+				'followersNumber',
+			],
 		});
-		return devlogEvents;
 	}
 
-	async findUserProjects(id: string) {
-		const projects = await this.projectsRepository.findAll({
+	async findUser(slug: string, userId: string | undefined) {
+		const user = await this.usersRepository.findOne({
 			where: {
-				userId: id,
+				slug,
 			},
-			attributes: ['name', 'id', 'description', 'readme'],
+			attributes: [
+				'id',
+				'name',
+				'slug',
+				'email',
+				'profileImgUrl',
+				'bio',
+				'followersNumber',
+			],
 			include: [
 				{
-					model: User,
-					attributes: [['name', 'username']],
-					required: true,
+					model: Project,
+					include: [{ model: DevlogEvent }],
 				},
 			],
-			order: [['createdAt', 'ASC']],
 		});
 
-		return projects;
+		if (!user) {
+			throw new NotFoundException('User does not exist.');
+		}
+
+		const projectsWithAuthorSlug = user.projects.map((project) => ({
+			...project.get({ plain: true }),
+			authorSlug: user.slug,
+		}));
+
+		const devlogs = projectsWithAuthorSlug.flatMap((project) =>
+			project.DevlogEvents.map((devlog) => ({
+				...devlog,
+				projectId: project.id,
+				projectName: project.name,
+				authorSlug: user.slug,
+			})),
+		);
+
+		if (!userId || user.id !== userId) {
+			const { id, name, slug, profileImgUrl, bio, followersNumber } =
+				user;
+
+			const publicUser = {
+				id,
+				name,
+				slug,
+				profileImgUrl,
+				bio,
+				followersNumber,
+			};
+
+			return {
+				...publicUser,
+				projects: projectsWithAuthorSlug,
+				devlogs,
+			};
+		}
+
+		return {
+			...user,
+			projects: projectsWithAuthorSlug,
+			devlogs,
+		};
 	}
 
 	async updateUser(id: string, data: updateUserDto) {
