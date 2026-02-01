@@ -1,22 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from '../users.controller';
 import { UsersService } from '../users.service';
-import { AuthGuard } from 'src/auth/guards/auth.guard';
-import { UnauthorizedException, BadRequestException } from '@nestjs/common';
+import { UnauthorizedException } from '@nestjs/common';
 import { UserNotFoundException } from 'src/exceptions/UserNotFound.exception';
-import { AuthRequest } from 'src/interfaces/authRequest.interface';
-import { Request } from 'express';
-import { updateUserDto } from 'src/user/dtos/updateUser.dto';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
 describe('UsersController', () => {
 	let controller: UsersController;
-	let usersService: Partial<Record<keyof UsersService, jest.Mock>>;
+	let usersService: any;
 
 	beforeEach(async () => {
 		usersService = {
+			findLoggedUser: jest.fn(),
+			getTrendingUsers: jest.fn(),
 			findUser: jest.fn(),
-			findUserPublic: jest.fn(),
-			getPostByUser: jest.fn(),
 			updateUser: jest.fn(),
 		};
 
@@ -31,95 +28,98 @@ describe('UsersController', () => {
 		controller = module.get<UsersController>(UsersController);
 	});
 
-	describe('findUser', () => {
-		it('should throw UnauthorizedException if no user id', async () => {
-			const req = { user: {} } as AuthRequest;
-			await expect(controller.findUser(req)).rejects.toThrow(
+	describe('findLoggedUser', () => {
+		it('should return logged user', async () => {
+			const req = { user: { userId: '1' } };
+			const mockUser = { id: '1', name: 'John' };
+			usersService.findLoggedUser.mockResolvedValue(mockUser);
+
+			await expect(
+				controller.findLoggedUser(req as any),
+			).resolves.toEqual(mockUser);
+			expect(usersService.findLoggedUser).toHaveBeenCalledWith('1');
+		});
+
+		it('should throw UnauthorizedException if no userId', async () => {
+			const req = { user: {} };
+			await expect(controller.findLoggedUser(req as any)).rejects.toThrow(
 				UnauthorizedException,
 			);
 		});
 
-		it('should throw UserNotFoundException if user not found', async () => {
-			const req = {
-				user: { userId: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb' },
-			} as AuthRequest;
-			usersService.findUser!.mockResolvedValue(null);
-			await expect(controller.findUser(req)).rejects.toThrow(
+		it('should throw UserNotFoundException if service returns null', async () => {
+			const req = { user: { userId: '1' } };
+			usersService.findLoggedUser.mockResolvedValue(null);
+
+			await expect(controller.findLoggedUser(req as any)).rejects.toThrow(
 				UserNotFoundException,
 			);
-			expect(usersService.findUser).toHaveBeenCalledWith(
-				'd02cc816-b60b-49c9-b0a8-0acf5caebafb',
-			);
-		});
-
-		it('should return user if found', async () => {
-			const req = {
-				user: { userId: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb' },
-			} as AuthRequest;
-			const user = {
-				id: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb',
-				name: 'John',
-			};
-			usersService.findUser!.mockResolvedValue(user);
-			expect(await controller.findUser(req)).toEqual(user);
 		});
 	});
 
-	describe('findUserPublic', () => {
-		it('should call usersService.findUserPublic and return user', async () => {
-			const user = {
-				id: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb',
-				name: 'John',
-			};
-			usersService.findUserPublic!.mockResolvedValue(user);
-			expect(
-				await controller.findUserPublic(
-					'd02cc816-b60b-49c9-b0a8-0acf5caebafb',
-				),
-			).toEqual(user);
-			expect(usersService.findUserPublic).toHaveBeenCalledWith(
-				'd02cc816-b60b-49c9-b0a8-0acf5caebafb',
+	describe('getTrendingUsers', () => {
+		it('should return trending users', async () => {
+			const trending = [{ id: '1', name: 'A' }];
+			usersService.getTrendingUsers.mockResolvedValue(trending);
+
+			await expect(controller.getTrendingUsers()).resolves.toEqual(
+				trending,
 			);
+			expect(usersService.getTrendingUsers).toHaveBeenCalled();
 		});
 	});
 
-	describe('getUserDevlogEvents', () => {
-		it('should call usersService.getPostByUser with correct id', async () => {
-			const req = {
-				params: { id: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb' },
-			} as unknown as Request;
-			const devlogEvents = [
-				{ id: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb' },
-				{ id: 'd02cc816-b60b-49c9-b0a8-0acf5caebafc' },
-			];
-			usersService.getPostByUser!.mockResolvedValue(devlogEvents);
-			expect(await controller.getUserDevlogEvents(req)).toEqual(
-				devlogEvents,
+	describe('findUser', () => {
+		it('should call service.findUser with slug and userId', async () => {
+			const req = { user: { userId: '2' } };
+			const user = { id: '1', name: 'A' };
+			usersService.findUser.mockResolvedValue(user);
+
+			await expect(controller.findUser(req as any, 'a')).resolves.toEqual(
+				user,
 			);
-			expect(usersService.getPostByUser).toHaveBeenCalledWith(
-				'd02cc816-b60b-49c9-b0a8-0acf5caebafb',
+			expect(usersService.findUser).toHaveBeenCalledWith('a', '2');
+		});
+
+		it('should handle undefined userId', async () => {
+			const req = {};
+			const user = { id: '1', name: 'A' };
+			usersService.findUser.mockResolvedValue(user);
+
+			await expect(controller.findUser(req as any, 'a')).resolves.toEqual(
+				user,
 			);
+			expect(usersService.findUser).toHaveBeenCalledWith('a', undefined);
 		});
 	});
 
 	describe('updateUser', () => {
-		it('should call usersService.updateUser with userId and body', async () => {
-			const req = {
-				user: { userId: 'd02cc816-b60b-49c9-b0a8-0acf5caebafb' },
-			} as AuthRequest;
-			const updateDto: updateUserDto = {
-				name: 'New Name',
-				bio: 'New bio',
-				profileImgUrl: 'http://image.url/img.png',
+		it('should call service.updateUser with logged user id', async () => {
+			const req = { user: { userId: '1' } };
+			const body = {
+				name: 'New',
+				bio: 'asdasd',
+				profileImgUrl: 'asdasd',
 			};
-			usersService.updateUser!.mockResolvedValue('updated');
-			expect(await controller.updateUser(req, updateDto)).toEqual(
-				'updated',
-			);
-			expect(usersService.updateUser).toHaveBeenCalledWith(
-				'd02cc816-b60b-49c9-b0a8-0acf5caebafb',
-				updateDto,
-			);
+			const updated = { id: '1', name: 'New' };
+			usersService.updateUser.mockResolvedValue(updated);
+
+			await expect(
+				controller.updateUser(req as any, body),
+			).resolves.toEqual(updated);
+			expect(usersService.updateUser).toHaveBeenCalledWith('1', body);
+		});
+	});
+
+	describe('getLoggedUserId', () => {
+		it('should return the logged userId', () => {
+			const req = { user: { userId: '1' } };
+			expect(controller.getLoggedUserId(req as any)).toBe('1');
+		});
+
+		it('should return undefined if no user', () => {
+			const req = {};
+			expect(controller.getLoggedUserId(req as any)).toBeUndefined();
 		});
 	});
 });
