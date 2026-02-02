@@ -10,3 +10,4 @@ export const jwtConstants = {
 	refreshSecret: process.env.JWT_REFRESH_SECRET,
 };
 export const redisToken = 'REDIS';
+export const RESERVED_SLUGS = ['me', 'trending', 'admin'];

@@ -11,9 +11,7 @@ export default async function Home() {
         <div className="min-h-screen bg-gradient-to-b from-white via-neutral-50 to-white">
             <Header />
 
-            {/* Hero Section */}
             <div className="relative overflow-hidden">
-                {/* Background decoration */}
                 <div className="absolute inset-0 -z-10">
                     <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
                     <div className="absolute top-20 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
@@ -24,9 +22,7 @@ export default async function Home() {
                 </div>
             </div>
 
-            {/* Main Content */}
             <div className="max-w-7xl mx-auto px-4 pb-24">
-                {/* Latest Projects Section */}
                 <section className="mb-24">
                     <div className="flex items-center gap-4 mb-8">
                         <div className="h-10 w-1.5 bg-gradient-to-b from-primary to-blue-500 rounded-full" />
@@ -80,10 +76,8 @@ export default async function Home() {
                     )}
                 </section>
 
-                {/* Trending Users Section */}
                 <section>
                     <div className="relative">
-                        {/* Background decoration for this section */}
                         <div className="absolute -inset-4 bg-gradient-to-r from-purple-50/50 via-transparent to-pink-50/50 rounded-3xl -z-10" />
                         <TrendingUsers />
                     </div>

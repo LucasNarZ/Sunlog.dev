@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import type { User } from '@/features/users/types/user';
-import { fetchUserProfile } from '@/features/users/services/fetchUserProfile';
+import { fetchMe } from '../services/fetchMe';
 
-const useUserProfile = (slug: string): [User | null, unknown, boolean] => {
+const useMe = (): [User | null, unknown, boolean] => {
 	const [error, setError] = useState<unknown>(null);
 	const [response, setResponse] = useState<User | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
@@ -10,7 +10,7 @@ const useUserProfile = (slug: string): [User | null, unknown, boolean] => {
 		(async () => {
 			try {
 				setLoading(true);
-				const data = await fetchUserProfile(slug);
+				const data = await fetchMe();
 				setResponse(data);
 			} catch (err) {
 				console.log(err);
@@ -24,4 +24,4 @@ const useUserProfile = (slug: string): [User | null, unknown, boolean] => {
 	return [response, error, loading];
 };
 
-export default useUserProfile;
+export default useMe;

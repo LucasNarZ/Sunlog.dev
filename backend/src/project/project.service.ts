@@ -13,6 +13,7 @@ import {
 import { CreateProjectDto } from './dtos/createProject.dto';
 import { DevlogEvent } from 'src/devlog-event/devlog-event.entity';
 import { User } from 'src/user/user.entity';
+import { col } from 'sequelize';
 
 @Injectable()
 export class ProjectService {
@@ -47,10 +48,10 @@ export class ProjectService {
 		return await this.projectRepository.findByPk(id);
 	}
 
-	async findProjectByName(username: string, projectName: string) {
+	async findProjectByName(userSlug: string, projectSlug: string) {
 		return await this.projectRepository.findOne({
 			where: {
-				name: projectName,
+				slug: projectSlug,
 			},
 			attributes: ['name', 'id', 'description', 'readme'],
 			include: [
@@ -59,7 +60,7 @@ export class ProjectService {
 					attributes: [['name', 'username']],
 					required: true,
 					where: {
-						name: username,
+						slug: userSlug,
 					},
 				},
 			],
@@ -68,11 +69,23 @@ export class ProjectService {
 
 	async findAllProjects() {
 		return await this.projectRepository.findAll({
+			attributes: [
+				'createdAt',
+				'description',
+				'slug',
+				'id',
+				'name',
+				'readme',
+				'stars',
+				'updatedAt',
+				[col('user.slug'), 'authorSlug'],
+			],
+
 			include: [
 				{
 					model: User,
 					required: true,
-					attributes: [['name', 'username']],
+					attributes: [],
 				},
 			],
 		});

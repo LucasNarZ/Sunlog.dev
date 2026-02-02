@@ -1,14 +1,12 @@
 'use client';
 
 import Header from '@/components/Header';
-import useDevlogEventsByAuthor from '@/features/users/hooks/useDevlogEventsByAuthor';
 import useUserProfile from '@/features/users/hooks/useUserProfile';
 import { apiClient } from '@/lib/apiClient';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { ProfileEditor } from '@/features/users/components/profileEditor';
 import { ConfirmModal } from '@/features/users/components/confirmModal';
-import useUserProjects from '@/features/users/hooks/useUserProjects';
 import Link from 'next/link';
 import { DevlogCard } from '@/features/devlogs/components/DevlogCard';
 import { ProjectCard } from '@/features/projects/components/ProjectCard';
@@ -17,9 +15,10 @@ import { Devlog } from '@/features/devlogs/types/devlog';
 
 const User = () => {
     const router = useRouter();
-    const [user, errorUser] = useUserProfile();
-    const [devlogEvents] = useDevlogEventsByAuthor(user?.id);
-    const [projects, errors, loading] = useUserProjects(user?.id);
+    const params = useParams();
+    const slug = params?.username as string;
+    const [user, errorUser, loading] = useUserProfile(slug);
+
     const [isEditing, setIsEditing] = useState(false);
     const [editedName, setEditedName] = useState('');
     const [editedBio, setEditedBio] = useState('');
@@ -44,9 +43,6 @@ const User = () => {
         setPreviewImgUrl(user.profileImgUrl ?? '');
     }, [user]);
 
-    useEffect(() => {
-        if (errors) router.replace('/');
-    }, [errors, router]);
 
     const followerLabel = useMemo(() => {
         const n = user?.followersNumber ?? 0;
@@ -200,11 +196,11 @@ const User = () => {
                         <div className="text-gray-500">Loading projects...</div>
                     )}
 
-                    {projects?.map((project: Project) => (
-                        <ProjectCard key={project.id} project={project} />
+                    {user?.projects?.map((project: Project) => (
+                        <ProjectCard key={project.id} userSlug={slug} project={project} />
                     ))}
 
-                    {!loading && (!projects || projects.length === 0) && (
+                    {!loading && (user?.projects?.length === 0) && (
                         <div className="text-gray-500 col-span-full">
                             No projects yet.
                         </div>
@@ -216,11 +212,11 @@ const User = () => {
                 </h3>
 
                 <div className="space-y-3">
-                    {devlogEvents?.map((devlog: Devlog) => (
+                    {user?.devlogs?.map((devlog: Devlog) => (
                         <DevlogCard devlog={devlog} />
                     ))}
 
-                    {devlogEvents?.length === 0 && (
+                    {user?.devlogs?.length === 0 && (
                         <div className="text-gray-500">
                             No devlog entries yet.
                         </div>

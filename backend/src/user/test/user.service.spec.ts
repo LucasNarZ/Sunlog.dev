@@ -1,54 +1,24 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from '../users.service';
-import {
-	usersRepositoryToken,
-	devlogEventRepositoryToken,
-	projectRepositoryToken,
-} from 'src/constants';
-import { NotFoundException } from '@nestjs/common';
+import { usersRepositoryToken } from 'src/constants';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 describe('UsersService', () => {
 	let service: UsersService;
-	let usersRepository: {
-		create: jest.Mock;
-		findOne: jest.Mock;
-		update: jest.Mock;
-		increment: jest.Mock;
-		decrement: jest.Mock;
-		findAll: jest.Mock;
-	};
-	let devlogEventRepository: {
-		findAll: jest.Mock;
-	};
-
-	let projectRepository = {};
+	let usersRepository: any;
 
 	beforeEach(async () => {
 		usersRepository = {
 			create: jest.fn(),
 			findOne: jest.fn(),
 			update: jest.fn(),
-			increment: jest.fn(),
-			decrement: jest.fn(),
 			findAll: jest.fn(),
 		};
-		devlogEventRepository = {
-			findAll: jest.fn(),
-		};
-		projectRepository = {};
 
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
 				UsersService,
 				{ provide: usersRepositoryToken, useValue: usersRepository },
-				{
-					provide: devlogEventRepositoryToken,
-					useValue: devlogEventRepository,
-				},
-				{
-					provide: projectRepositoryToken,
-					useValue: projectRepository,
-				},
 			],
 		}).compile();
 
@@ -56,23 +26,51 @@ describe('UsersService', () => {
 	});
 
 	describe('createUser', () => {
-		it('should call usersRepository.create with correct params', async () => {
+		it('should create a user with proper slug', async () => {
 			const dto = {
-				name: 'John Boy',
-				email: 'john@example.com',
+				name: 'John Doe',
+				email: 'a@b.com',
 				password: 'pass',
-				slug: 'john_boy',
 			};
-			usersRepository.create.mockResolvedValue(dto);
-			await expect(service.createUser(dto)).resolves.toEqual(dto);
-			expect(usersRepository.create).toHaveBeenCalledWith(dto);
+			const created = { ...dto, slug: 'john_doe' };
+			usersRepository.create.mockResolvedValue(created);
+
+			await expect(service.createUser(dto)).resolves.toEqual(created);
+			expect(usersRepository.create).toHaveBeenCalledWith({
+				...dto,
+				slug: 'john_doe',
+			});
+		});
+
+		it('should throw if slug is reserved', async () => {
+			const dto = { name: 'Me', email: 'a@b.com', password: 'pass' };
+			await expect(service.createUser(dto)).rejects.toThrow(
+				BadRequestException,
+			);
+		});
+	});
+
+	describe('createUserGoogle', () => {
+		it('should create google user with slug', async () => {
+			const dto = { name: 'Alice', email: 'a@b.com', googleId: '123' };
+			const created = { ...dto, slug: 'alice' };
+			usersRepository.create.mockResolvedValue(created);
+
+			await expect(service.createUserGoogle(dto)).resolves.toEqual(
+				created,
+			);
+			expect(usersRepository.create).toHaveBeenCalledWith({
+				...dto,
+				slug: 'alice',
+			});
 		});
 	});
 
 	describe('getUserByEmail', () => {
-		it('should call usersRepository.findOne with correct email', async () => {
+		it('should find user by email', async () => {
 			const user = { id: '1', email: 'a@b.com' };
 			usersRepository.findOne.mockResolvedValue(user);
+
 			await expect(service.getUserByEmail('a@b.com')).resolves.toEqual(
 				user,
 			);
@@ -82,61 +80,145 @@ describe('UsersService', () => {
 		});
 	});
 
-	describe('findUserPublic', () => {
-		it('should return user when found', async () => {
-			const user = { id: '1', name: 'John' };
+	describe('findByGoogleId', () => {
+		it('should find user by googleId', async () => {
+			const user = { id: '1', googleId: '123' };
 			usersRepository.findOne.mockResolvedValue(user);
-			await expect(service.findUserPublic('1')).resolves.toEqual(user);
-		});
 
-		it('should throw NotFoundException when user not found', async () => {
-			usersRepository.findOne.mockResolvedValue(null);
-			await expect(service.findUserPublic('1')).rejects.toThrow(
-				NotFoundException,
-			);
+			await expect(service.findByGoogleId('123')).resolves.toEqual(user);
+			expect(usersRepository.findOne).toHaveBeenCalledWith({
+				where: { googleId: '123' },
+			});
 		});
 	});
 
-	describe('getPostByUser', () => {
-		it('should return devlogEvents if found', async () => {
-			const devlogEvents = [{ id: 'p1' }, { id: 'p2' }];
-			devlogEventRepository.findAll.mockResolvedValue(devlogEvents);
-			await expect(service.getPostByUser('1')).resolves.toEqual(
-				devlogEvents,
+	describe('findLoggedUser', () => {
+		it('should return selected attributes', async () => {
+			const user = {
+				id: '1',
+				name: 'A',
+				slug: 'a',
+				email: 'a@b.com',
+				profileImgUrl: '',
+				bio: '',
+				followersNumber: 0,
+			};
+			usersRepository.findOne.mockResolvedValue(user);
+
+			await expect(service.findLoggedUser('1')).resolves.toEqual(user);
+			expect(usersRepository.findOne).toHaveBeenCalledWith({
+				where: { id: '1' },
+				attributes: [
+					'id',
+					'name',
+					'slug',
+					'email',
+					'profileImgUrl',
+					'bio',
+					'followersNumber',
+				],
+			});
+		});
+	});
+
+	describe('findUser', () => {
+		it('should throw NotFoundException if user not found', async () => {
+			usersRepository.findOne.mockResolvedValue(null);
+			await expect(service.findUser('slug', undefined)).rejects.toThrow(
+				NotFoundException,
+			);
+		});
+
+		it('should return public user if not logged in', async () => {
+			const mockUser = {
+				id: '1',
+				name: 'A',
+				slug: 'a',
+				email: 'a@b.com',
+				profileImgUrl: '',
+				bio: '',
+				followersNumber: 0,
+				projects: [
+					{
+						id: 'p1',
+						name: 'proj1',
+						get: () => ({
+							id: 'p1',
+							name: 'proj1',
+							DevlogEvents: [{ id: 'd1' }],
+						}),
+						DevlogEvents: [{ id: 'd1' }],
+					},
+				],
+			};
+			usersRepository.findOne.mockResolvedValue(mockUser);
+
+			const result = await service.findUser('a', '2');
+			expect(result).toHaveProperty('projects');
+			expect(result).toHaveProperty('devlogs');
+			expect(result).not.toHaveProperty('email'); // public
+		});
+
+		it('should return full user if same userId', async () => {
+			const mockUser = {
+				id: '1',
+				name: 'A',
+				slug: 'a',
+				email: 'a@b.com',
+				profileImgUrl: '',
+				bio: '',
+				followersNumber: 0,
+				projects: [
+					{
+						id: 'p1',
+						name: 'proj1',
+						get: () => ({
+							id: 'p1',
+							name: 'proj1',
+							DevlogEvents: [{ id: 'd1' }],
+						}),
+						DevlogEvents: [{ id: 'd1' }],
+					},
+				],
+			};
+			usersRepository.findOne.mockResolvedValue(mockUser);
+
+			const result = await service.findUser('a', '1');
+			expect(result).toHaveProperty('projects');
+			expect(result).toHaveProperty('devlogs');
+			expect(result).toHaveProperty('email'); // full
+		});
+	});
+
+	describe('updateUser', () => {
+		it('should call update with correct params', async () => {
+			usersRepository.update.mockResolvedValue(['ok']);
+			await service.updateUser('1', {
+				name: 'New',
+				bio: 'sdasd',
+				profileImgUrl: 'asdasd',
+			});
+			expect(usersRepository.update).toHaveBeenCalledWith(
+				{
+					name: 'New',
+					bio: 'sdasd',
+					profileImgUrl: 'asdasd',
+				},
+				{ where: { id: '1' }, returning: true },
 			);
 		});
 	});
 
 	describe('getTrendingUsers', () => {
-		it('shoud return trendingUsers', async () => {
-			usersRepository.findAll.mockResolvedValue([
-				{
-					id: '1',
-					name: 'lucas',
-				},
-				{
-					id: '2',
-					name: 'lucas',
-				},
-				{
-					id: '3',
-					name: 'lucas',
-				},
-			]);
-			await expect(service.getTrendingUsers()).resolves.toStrictEqual([
-				{
-					id: '1',
-					name: 'lucas',
-				},
-				{
-					id: '2',
-					name: 'lucas',
-				},
-				{
-					id: '3',
-					name: 'lucas',
-				},
-			]);
+		it('should call findAll with proper params', async () => {
+			const trending = [
+				{ id: '1', name: 'A' },
+				{ id: '2', name: 'B' },
+			];
+			usersRepository.findAll.mockResolvedValue(trending);
+
+			await expect(service.getTrendingUsers()).resolves.toEqual(trending);
+			expect(usersRepository.findAll).toHaveBeenCalled();
 		});
 	});
 });

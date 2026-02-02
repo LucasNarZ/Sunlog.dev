@@ -40,7 +40,6 @@ export class GoogleAuthService {
 			throw new UnauthorizedException('Invalid Google token.');
 		}
 
-
 		let user = await this.userService.findByGoogleId(payload.sub);
 
 		if (!user) {
@@ -65,6 +64,6 @@ export class GoogleAuthService {
 		const refreshToken =
 			await this.tokenService.generateAndStoreRefreshToken(jwtPayload);
 
-		return { accessToken, refreshToken, user };
+		return { accessToken, refreshToken };
 	}
 }
