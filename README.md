@@ -1,8 +1,4 @@
-Here’s a clean and professional **README** you can use for the project:
-
----
-
-# 🚀 DevLog Platform
+# Sunlog.dev
 
 A full-stack platform where developers can create projects, share development updates (devlogs), and interact with other users through comments, likes, and follows.
 
