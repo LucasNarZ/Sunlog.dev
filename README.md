@@ -47,8 +47,6 @@ The system is divided into multiple services:
   * Grafana (dashboards)
   * Loki + Promtail (logs)
 
-Got it — here’s the corrected and complete section:
-
 ---
 
 ## 🐳 Running Locally (Development)
