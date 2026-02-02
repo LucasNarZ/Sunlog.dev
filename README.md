@@ -1,29 +1,138 @@
-# Sunlog.dev — Developer Devlog Platform
-
-Sunlog.dev is a personal developer journey platform where users can create, share, and discover developer logs (devlogs) organized by projects, skills, categories, and tags. It helps developers document their learning process, projects, and share knowledge with the community.
+Here’s a clean and professional **README** you can use for the project:
 
 ---
 
-## Features
+# 🚀 DevLog Platform
 
-- User registration and authentication
-- Create, edit, and delete devlogs with title, description, preview image, and tags
-- Filter devlogs by tags, categories, skills, and projects
-- Trending sections for users and devlogs based on recent activity and popularity
-- Responsive and accessible UI with Next.js and Tailwind CSS
-- Server-side rendering for SEO and fast load times
+A full-stack platform where developers can create projects, share development updates (devlogs), and interact with other users through comments, likes, and follows.
+
+This system is designed with **scalability, observability, and production-ready architecture** in mind.
 
 ---
 
-## Tech Stack
+## ✨ Features
 
-- **Frontend:** Next.js (React), TypeScript, Tailwind CSS
-- **Backend:** NestJS with Sequelize ORM and PostgreSQL
-- **API Requests:** Axios with centralized `apiClient`
-- **Authentication:** JWT
-- **Web Server / Proxy:** Nginx
-- **Infrastructure as Code:** Terraform managing AWS EC2 instances
-- **CI/CD:** GitHub Actions pipelines
-- **Hosting:** AWS EC2
+### Core Features
+
+* User authentication (including Google OAuth)
+* User profiles
+* Create and manage projects
+* Publish devlogs linked to projects
+* Comment on posts
+* Like posts
+* Follow other users
+* Admin area for moderation
+* Email and notification processing in background jobs
+
+### Technical Highlights
+
+* REST API built with **NestJS**
+* Frontend built with **Next.js**
+* Asynchronous processing with **RabbitMQ**
+* Caching layer with **Redis**
+* Background worker service
+* PostgreSQL (via migrations and structured schema)
 
 ---
+
+## 🏗 Architecture Overview
+
+The system is divided into multiple services:
+
+* **Frontend** – Next.js application (SSR-ready)
+* **Backend API** – Main REST API (NestJS)
+* **Worker** – Background job processor (emails, async tasks)
+* **Redis** – Caching layer
+* **RabbitMQ** – Message broker for async communication
+* **NGINX** – Reverse proxy (production)
+* **Monitoring Stack**
+
+  * Prometheus (metrics)
+  * Grafana (dashboards)
+  * Loki + Promtail (logs)
+
+Got it — here’s the corrected and complete section:
+
+---
+
+## 🐳 Running Locally (Development)
+
+Make sure you have **Node.js** and **npm** installed.
+
+First, create your environment file based on the provided example.
+
+Start the development containers (database, redis, rabbitmq, etc.):
+
+```bash
+docker compose -f docker-compose.dev.yml up --build -d
+```
+
+With the containers running, install backend dependencies and execute the database migrations:
+
+```bash
+cd backend
+npm install
+npx sequelize-cli db:migrate
+cd ..
+```
+
+Services will be available:
+
+* Frontend: [http://localhost](http://localhost)
+* Backend API: [http://localhost/api](http://localhost:3001/api)
+* Grafana: [http://localhost/grafana/](http://localhost/grafana/)
+
+---
+
+## 🧪 Testing
+
+Backend include automated tests.
+
+Run inside each service folder:
+
+```bash
+npm install
+npm run test
+```
+
+---
+
+## 📊 Observability
+
+The platform includes built-in monitoring and logging:
+
+* **Prometheus** collects application and database metrics
+* **Grafana** provides dashboards for HTTP and DB metrics
+* **Loki** aggregates logs from all services
+
+This allows real-time insight into system health and performance.
+
+---
+
+## 🔒 Security
+
+* JWT-based authentication
+* OAuth login with Google
+* Route protection via guards and decorators
+* Centralized error handling and validation
+* Indexed database queries for performance and abuse mitigation
+
+---
+
+## 📁 Project Structure
+
+```
+backend/    → Main API (NestJS)
+frontend/   → Web app (Next.js)
+worker/     → Background job processor
+infra/      → Terraform infrastructure
+grafana/    → Dashboards
+scripts/    → Deployment and startup scripts
+```
+
+---
+
+## 📜 License
+
+This project is licensed under the terms of the MIT License.
+
