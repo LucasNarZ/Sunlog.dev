@@ -43,10 +43,6 @@ describe('ProjectController', () => {
 					provide: ProjectService,
 					useValue: projectService,
 				},
-				{
-					provide: 'LOGGER',
-					useValue: logger,
-				},
 			],
 		})
 			.overrideGuard(AuthGuard)
@@ -144,7 +140,6 @@ describe('ProjectController', () => {
 				projects,
 			);
 			expect(projectService.findAllProjects).toHaveBeenCalled();
-			expect(logger.log).toHaveBeenCalledWith('Good log!!!!');
 		});
 	});
 

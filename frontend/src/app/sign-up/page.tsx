@@ -1,193 +1,172 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, useMemo } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { apiClient } from '@lib/apiClient';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { isAxiosError } from 'axios'
+import { isAxiosError } from 'axios';
+import { FormInput } from '@/components/FormInput';
+import { PasswordInput } from '@/components/PasswordInput';
+import { LoadingButton } from '@/components/LoadingButton';
+import { ErrorAlert } from '@/components/ErrorAlert';
+import { SignUpSidebar } from '@/components/SignUpSidebar';
+import { FieldCorrectIcon } from '@/components/FieldCorrectIcon';
+import { signUpSchema, getPasswordStrength, type SignUpFormData } from '@/schemas/signUpSchema';
 
 const SignUp = () => {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [repeatPassword, setRepeatPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
-    const [showRepeatPassword, setShowRepeatPassword] = useState(false);
-    const [error, setError] = useState('');
-    const [passwordError, setPasswordError] = useState('');
-    const [repeatPasswordError, setRepeatPasswordError] = useState('');
-    const [loading, setLoading] = useState(false);
-
+    const [apiError, setApiError] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
 
-    const isStrongPassword = (pwd: string) => {
-        const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-        return regex.test(pwd);
-    };
+    const {
+        register,
+        handleSubmit,
+        watch,
+        setError,
+        formState: { errors, dirtyFields },
+    } = useForm<SignUpFormData>({
+        resolver: zodResolver(signUpSchema),
+        mode: 'onBlur',
+        defaultValues: {
+            name: '',
+            email: '',
+            password: '',
+            repeatPassword: '',
+        },
+    });
 
-    const validate = () => {
-        let valid = true;
-        setPasswordError('');
-        setRepeatPasswordError('');
-        setError('');
+    const password = watch('password');
+    const repeatPassword = watch('repeatPassword');
 
-        if (!isStrongPassword(password)) {
-            setPasswordError(
-                'The password must be at least 8 characters long, contain an uppercase letter, a number, and a special character.',
-            );
-            valid = false;
-        }
+    const passwordStrength = useMemo(() => getPasswordStrength(password || ''), [password]);
+    const passwordsMatch = password && repeatPassword && password === repeatPassword;
 
-        if (password !== repeatPassword) {
-            setRepeatPasswordError('Passwords do not match.');
-            valid = false;
-        }
-
-        return valid;
-    };
-
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        if (!validate()) return;
+    const onSubmit = async (data: SignUpFormData) => {
+        setApiError('');
+        setIsSubmitting(true);
 
         try {
-            setLoading(true);
-            const body = { name, email, password };
-            await apiClient.post('/auth/register', body);
+            const { repeatPassword: _, ...submitData } = data;
+            await apiClient.post('/auth/register', submitData);
             router.push('/sign-in');
         } catch (err: unknown) {
             if (isAxiosError(err)) {
-                setError(err.response?.data?.message || err.message);
+                const message = err.response?.data?.message || err.message;
+                const status = err.response?.status;
+                const field = err.response?.data?.field;
+
+                if (status === 429) {
+                    setApiError('Too many attempts. Please try again later.');
+                } else if (status === 409) {
+                    setApiError('An account with this email already exists.');
+                } else if (field && ['name', 'email', 'password'].includes(field)) {
+                    setError(field as keyof SignUpFormData, {
+                        type: 'server',
+                        message,
+                    });
+                } else {
+                    setApiError(message);
+                }
             } else {
-                setError('Unexpected Error. Try again later.');
+                setApiError('Unexpected error. Please try again later.');
             }
         } finally {
-            setLoading(false);
+            setIsSubmitting(false);
         }
     };
 
     return (
-        <div className="h-[100vh] w-[100vw] flex justify-center items-center bg-gray-200">
-            <div className="flex bg-white w-11/12 max-w-md md:max-w-[1000px] h-[600px] rounded-2xl overflow-hidden gap-y-7">
-                <form
-                    className="w-full md:w-1/2 flex flex-col items-center gap-5 pt-15"
-                    onSubmit={handleSubmit}
-                >
-                    <p className="self-center text-3xl">Welcome</p>
+        <div className="min-h-screen w-full flex justify-center items-center bg-gradient-to-br from-neutral-100 via-white to-neutral-100 p-4">
+            <div className="flex bg-white w-full max-w-5xl rounded-3xl overflow-hidden shadow-2xl">
+                <div className="w-full md:w-1/2 p-8 md:p-12">
+                    <div className="mb-8">
+                        <h1 className="text-4xl font-bold text-neutral-900 mb-2">
+                            Create Account
+                        </h1>
+                        <p className="text-neutral-600">Join our community of developers</p>
+                    </div>
 
-                    <div className="flex flex-col w-6/7">
-                        <label>Name</label>
-                        <input
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
+                        <FormInput
+                            label="Full Name"
                             type="text"
-                            className="border border-gray-400 rounded h-11 p-4 focus:outline-none focus:ring-1 focus:ring-primary"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            inputId="signup-name"
+                            placeholder="Enter your name"
+                            error={errors.name}
+                            success={dirtyFields.name && !errors.name}
+                            autoComplete="name"
+                            data-testid="name-input"
+                            {...register('name')}
                         />
-                    </div>
 
-                    <div className="flex flex-col w-6/7">
-                        <label>Email</label>
-                        <input
+                        <FormInput
+                            label="Email Address"
                             type="email"
-                            className="border border-gray-400 rounded h-11 p-4 focus:outline-none focus:ring-1 focus:ring-primary"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            inputId="signup-email"
+                            placeholder="you@example.com"
+                            error={errors.email}
+                            success={dirtyFields.email && !errors.email}
+                            autoComplete="email"
+                            data-testid="email-input"
+                            {...register('email')}
                         />
-                    </div>
 
-                    <div className="flex flex-col w-6/7 relative">
-                        <label>Password</label>
-                        <input
-                            type={showPassword ? 'text' : 'password'}
-                            className={`border border-gray-400 rounded h-11 p-4 pr-12 focus:outline-none focus:ring-1 focus:ring-primary ${passwordError
-                                ? 'border-red-500 focus:ring-red-500'
-                                : ''
-                                }`}
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                        <PasswordInput
+                            label="Password"
+                            inputId="signup-password"
+                            placeholder="Create a strong password"
+                            error={errors.password}
+                            showStrength
+                            strength={passwordStrength}
+                            autoComplete="new-password"
+                            data-testid="password-input"
+                            {...register('password')}
                         />
-                        <button
-                            type="button"
-                            onClick={() => setShowPassword((prev) => !prev)}
-                            className="cursor-pointer absolute right-3 top-[38px] text-sm text-primary hover:text-primary-dark transition"
-                            tabIndex={-1}
-                        >
-                            {showPassword ? 'Hide' : 'Show'}
-                        </button>
-                        {passwordError && (
-                            <p className="text-red-500 text-sm mt-1">
-                                {passwordError}
-                            </p>
-                        )}
-                    </div>
 
-                    <div className="flex flex-col w-6/7 relative">
-                        <label>Repeat Password</label>
-                        <input
-                            type={showRepeatPassword ? 'text' : 'password'}
-                            className={`border border-gray-400 rounded h-11 p-4 pr-12 focus:outline-none focus:ring-1 focus:ring-primary ${repeatPasswordError
-                                ? 'border-red-500 focus:ring-red-500'
-                                : ''
-                                }`}
-                            value={repeatPassword}
-                            onChange={(e) => setRepeatPassword(e.target.value)}
-                        />
-                        <button
-                            type="button"
-                            onClick={() =>
-                                setShowRepeatPassword((prev) => !prev)
-                            }
-                            className="cursor-pointer absolute right-3 top-[38px] text-sm text-primary hover:text-primary-dark transition"
-                            tabIndex={-1}
-                        >
-                            {showRepeatPassword ? 'Hide' : 'Show'}
-                        </button>
-                        {repeatPasswordError && (
-                            <p className="text-red-500 text-sm mt-1">
-                                {repeatPasswordError}
-                            </p>
-                        )}
-                    </div>
+                        <div>
+                            <PasswordInput
+                                label="Confirm Password"
+                                inputId="signup-repeat-password"
+                                placeholder="Confirm your password"
+                                error={errors.repeatPassword}
+                                autoComplete="new-password"
+                                data-testid="repeat-password-input"
+                                {...register('repeatPassword')}
+                            />
+                            {passwordsMatch && !errors.repeatPassword && (
+                                <div className="flex items-center gap-2 mt-2 text-green-600 text-sm">
+                                    <FieldCorrectIcon />
+                                    <span>Passwords match</span>
+                                </div>
+                            )}
+                        </div>
 
-                    {error && (
-                        <p className="text-red-500 text-sm -mt-4 px-4 text-center">
-                            {error}
-                        </p>
-                    )}
+                        {apiError && <ErrorAlert message={apiError} onDismiss={() => setApiError('')} />}
 
-                    <div className="mt-auto mb-12 flex flex-col items-center gap-2">
-                        <button
+                        <LoadingButton
                             type="submit"
-                            disabled={loading}
-                            className={`cursor-pointer border-1-white text-white w-70 h-10 rounded-xl transition duration-300 ${loading
-                                ? 'bg-secondary opacity-70 cursor-not-allowed'
-                                : 'bg-primary hover:bg-secondary'
-                                }`}
+                            loading={isSubmitting}
+                            loadingText="Creating Account..."
+                            data-testid="submit-button"
                         >
-                            {loading ? 'Creating...' : 'Create Account'}
-                        </button>
-                        <p className="text-sm opacity-40">
+                            Create Account
+                        </LoadingButton>
+
+                        <p className="text-center text-sm text-neutral-600">
                             Already have an account?{' '}
                             <Link
                                 href="/sign-in"
-                                className="text-blue-700 cursor-pointer"
+                                className="font-semibold text-primary hover:text-primary/80 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded"
                             >
                                 Sign In
                             </Link>
                         </p>
-                    </div>
-                </form>
-
-                <div className="w-1/2 bg-secondary text-white font-family-garamond hidden md:flex flex-col items-center justify-around">
-                    <p className="text-2xl text-center">
-                        Begin Your <br /> Learning Experience
-                    </p>
-                    <h1 className="text-6xl text-center leading-18">
-                        Create, <br /> Share, <br /> Learn
-                    </h1>
-                    <p>Where Creativity has no limits</p>
+                    </form>
                 </div>
+
+                <SignUpSidebar />
             </div>
         </div>
     );

@@ -14,3 +14,7 @@
 body {
 	font-family: 'Inter', 'sans-serif';
 }
+
+button {
+    @apply cursor-pointer
+}

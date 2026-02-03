@@ -9,6 +9,7 @@ import {
 	Unique,
 } from 'sequelize-typescript';
 import { Follow } from 'src/follow/follow.entity';
+import { Project } from 'src/project/project.entity';
 
 @Table
 export class User extends Model {
@@ -42,9 +43,16 @@ export class User extends Model {
 
 	@Column({
 		type: DataType.STRING,
-		allowNull: false,
+		allowNull: true,
 	})
 	password: string;
+
+	@Column({
+		type: DataType.STRING,
+		allowNull: true,
+		unique: true,
+	})
+	googleId: string;
 
 	@Default(
 		'https://deepgrouplondon.com/wp-content/uploads/2019/06/person-placeholder-5.png',
@@ -75,8 +83,8 @@ export class User extends Model {
 	})
 	bio: string;
 
-	@HasMany(() => DevlogEvent)
-	devlogs: DevlogEvent[];
+	@HasMany(() => Project)
+	projects: Project[];
 
 	@Column({
 		type: DataType.BOOLEAN,

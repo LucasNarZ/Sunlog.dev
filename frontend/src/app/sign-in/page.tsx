@@ -1,130 +1,152 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { apiClient } from '@lib/apiClient';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { isAxiosError } from 'axios';
+import GoogleButton from '@/components/googleButton';
+import { FormInput } from '@/components/FormInput';
+import { PasswordInput } from '@/components/PasswordInput';
+import { LoadingButton } from '@/components/LoadingButton';
+import { ErrorAlert } from '@/components/ErrorAlert';
+import { SignInSidebar } from '@/components/SignInSidebar';
+import { Divider } from '@/components/Divider';
+import { signInSchema, type SignInFormData } from '@/schemas/signInSchema';
 
 const SignIn = () => {
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
-	const [showPassword, setShowPassword] = useState(false);
-	const [errorMessage, setErrorMessage] = useState<string | null>(null);
-	const [loading, setLoading] = useState(false);
-	const router = useRouter();
+    const [apiError, setApiError] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const router = useRouter();
 
-	const validateEmail = (email: string) =>
-		/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const {
+        register,
+        handleSubmit,
+        setError,
+        formState: { errors },
+    } = useForm<SignInFormData>({
+        resolver: zodResolver(signInSchema),
+        mode: 'onBlur',
+        defaultValues: {
+            email: '',
+            password: '',
+        },
+    });
 
-	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		setErrorMessage(null);
+    const onSubmit = async (data: SignInFormData) => {
+        setApiError('');
+        setIsSubmitting(true);
 
-		if (!validateEmail(email)) {
-			setErrorMessage('Please enter a valid email.');
-			return;
-		}
+        try {
+            const response = await apiClient.post('/auth/login', data);
+            if (response.status === 200) {
+                router.push('/profile');
+            }
+        } catch (err: unknown) {
+            if (isAxiosError(err)) {
+                const status = err.response?.status;
+                const message = err.response?.data?.message || err.message;
 
-		if (password.length < 6) {
-			setErrorMessage('Password must be at least 6 characters long.');
-			return;
-		}
+                if (status === 401) {
+                    setApiError('Invalid email or password. Please try again.');
+                } else if (status === 429) {
+                    setApiError('Too many login attempts. Please try again later.');
+                } else if (status === 403) {
+                    setApiError('Your account has been locked. Please contact support.');
+                } else {
+                    setApiError(message || 'Login failed. Please try again.');
+                }
+            } else {
+                setApiError('An unexpected error occurred. Please try again.');
+            }
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
-		try {
-			setLoading(true);
-			const body = { email, password };
-			const response = await apiClient.post('/auth/login', body);
-			if (response.status === 200) {
-				router.push('/profile');
-			} else {
-				setErrorMessage('Login failed. Please check your credentials.');
-			}
-		} catch (err) {
-			console.error(err);
-			setErrorMessage('An unexpected error occurred.');
-		} finally {
-			setLoading(false);
-		}
-	};
+    return (
+        <div className="min-h-screen w-full flex justify-center items-center bg-gradient-to-br from-neutral-100 via-white to-neutral-100 p-4">
+            <div className="flex bg-white w-full max-w-5xl rounded-3xl overflow-hidden shadow-2xl">
+                <div className="w-full md:w-1/2 p-8 md:p-12">
+                    <div className="mb-8">
+                        <h1 className="text-4xl font-bold text-neutral-900 mb-2">
+                            Welcome Back
+                        </h1>
+                        <p className="text-neutral-600">Sign in to continue your journey</p>
+                    </div>
 
-	return (
-		<div className="h-[100vh] w-[100vw] flex justify-center items-center bg-gray-200">
-			<div className="flex bg-white w-11/12 max-w-md md:max-w-[1000px] h-[600px] rounded-2xl overflow-hidden gap-y-7">
-				<form
-					className="w-full md:w-1/2 flex flex-col items-center gap-7 pt-15"
-					onSubmit={handleSubmit}
-					noValidate
-				>
-					<p className="self-center text-3xl">Sign In</p>
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
+                        <FormInput
+                            label="Email Address"
+                            type="email"
+                            inputId="signin-email"
+                            placeholder="you@example.com"
+                            error={errors.email}
+                            autoComplete="email"
+                            data-testid="email-input"
+                            {...register('email')}
+                        />
 
-					<div className="flex flex-col w-6/7">
-						<label>Email</label>
-						<input
-							type="email"
-							className="border rounded h-11 p-4 focus:outline-none focus:ring-1 focus:ring-primary"
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
-							required
-						/>
-					</div>
+                        <div>
+                            <div className="flex items-center justify-between mb-2">
+                                <label
+                                    htmlFor="signin-password"
+                                    className="block text-sm font-medium text-neutral-700"
+                                >
+                                    Password
+                                </label>
+                                <Link
+                                    href="/forgot-password"
+                                    className="text-sm font-medium text-primary hover:text-primary/80 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded"
+                                >
+                                    Forgot password?
+                                </Link>
+                            </div>
+                            <PasswordInput
+                                inputId="signin-password"
+                                placeholder="Enter your password"
+                                error={errors.password}
+                                autoComplete="current-password"
+                                data-testid="password-input"
+                                {...register('password')}
+                            />
+                        </div>
 
-					<div className="flex flex-col w-6/7 relative">
-						<label>Password</label>
-						<input
-							type={showPassword ? 'text' : 'password'}
-							className="border rounded h-11 p-4 pr-12 focus:outline-none focus:ring-1 focus:ring-primary"
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
-							required
-							minLength={6}
-						/>
-						<button
-							type="button"
-							onClick={() => setShowPassword((prev) => !prev)}
-							className="cursor-pointer absolute right-3 top-[38px] text-sm text-primary hover:text-primary-dark transition"
-							tabIndex={-1}
-						>
-							{showPassword ? 'Hide' : 'Show'}
-						</button>
-					</div>
+                        {apiError && <ErrorAlert message={apiError} onDismiss={() => setApiError('')} />}
 
-					{errorMessage && (
-						<p className="text-red-600 text-sm w-6/7 text-center">
-							{errorMessage}
-						</p>
-					)}
+                        <LoadingButton
+                            type="submit"
+                            loading={isSubmitting}
+                            loadingText="Signing in..."
+                            data-testid="submit-button"
+                        >
+                            Sign In
+                        </LoadingButton>
 
-					<div className="mt-auto mb-12 flex flex-col items-center gap-2">
-						<button
-							type="submit"
-							disabled={loading}
-							className={`cursor-pointer  w-70 h-10 rounded-xl text-white transition duration-300 ${
-								loading
-									? 'bg-secondary opacity-70 cursor-not-allowed'
-									: 'bg-primary hover:bg-secondary'
-							}`}
-						>
-							{loading ? 'Signing in...' : 'Sign In'}
-						</button>
-						<p className="text-sm opacity-40 mt-2">
-							Don&apos;t have an account?{' '}
-							<Link href="/sign-up" className="text-blue-700">
-								Create Account
-							</Link>
-						</p>
-					</div>
-				</form>
+                        <Divider />
 
-				<div className="w-1/2 bg-secondary text-white font-family-garamond hidden md:flex flex-col items-center justify-around">
-					<p className="text-3xl text-center">Welcome back!</p>
-					<h1 className="text-6xl text-center leading-18">
-						Create, <br /> Share, <br /> Learn
-					</h1>
-					<p>Where Creativity has no limits</p>
-				</div>
-			</div>
-		</div>
-	);
+                        <div className="grid grid-cols-1 gap-3">
+                            <GoogleButton />
+                        </div>
+
+                        <p className="text-center text-sm text-neutral-600">
+                            Don't have an account?{' '}
+                            <Link
+                                href="/sign-up"
+                                className="font-semibold text-primary hover:text-primary/80 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded"
+                            >
+                                Create Account
+                            </Link>
+                        </p>
+                    </form>
+                </div>
+
+                <SignInSidebar />
+            </div>
+        </div>
+    );
 };
 
 export default SignIn;

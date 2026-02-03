@@ -7,15 +7,12 @@ import {
 	UseGuards,
 	UnauthorizedException,
 	Param,
-	BadRequestException,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { UsersService } from './users.service';
-import { Request } from 'express';
 import { updateUserDto } from 'src/user/dtos/updateUser.dto';
 import { UserNotFoundException } from 'src/exceptions/UserNotFound.exception';
 import { AuthRequest } from 'src/interfaces/authRequest.interface';
-import { isUUID } from 'class-validator';
 
 @Controller('users')
 export class UsersController {
@@ -23,42 +20,27 @@ export class UsersController {
 
 	@UseGuards(AuthGuard)
 	@Get('me')
-	async findUser(@Req() req: AuthRequest) {
+	async findLoggedUser(@Req() req: AuthRequest) {
 		const id = req.user.userId;
 		if (!id) {
 			throw new UnauthorizedException('User is not logged');
 		}
-		const user = await this.usersService.findUser(id);
+		const user = await this.usersService.findLoggedUser(id);
 		if (!user) {
 			throw new UserNotFoundException(`user with id ${id} not found`);
 		}
 		return user;
 	}
 
-	@Get(':userId')
-	async findUserPublic(@Param('userId') userId: string) {
-		if (!isUUID(userId)) {
-			throw new BadRequestException('UserId must be an UUID.');
-		}
-		return await this.usersService.findUserPublic(userId);
+	@Get('trending')
+	async getTrendingUsers() {
+		return await this.usersService.getTrendingUsers();
 	}
 
-	@Get(':userId/projects')
-	async findUserProjects(@Param('userId') userId: string) {
-		if (!isUUID(userId)) {
-			throw new BadRequestException('UserId must be an UUID.');
-		}
-		return await this.usersService.findUserProjects(userId);
-	}
-
-	@Get(':id/devlogEvents')
-	async getUserDevlogEvents(@Req() req: Request) {
-		const { id } = req.params;
-		if (!isUUID(id)) {
-			throw new BadRequestException('UserId must be an UUID.');
-		}
-		const devlogEvents = await this.usersService.getPostByUser(id);
-		return devlogEvents;
+	@Get(':slug')
+	async findUser(@Req() req: AuthRequest, @Param('slug') slug: string) {
+		const userId = req?.user?.userId;
+		return await this.usersService.findUser(slug, userId);
 	}
 
 	@UseGuards(AuthGuard)
@@ -72,10 +54,5 @@ export class UsersController {
 	@Get('/me/id')
 	getLoggedUserId(@Req() req: AuthRequest) {
 		return req?.user?.userId;
-	}
-
-	@Get('/trending')
-	async getTrendingUsers() {
-		return await this.usersService.getTrendingUsers();
 	}
 }

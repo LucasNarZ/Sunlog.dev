@@ -15,12 +15,16 @@ import { Response } from 'express';
 import { TokenService } from './token.service';
 import { extractTokenFromCookie } from 'src/utils/jwt.util';
 import { AuthGuard } from './guards/auth.guard';
+import { LoginGoogleDto } from './dtos/loginGoogle.dto';
+import { GoogleAuthService } from './googleAuth.service';
+import { logger } from 'src/logger/logger';
 
 @Controller('auth')
 export class AuthController {
 	constructor(
 		private readonly authService: AuthService,
 		private tokenService: TokenService,
+		private googleAuthService: GoogleAuthService,
 	) {}
 
 	@Post('register')
@@ -110,6 +114,33 @@ export class AuthController {
 			maxAge: 15 * 60 * 1000,
 		});
 
+		return data;
+	}
+
+	@HttpCode(HttpStatus.OK)
+	@Post('login/google')
+	async loginGoogle(
+		@Res({ passthrough: true }) res: Response,
+		@Body() loginGoogleDto: LoginGoogleDto,
+	) {
+		const data = await this.googleAuthService.loginWithGoogle(
+			loginGoogleDto.idToken,
+		);
+		const isProduction =
+			process.env.NODE_ENV === 'production' ? true : false;
+
+		res.cookie('refresh_token', data.refreshToken, {
+			httpOnly: true,
+			secure: isProduction,
+			sameSite: isProduction ? 'none' : 'lax',
+			maxAge: 15 * 24 * 60 * 60 * 1000,
+		});
+		res.cookie('access_token', data.accessToken, {
+			httpOnly: true,
+			secure: isProduction,
+			sameSite: isProduction ? 'none' : 'lax',
+			maxAge: 15 * 60 * 1000,
+		});
 		return data;
 	}
 }

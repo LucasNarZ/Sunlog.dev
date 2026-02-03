@@ -1,15 +1,12 @@
 {
-  "name": "the-learning-experience",
+  "name": "Sunlog.dev",
   "version": "1.0.0",
-  "description": "**The Learning Experience** is a modern, interactive blog platform built for developers and learners who love to share knowledge through **HTML**, **CSS**, and **JavaScript**.",
-  "main": "index.js",
+  "description": "**Sunlog.dev** is a modern, interactive blog platform built for developers and learners who love to share knowledge through **HTML**, **CSS**, and **JavaScript**.",
   "scripts": {
     "test": "cd backend && npm run test && cd ..",
-    "install-all": "cd frontend && npm i && cd ../backend && npm i && cd .."
+    "install-all": "cd frontend && npm i && cd ../backend && npm i && cd ..",
+    "start:dev": "docker compose -f docker-compose.dev.yml up -d --build"
   },
   "author": "Lucas",
-  "license": "ISC",
-  "dependencies": {
-    "@hookform/resolvers": "^5.2.2"
-  }
+  "license": "ISC"
 }
