@@ -145,9 +145,9 @@ describe('UsersService', () => {
 						get: () => ({
 							id: 'p1',
 							name: 'proj1',
-							DevlogEvents: [{ id: 'd1' }],
+							devlogEvents: [{ id: 'd1' }],
 						}),
-						DevlogEvents: [{ id: 'd1' }],
+						devlogEvents: [{ id: 'd1' }],
 					},
 				],
 			};
@@ -175,9 +175,9 @@ describe('UsersService', () => {
 						get: () => ({
 							id: 'p1',
 							name: 'proj1',
-							DevlogEvents: [{ id: 'd1' }],
+							devlogEvents: [{ id: 'd1' }],
 						}),
-						DevlogEvents: [{ id: 'd1' }],
+						devlogEvents: [{ id: 'd1' }],
 					},
 				],
 			};

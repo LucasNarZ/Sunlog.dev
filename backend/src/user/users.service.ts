@@ -95,10 +95,10 @@ export class UsersService {
 			],
 		});
 
-		logger.log(user?.toJSON());
 		if (!user) {
 			throw new NotFoundException('User does not exist.');
 		}
+		console.log(user);
 
 		const projectsWithAuthorSlug = user.projects.map((project) => ({
 			...project.get({ plain: true }),
