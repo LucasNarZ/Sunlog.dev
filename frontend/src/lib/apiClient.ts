@@ -14,7 +14,9 @@ export const apiClient = axios.create({
 			? isServer
 				? 'http://nginx/api'
 				: 'http://localhost/api'
-			: 'https://sunlog.dev/api',
+			: isServer
+				? 'http://nginx/api'
+				: 'http://sunlog.dev/api',
 });
 
 apiClient.interceptors.response.use(
