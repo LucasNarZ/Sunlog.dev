@@ -90,21 +90,8 @@ const SignIn = () => {
                         />
 
                         <div>
-                            <div className="flex items-center justify-between mb-2">
-                                <label
-                                    htmlFor="signin-password"
-                                    className="block text-sm font-medium text-neutral-700"
-                                >
-                                    Password
-                                </label>
-                                <Link
-                                    href="/forgot-password"
-                                    className="text-sm font-medium text-primary hover:text-primary/80 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded"
-                                >
-                                    Forgot password?
-                                </Link>
-                            </div>
                             <PasswordInput
+                                label="Password"
                                 inputId="signin-password"
                                 placeholder="Enter your password"
                                 error={errors.password}

@@ -197,7 +197,7 @@ const User = () => {
                     )}
 
                     {user?.projects?.map((project: Project) => (
-                        <ProjectCard key={project.id} userSlug={slug} project={project} />
+                        <ProjectCard key={project.id} project={project} />
                     ))}
 
                     {!loading && (user?.projects?.length === 0) && (

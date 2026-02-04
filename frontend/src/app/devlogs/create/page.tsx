@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { MarkdownEditor } from '@/components/MarkdownEditor';
 import Header from '@components/Header';
 import { apiClient } from '@lib/apiClient';
@@ -10,20 +10,19 @@ import {
     createDevlogSchema,
     CreateDevlogDTO,
 } from '@/features/devlogs/schemas/createDevlog.schema';
-import useUserProfile from '@/features/users/hooks/useUserProfile';
 import { useRouter } from 'next/navigation';
 import useUserProjects from '@/features/users/hooks/useUserProjects';
+import useMe from '@/features/users/hooks/useMe';
 
 function CreateDevlogEventPage() {
     const router = useRouter();
-    const [user, error] = useUserProfile();
+    const [user, error] = useMe();
     const [projects] = useUserProjects(user?.id);
 
     const {
         register,
         handleSubmit,
         watch,
-        setValue,
         formState: { errors, isSubmitting },
     } = useForm<CreateDevlogDTO>({
         resolver: zodResolver(createDevlogSchema()),
