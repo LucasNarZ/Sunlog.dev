@@ -3,7 +3,10 @@ import axios from 'axios';
 const isServer = typeof window === 'undefined';
 
 let isRefreshing = false;
-let queue: Array<() => void> = [];
+let queue: Array<{
+	resolve: (value: any) => void;
+	reject: (reason?: any) => void;
+}> = [];
 
 export const apiClient = axios.create({
 	baseURL:
@@ -26,25 +29,31 @@ apiClient.interceptors.response.use(
 
 		if (status === 401 && !original._retry) {
 			if (isRefreshing) {
-				return new Promise((resolve) => {
-					queue.push(() => resolve(apiClient(original)));
+				return new Promise((resolve, reject) => {
+					queue.push({ resolve, reject });
 				});
 			}
+
 			original._retry = true;
 			isRefreshing = true;
 
 			try {
 				await apiClient.post('/auth/refresh');
-				queue.forEach((cb) => cb());
+
+				queue.forEach((p) => p.resolve(apiClient(original)));
 				queue = [];
 				isRefreshing = false;
+
 				return apiClient(original);
 			} catch (err) {
-				isRefreshing = false;
+				queue.forEach((p) => p.reject(err));
 				queue = [];
-				throw error;
+				isRefreshing = false;
+
+				return Promise.reject(err);
 			}
 		}
-		throw error;
+
+		return Promise.reject(error);
 	},
 );

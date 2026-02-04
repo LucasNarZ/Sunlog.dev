@@ -6,11 +6,14 @@ import useMe from '@/features/users/hooks/useMe';
 
 const HeroSection = () => {
     const [user, error, loading] = useMe();
+    console.log(user)
+    console.log(error)
+    console.log(loading)
 
     return (
         <>
             {loading ? (
-                <div className="max-w-5xl w-full bg-gray-100 animate-pulse rounded-xl" />
+                <div className="max-w-5xl w-full h-40 bg-gray-100 animate-pulse rounded-xl" />
             ) : user && !error ? (
                 <div className="p-8 bg-white rounded-xl shadow max-w-5xl w-full text-center">
                     <img
@@ -32,7 +35,7 @@ const HeroSection = () => {
                             New Devlog
                         </Link>
                         <Link
-                            href={`/${user?.name}`}
+                            href={`/${user?.slug}`}
                             className="px-6 py-2 border border-primary text-primary rounded hover:bg-primary hover:text-white transition"
                         >
                             My Profile

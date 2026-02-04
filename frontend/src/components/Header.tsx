@@ -100,7 +100,7 @@ const Header = () => {
                     href="/"
                     className="text-lg lg:text-xl font-family-garamond sm:w-auto w-20 font-semibold text-gray-800 hover:text-secondary transition"
                 >
-                    <Image src="/logo.png" alt="logo" width={80} height={80} />
+                    <Image src="/logo.svg" alt="logo" width={170} height={80} />
                 </Link>
             </div>
 

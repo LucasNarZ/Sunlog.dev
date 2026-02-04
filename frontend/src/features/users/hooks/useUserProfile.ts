@@ -19,7 +19,7 @@ const useUserProfile = (slug: string): [User | null, unknown, boolean] => {
 				setLoading(false);
 			}
 		})();
-	}, []);
+	}, [slug]);
 
 	return [response, error, loading];
 };

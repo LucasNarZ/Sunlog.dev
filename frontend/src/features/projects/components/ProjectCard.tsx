@@ -5,6 +5,7 @@ interface ProjectCardProps {
     project: Project;
 }
 
+
 export function ProjectCard({ project }: ProjectCardProps) {
     1;
     return (

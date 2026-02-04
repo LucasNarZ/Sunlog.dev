@@ -2,7 +2,7 @@ import Header from '@/components/Header';
 import { DevlogCard } from '@/features/devlogs/components/DevlogCard';
 import { fetchProjectDevlogs } from '@/features/devlogs/services/fetchProjectDevlogs';
 import { fetchProject } from '@/features/projects/services/fetchProject';
-import { notFound } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 
 type PageProps = {
@@ -15,16 +15,30 @@ type PageProps = {
 export default async function ProjectPage({ params }: PageProps) {
     const awaitedParams = await params;
     const projectPath = `${awaitedParams.username}/${awaitedParams.projectName}`;
-    const project = await fetchProject(projectPath);
-    if (!project) return notFound();
-    const devlogs = await fetchProjectDevlogs(project.id);
+
+    let project;
+    try {
+        project = await fetchProject(projectPath);
+    } catch (err: any) {
+        const status = err?.response?.status;
+
+        if (status === 404) redirect("/not-found")
+
+        throw err;
+    }
+
+    let devlogs = [];
+    try {
+        devlogs = await fetchProjectDevlogs(project.id);
+    } catch (err) {
+        console.error('Failed to load devlogs', err);
+    }
 
     return (
         <>
             <Header />
             <div className="bg-gradient-to-b from-neutral-50 to-white min-h-screen">
                 <div className="max-w-7xl mx-auto px-6 py-12">
-                    {/* Hero Section */}
                     <div className="mb-12">
                         <div className="flex items-center gap-2 text-sm text-neutral-600 mb-3">
                             <span className="hover:text-neutral-900 transition-colors cursor-pointer">
@@ -42,7 +56,6 @@ export default async function ProjectPage({ params }: PageProps) {
 
                     <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
                         <main className="space-y-12">
-                            {/* Timeline Section */}
                             <section>
                                 <div className="flex items-center gap-3 mb-6">
                                     <div className="h-8 w-1 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full" />
@@ -52,7 +65,6 @@ export default async function ProjectPage({ params }: PageProps) {
                                 </div>
 
                                 <div className="relative">
-                                    {/* Timeline line */}
                                     <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-200 via-purple-200 to-transparent" />
 
                                     <div className="space-y-6">
@@ -62,10 +74,8 @@ export default async function ProjectPage({ params }: PageProps) {
                                                     key={d.id}
                                                     className="group relative pl-16 block"
                                                 >
-                                                    {/* Timeline dot */}
                                                     <div className="absolute left-[18px] top-7 w-4 h-4 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 ring-4 ring-white shadow-lg group-hover:scale-125 transition-transform duration-200" />
 
-                                                    {/* Card */}
                                                     <DevlogCard devlog={d} />
                                                 </div>
                                             ))
@@ -84,7 +94,6 @@ export default async function ProjectPage({ params }: PageProps) {
                                 </div>
                             </section>
 
-                            {/* README Section */}
                             <section>
                                 <div className="flex items-center gap-3 mb-6">
                                     <div className="h-8 w-1 bg-gradient-to-b from-emerald-500 to-teal-500 rounded-full" />
@@ -112,9 +121,7 @@ export default async function ProjectPage({ params }: PageProps) {
                             </section>
                         </main>
 
-                        {/* Sidebar */}
                         <aside className="lg:sticky lg:top-24 h-fit space-y-6">
-                            {/* Author Card */}
                             <div className="border border-neutral-200 rounded-2xl p-6 bg-white shadow-sm">
                                 <div className="flex items-center gap-3 mb-4">
                                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-lg shadow-md">
@@ -174,7 +181,7 @@ export default async function ProjectPage({ params }: PageProps) {
                             </div>
                         </aside>
                     </div>
-                </div>
+                </div >
             </div >
         </>
     );
