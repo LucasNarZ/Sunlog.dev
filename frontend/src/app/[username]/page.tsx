@@ -3,7 +3,7 @@
 import Header from '@/components/Header';
 import useUserProfile from '@/features/users/hooks/useUserProfile';
 import { apiClient } from '@/lib/apiClient';
-import { useParams, useRouter } from 'next/navigation';
+import { redirect, useParams, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { ProfileEditor } from '@/features/users/components/profileEditor';
 import { ConfirmModal } from '@/features/users/components/confirmModal';
@@ -12,12 +12,14 @@ import { DevlogCard } from '@/features/devlogs/components/DevlogCard';
 import { ProjectCard } from '@/features/projects/components/ProjectCard';
 import { Project } from '@/features/projects/types/project';
 import { Devlog } from '@/features/devlogs/types/devlog';
+import useMe from '@/features/users/hooks/useMe';
 
 const User = () => {
     const router = useRouter();
     const params = useParams();
     const slug = params?.username as string;
     const [user, errorUser, loading] = useUserProfile(slug);
+    const [me, errorMe, loadingMe] = useMe();
 
     const [isEditing, setIsEditing] = useState(false);
     const [editedName, setEditedName] = useState('');
@@ -32,7 +34,7 @@ const User = () => {
     const [postToDelete, setPostToDelete] = useState<Devlog | null>(null);
 
     useEffect(() => {
-        if (errorUser) router.replace('/sign-in');
+        if (errorUser) redirect("/not-found")
     }, [errorUser, router]);
 
     useEffect(() => {
@@ -125,66 +127,83 @@ const User = () => {
                         />
                     </div>
 
-                    <div className="text-center md:text-left w-80">
-                        {isEditing ? (
-                            <ProfileEditor
-                                user={user}
-                                editedName={editedName}
-                                editedBio={editedBio}
-                                editedProfileImgUrl={editedProfileImgUrl}
-                                previewImgUrl={previewImgUrl}
-                                isSaving={isSaving}
-                                nameError={nameError}
-                                urlError={urlError}
-                                saveError={saveError}
-                                onChangeName={setEditedName}
-                                onChangeBio={setEditedBio}
-                                onChangeImgUrl={(v) => {
-                                    setEditedProfileImgUrl(v);
-                                    setPreviewImgUrl(v);
-                                }}
-                                onSave={handleSave}
-                                onCancel={toggleEdit}
-                            />
-                        ) : (
-                            <>
-                                <h2 className="text-3xl font-semibold">
-                                    {user?.name}
-                                </h2>
-                                <p className="text-gray-600">{user?.email}</p>
-                                <p className="text-sm text-gray-500 mt-2">
-                                    {followerLabel}
-                                </p>
-                                <p className="text-gray-700 mt-3 italic max-w-xl whitespace-pre-line">
-                                    {user?.bio?.trim() ||
-                                        'No bio provided yet.'}
-                                </p>
+                    {me?.id === user?.id ?
+                        <div className="text-center md:text-left w-80">
+                            {isEditing ? (
+                                <ProfileEditor
+                                    user={user}
+                                    editedName={editedName}
+                                    editedBio={editedBio}
+                                    editedProfileImgUrl={editedProfileImgUrl}
+                                    previewImgUrl={previewImgUrl}
+                                    isSaving={isSaving}
+                                    nameError={nameError}
+                                    urlError={urlError}
+                                    saveError={saveError}
+                                    onChangeName={setEditedName}
+                                    onChangeBio={setEditedBio}
+                                    onChangeImgUrl={(v) => {
+                                        setEditedProfileImgUrl(v);
+                                        setPreviewImgUrl(v);
+                                    }}
+                                    onSave={handleSave}
+                                    onCancel={toggleEdit}
+                                />
+                            ) : (
+                                <>
+                                    <h2 className="text-3xl font-semibold">
+                                        {user?.name}
+                                    </h2>
+                                    <p className="text-gray-600">{user?.email}</p>
+                                    <p className="text-sm text-gray-500 mt-2">
+                                        {followerLabel}
+                                    </p>
+                                    <p className="text-gray-700 mt-3 italic max-w-xl whitespace-pre-line">
+                                        {user?.bio?.trim() ||
+                                            'No bio provided yet.'}
+                                    </p>
 
-                                <div className="flex flex-wrap gap-3 mt-5">
-                                    <button
-                                        onClick={toggleEdit}
-                                        className="cursor-pointer px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-                                    >
-                                        Edit Profile
-                                    </button>
+                                    <div className="flex flex-wrap gap-3 mt-5">
+                                        <button
+                                            onClick={toggleEdit}
+                                            className="cursor-pointer px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                                        >
+                                            Edit Profile
+                                        </button>
 
-                                    <Link
-                                        href="/new-project"
-                                        className="cursor-pointer px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-                                    >
-                                        Create New Project
-                                    </Link>
+                                        <Link
+                                            href="/new-project"
+                                            className="cursor-pointer px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                                        >
+                                            Create New Project
+                                        </Link>
 
-                                    <Link
-                                        href="/devlogs/create"
-                                        className="cursor-pointer px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-                                    >
-                                        Create Devlog Entry
-                                    </Link>
-                                </div>
-                            </>
-                        )}
-                    </div>
+                                        <Link
+                                            href="/devlogs/create"
+                                            className="cursor-pointer px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                                        >
+                                            Create Devlog Entry
+                                        </Link>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                        :
+                        <div className="text-center md:text-left w-80">
+                            <h2 className="text-3xl font-semibold">
+                                {user?.name}
+                            </h2>
+                            <p className="text-gray-600">{user?.email}</p>
+                            <p className="text-sm text-gray-500 mt-2">
+                                {followerLabel}
+                            </p>
+                            <p className="text-gray-700 mt-3 italic max-w-xl whitespace-pre-line">
+                                {user?.bio?.trim() ||
+                                    'No bio provided yet.'}
+                            </p>
+                        </div>
+                    }
+
                 </div>
 
                 <h3 className="text-xl font-semibold mb-4 text-gray-800">

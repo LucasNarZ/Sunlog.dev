@@ -13,6 +13,7 @@ import { updateUserDto } from 'src/user/dtos/updateUser.dto';
 import { fn, col, Op } from 'sequelize';
 import { Project } from 'src/project/project.entity';
 import { createUserGoogleDto } from './dtos/createUserGoogle.dto';
+import { logger } from 'src/logger/logger';
 
 @Injectable()
 export class UsersService {
@@ -94,6 +95,7 @@ export class UsersService {
 			],
 		});
 
+		logger.log(user?.toJSON());
 		if (!user) {
 			throw new NotFoundException('User does not exist.');
 		}
@@ -104,7 +106,7 @@ export class UsersService {
 		}));
 
 		const devlogs = projectsWithAuthorSlug.flatMap((project) =>
-			project.DevlogEvents.map((devlog) => ({
+			project.devlogEvents.map((devlog) => ({
 				...devlog,
 				projectId: project.id,
 				projectName: project.name,

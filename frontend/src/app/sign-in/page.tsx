@@ -42,7 +42,7 @@ const SignIn = () => {
         try {
             const response = await apiClient.post('/auth/login', data);
             if (response.status === 200) {
-                router.push('/profile');
+                router.push("/");
             }
         } catch (err: unknown) {
             if (isAxiosError(err)) {

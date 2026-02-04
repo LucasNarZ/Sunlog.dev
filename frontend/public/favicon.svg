@@ -1,15 +1,11 @@
-<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <style>
-    .sun { fill: #FDB813; }
-    .ray { stroke: #FDB813; stroke-width: 2; stroke-linecap: round; }
-  </style>
-  <line x1="30" y1="5" x2="30" y2="0" class="ray"/>
-  <line x1="30" y1="55" x2="30" y2="60" class="ray"/>
-  <line x1="5" y1="30" x2="0" y2="30" class="ray"/>
-  <line x1="55" y1="30" x2="60" y2="30" class="ray"/>
-  <line x1="12" y1="12" x2="8" y2="8" class="ray"/>
-  <line x1="48" y1="12" x2="52" y2="8" class="ray"/>
-  <line x1="12" y1="48" x2="8" y2="52" class="ray"/>
-  <line x1="48" y1="48" x2="52" y2="52" class="ray"/>
-  <circle cx="30" cy="30" r="15" class="sun"/>
+<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sunGradient" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFA500"/>
+      <stop offset="100%" stop-color="#FF6B35"/>
+    </linearGradient>
+  </defs>
+  
+  <circle cx="40" cy="40" r="18" fill="url(#sunGradient)"/>
+  <circle cx="40" cy="40" r="22" fill="none" stroke="#FFA500" stroke-width="2" opacity="0.3"/>
 </svg>

@@ -6,7 +6,13 @@ import { ProjectCard } from '@/features/projects/components/ProjectCard';
 import { Project } from '@/features/projects/types/project';
 
 export default async function Home() {
-    const projects = await fetchProjects();
+    let projects: Project[] = [];
+
+    try {
+        projects = await fetchProjects();
+    } catch (err) {
+        console.error('Failed to load projects', err);
+    }
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-white via-neutral-50 to-white">

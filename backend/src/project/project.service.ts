@@ -49,7 +49,7 @@ export class ProjectService {
 	}
 
 	async findProjectByName(userSlug: string, projectSlug: string) {
-		return await this.projectRepository.findOne({
+		const project = await this.projectRepository.findOne({
 			where: {
 				slug: projectSlug,
 			},
@@ -65,6 +65,10 @@ export class ProjectService {
 				},
 			],
 		});
+
+		if (!project) throw new NotFoundException('Project does not exists.');
+
+		return project;
 	}
 
 	async findAllProjects() {
