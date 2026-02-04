@@ -3,6 +3,7 @@ import TrendingUsers from '@/features/users/components/TrendingUsers';
 import HeroSection from '@/components/HeroSection';
 import { fetchProjects } from '@/features/projects/services/fetchProjects';
 import { ProjectCard } from '@/features/projects/components/ProjectCard';
+import { Project } from '@/features/projects/types/project';
 
 export default async function Home() {
     const projects = await fetchProjects();
@@ -52,7 +53,7 @@ export default async function Home() {
                         </div>
                     ) : projects.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {projects.map((project: any) => (
+                            {projects.map((project: Project) => (
                                 <ProjectCard key={project.id} project={project} />
                             ))}
                         </div>

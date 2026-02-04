@@ -7,7 +7,6 @@ const TrendingUsers = async () => {
 
     return (
         <div className="border border-neutral-200 rounded-3xl shadow-sm bg-white overflow-hidden">
-            {/* Header */}
             <div className="bg-gradient-to-br from-purple-50 via-pink-50 to-white p-6 border-b border-neutral-200">
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg">
@@ -33,17 +32,15 @@ const TrendingUsers = async () => {
                         {users.map((user, index) => (
                             <Link
                                 key={user.id}
-                                href={`/${user.username}`}
+                                href={`/${user.slug}`}
                                 className="group relative"
                             >
                                 <div className="relative border border-neutral-200 rounded-2xl p-5 bg-white hover:bg-gradient-to-br hover:from-purple-50/50 hover:to-pink-50/50 hover:border-purple-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                                    {/* Rank Badge */}
                                     <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-sm shadow-lg">
                                         #{index + 1}
                                     </div>
 
                                     <div className="flex items-start gap-4">
-                                        {/* Avatar */}
                                         <div className="relative flex-shrink-0">
                                             <div className="w-16 h-16 rounded-full ring-2 ring-neutral-200 group-hover:ring-purple-300 transition-all duration-300 overflow-hidden">
                                                 <Image
@@ -54,17 +51,15 @@ const TrendingUsers = async () => {
                                                     className="object-cover w-full h-full"
                                                 />
                                             </div>
-                                            {/* Online indicator (optional) */}
                                             <div className="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white" />
                                         </div>
 
-                                        {/* User Info */}
                                         <div className="flex-1 min-w-0">
                                             <h3 className="font-semibold text-neutral-900 group-hover:text-purple-600 transition-colors truncate">
                                                 {user.name}
                                             </h3>
                                             <p className="text-sm text-neutral-500 truncate">
-                                                @{user.username}
+                                                @{user.slug}
                                             </p>
                                             <div className="flex items-center gap-2 mt-3">
                                                 <div className="flex items-center gap-1.5 text-sm">
@@ -81,7 +76,6 @@ const TrendingUsers = async () => {
                                         </div>
                                     </div>
 
-                                    {/* Follow Button (appears on hover) */}
                                     <button
                                         onClick={(e) => {
                                             e.preventDefault();
@@ -112,7 +106,6 @@ const TrendingUsers = async () => {
                 )}
             </div>
 
-            {/* Footer */}
             {users?.length > 0 && (
                 <div className="p-6 pt-0">
                     <Link

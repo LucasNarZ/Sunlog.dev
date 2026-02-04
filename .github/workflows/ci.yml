@@ -23,3 +23,6 @@ jobs:
 
       - name: Run tests
         run: npm run test
+
+      - name: Test build
+        run: npm run test:build
