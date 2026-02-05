@@ -12,6 +12,8 @@ type PageProps = {
     };
 };
 
+export const dynamic = 'force-dynamic'
+
 export default async function ProjectPage({ params }: PageProps) {
     const awaitedParams = await params;
     const projectPath = `${awaitedParams.username}/${awaitedParams.projectName}`;

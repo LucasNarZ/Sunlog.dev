@@ -8,13 +8,10 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      args:
-        NEXT_PUBLIC_API_URL: https://sunlog.dev/api
     image: ${AWS_ECR_PREFIX}/sunlog.dev/frontend:latest
     restart: unless-stopped
     environment:
       NODE_ENV: production
-      INTERNAL_API_URL: http://nginx/api
     networks:
       - internal
   

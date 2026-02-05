@@ -7,9 +7,6 @@ RUN npm ci
 
 COPY . .
 
-ARG NEXT_PUBLIC_API_URL
-ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
-
 RUN npm run build
 
 # ---- Stage 2: Runner ----
@@ -17,7 +14,6 @@ FROM node:23-alpine
 WORKDIR /app
 
 ENV NODE_ENV=production
-ENV INTERNAL_API_URL=http://nginx/api
 
 COPY package*.json ./
 RUN npm ci --omit=dev

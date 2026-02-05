@@ -5,6 +5,8 @@ import { fetchProjects } from '@/features/projects/services/fetchProjects';
 import { ProjectCard } from '@/features/projects/components/ProjectCard';
 import { Project } from '@/features/projects/types/project';
 
+export const dynamic = 'force-dynamic'
+
 export default async function Home() {
     let projects: Project[] = [];
 
