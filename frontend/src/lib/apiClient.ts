@@ -25,6 +25,10 @@ apiClient.interceptors.response.use(
 		const status = error.response?.status;
 		const original = error.config;
 
+		if (!original || !original.url) {
+			return Promise.reject(error);
+		}
+
 		if (original.url.includes('/auth/refresh')) {
 			return Promise.reject(error);
 		}
