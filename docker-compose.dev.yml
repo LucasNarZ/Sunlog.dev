@@ -171,4 +171,3 @@ volumes:
   rabbitmq_data:
   loki_data:
   grafana_data:
-
