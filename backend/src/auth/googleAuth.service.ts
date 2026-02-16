@@ -43,13 +43,29 @@ export class GoogleAuthService {
 		let user = await this.userService.findByGoogleId(payload.sub);
 
 		if (!user) {
-			user = await this.userService.createUserGoogle({
-				googleId: payload.sub,
-				email: payload.email,
-				name: payload.name,
-			});
+			const existingUser = await this.userService.getUserByEmail(
+				payload.email,
+			);
+
+			if (existingUser) {
+				await this.userService.linkGoogleAccount(
+					existingUser.id,
+					payload.sub,
+				);
+				user = await this.userService.findByGoogleId(payload.sub);
+			} else {
+				user = await this.userService.createUserGoogle({
+					googleId: payload.sub,
+					email: payload.email,
+					name: payload.name,
+				});
+			}
 		} else {
 			logger.log(`Existing user found: ${user.id}`);
+		}
+
+		if (!user) {
+			throw new UnauthorizedException('User not found after Google login.');
 		}
 
 		const jwtPayload: UserPayload = {

@@ -13,7 +13,6 @@ import { updateUserDto } from 'src/user/dtos/updateUser.dto';
 import { fn, col, Op } from 'sequelize';
 import { Project } from 'src/project/project.entity';
 import { createUserGoogleDto } from './dtos/createUserGoogle.dto';
-import { logger } from 'src/logger/logger';
 
 @Injectable()
 export class UsersService {
@@ -44,6 +43,13 @@ export class UsersService {
 			googleId: googleId,
 			slug: name.toLowerCase().replace(' ', '_'),
 		});
+	}
+
+	async linkGoogleAccount(userId: string, googleId: string) {
+		return await this.usersRepository.update(
+			{ googleId },
+			{ where: { id: userId }, returning: true },
+		);
 	}
 
 	async getUserByEmail(email: string) {

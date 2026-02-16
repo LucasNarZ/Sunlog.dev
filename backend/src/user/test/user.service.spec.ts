@@ -221,4 +221,14 @@ describe('UsersService', () => {
 			expect(usersRepository.findAll).toHaveBeenCalled();
 		});
 	});
+	describe('linkGoogleAccount', () => {
+		it('should call update with correct params', async () => {
+			usersRepository.update.mockResolvedValue([1, [{ id: '1' }]]);
+			await service.linkGoogleAccount('1', 'google_123');
+			expect(usersRepository.update).toHaveBeenCalledWith(
+				{ googleId: 'google_123' },
+				{ where: { id: '1' }, returning: true },
+			);
+		});
+	});
 });
