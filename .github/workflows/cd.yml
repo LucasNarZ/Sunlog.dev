@@ -8,8 +8,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      # Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -22,31 +22,75 @@ jobs:
 
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 2
+          max_attempts: 3
+          retry_wait_seconds: 10
+          command: |
+            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
 
       - name: Create .env file
         run: |
           echo "${{ secrets.ENV_FILE }}" > .env
 
-      - name: Build and Publish images
+      - name: Build images
         run: |
           docker compose -f docker-compose.prod.yml build
-          docker compose -f docker-compose.prod.yml push
 
-      # Set up SSH
+      - name: Push images to ECR
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          retry_wait_seconds: 30
+          command: |
+            docker compose -f docker-compose.prod.yml push
+
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Add server to known_hosts
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan 46.202.150.9 >> ~/.ssh/known_hosts
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 1
+          max_attempts: 3
+          retry_wait_seconds: 5
+          command: |
+            mkdir -p ~/.ssh
+            ssh-keyscan -H -T 10 46.202.150.9 >> ~/.ssh/known_hosts 2>/dev/null || {
+              echo "ssh-keyscan failed, using fallback..."
+              cat > ~/.ssh/config << 'EOF'
+            Host 46.202.150.9
+                StrictHostKeyChecking no
+                UserKnownHostsFile=/dev/null
+                LogLevel ERROR
+            EOF
+              chmod 600 ~/.ssh/config
+            }
 
-      - name: Set execute permission on deploy script
-        run: ssh deploy@46.202.150.9 'chmod +x ./Sunlog.dev/scripts/deploy.sh'
+      - name: Set deploy script permissions
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 2
+          max_attempts: 3
+          retry_wait_seconds: 10
+          command: |
+            ssh -o ConnectTimeout=30 \
+                -o ServerAliveInterval=60 \
+                deploy@46.202.150.9 \
+                'chmod +x ./Sunlog.dev/scripts/deploy.sh'
 
-      # Deploy to the server
-      - name: Deploy using script
-        run: ssh deploy@46.202.150.9 './Sunlog.dev/scripts/deploy.sh'
+      - name: Deploy to server
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          retry_wait_seconds: 30
+          command: |
+            ssh -o ConnectTimeout=30 \
+                -o ServerAliveInterval=60 \
+                deploy@46.202.150.9 \
+                './Sunlog.dev/scripts/deploy.sh'
