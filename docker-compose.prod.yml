@@ -10,11 +10,6 @@ services:
       dockerfile: Dockerfile
     image: ${AWS_ECR_PREFIX}/sunlog.dev/frontend:latest
     restart: unless-stopped
-    environment:
-      - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
-      - NEXT_PUBLIC_GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-      - API_URL=${API_URL}
     networks:
       - internal
 
