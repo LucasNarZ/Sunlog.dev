@@ -1,3 +1,5 @@
+name: sunlogdev
+
 networks:
   public:
   internal:
@@ -6,29 +8,24 @@ networks:
 services:
   front-end:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    image: ${AWS_ECR_PREFIX}/sunlog.dev/frontend:latest
+      context: ../frontend
     restart: unless-stopped
     networks:
       - internal
 
   api:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
-    image: ${AWS_ECR_PREFIX}/sunlog.dev/api:latest
+      context: ../backend
     restart: unless-stopped
     environment:
-      - PORT=3000
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - JWT_ACCESS_SECRET=${JWT_ACCESS_SECRET}
-      - JWT_REFLESH_SECRET=${JWT_REFRESH_SECRET}
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-      - NODE_ENV=production
+      PORT: 3000
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
+      JWT_REFLESH_SECRET: ${JWT_REFRESH_SECRET}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
     depends_on:
       - postgres
       - redis
@@ -37,19 +34,16 @@ services:
 
   worker:
     build:
-      context: ./worker
-      dockerfile: Dockerfile
-    image: ${AWS_ECR_PREFIX}/sunlog.dev/worker:latest
+      context: ../worker
     restart: unless-stopped
     environment:
-      - PORT=3000
-      - NODE_ENV=production
-      - RABBITMQ_URL=${RABBITMQ_URL}
-      - SMTP_HOST=${SMTP_HOST}
-      - SMTP_PORT=${SMTP_PORT}
-      - SMTP_USER=${SMTP_USER}
-      - SMTP_PASS=${SMTP_PASS}
-      - SES_FROM=${SES_FROM}
+      PORT: 3000
+      RABBITMQ_URL: ${RABBITMQ_URL}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      SES_FROM: ${SES_FROM}
     depends_on:
       - rabbitmq
     networks:
@@ -78,9 +72,9 @@ services:
     image: postgres:16.3
     restart: unless-stopped
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres:/var/lib/postgresql/data
     ports:
@@ -104,7 +98,6 @@ services:
 
   loki:
     image: grafana/loki:2.9.0
-    restart: unless-stopped
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
       - loki_data:/loki
@@ -113,7 +106,6 @@ services:
 
   promtail:
     image: grafana/promtail:3.5.9
-    restart: unless-stopped
     volumes:
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock
@@ -126,10 +118,9 @@ services:
 
   grafana:
     image: grafana/grafana:latest
-    restart: unless-stopped
     environment:
-      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s/grafana/
-      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+      GF_SERVER_ROOT_URL: "%(protocol)s://%(domain)s/grafana/"
+      GF_SERVER_SERVE_FROM_SUB_PATH: "true"
     volumes:
       - ./grafana/provisioning:/etc/grafana/provisioning
       - ./grafana/dashboards:/etc/grafana/dashboards
@@ -139,7 +130,6 @@ services:
 
   prometheus:
     image: prom/prometheus
-    restart: unless-stopped
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     networks:
@@ -148,9 +138,6 @@ services:
   nginx:
     image: nginx
     restart: unless-stopped
-    volumes:
-      - ./nginx.prod.conf:/etc/nginx/nginx.conf
-      - /etc/letsencrypt:/etc/letsencrypt:ro
     depends_on:
       - api
       - front-end

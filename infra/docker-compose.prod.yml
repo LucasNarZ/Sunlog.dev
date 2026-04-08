@@ -1,0 +1,36 @@
+services:
+  front-end:
+    build:
+      dockerfile: Dockerfile
+    image: ${AWS_ECR_PREFIX}/sunlog.dev/frontend:latest
+
+  api:
+    build:
+      dockerfile: Dockerfile
+    image: ${AWS_ECR_PREFIX}/sunlog.dev/api:latest
+    environment:
+      NODE_ENV: production
+
+  worker:
+    build:
+      dockerfile: Dockerfile
+    image: ${AWS_ECR_PREFIX}/sunlog.dev/worker:latest
+    environment:
+      NODE_ENV: production
+
+  loki:
+    restart: unless-stopped
+
+  promtail:
+    restart: unless-stopped
+
+  grafana:
+    restart: unless-stopped
+
+  prometheus:
+    restart: unless-stopped
+
+  nginx:
+    volumes:
+      - ./nginx.prod.conf:/etc/nginx/nginx.conf
+      - /etc/letsencrypt:/etc/letsencrypt:ro

@@ -35,6 +35,7 @@ import { projectProviders } from './project/project.providers';
 import { LoggingMiddleware } from './middlewares/logging.middleware';
 import { LoggerModule } from './logger/logger.module';
 import { MetricsModule } from './metrics/metrics.module';
+import { RabbitmqModule } from './rabbitmq/rabbitmq.module';
 
 @Module({
 	imports: [
@@ -50,6 +51,7 @@ import { MetricsModule } from './metrics/metrics.module';
 		ProjectModule,
 		LoggerModule,
 		MetricsModule,
+		RabbitmqModule,
 	],
 	controllers: [
 		AppController,

@@ -138,7 +138,7 @@
 
     ### 7. Reverse Proxy (NGINX)
     - **Purpose**: Gateway and load balancer
-    - **Configuration**: `nginx.dev.conf` / `nginx.prod.conf`
+    - **Configuration**: `infra/nginx.dev.conf` / `infra/nginx.prod.conf`
 
     **Routing:**
     ```
@@ -250,7 +250,7 @@
 
     ### Development Environment
     ```yaml
-    # docker-compose.dev.yml
+    # infra/docker-compose.yml + infra/docker-compose.dev.yml
     services:
     - front-end (hot reload)
     - api (hot reload)
@@ -267,7 +267,7 @@
 
     ### Production Environment
     ```yaml
-    # docker-compose.prod.yml
+    # infra/docker-compose.yml + infra/docker-compose.prod.yml
     services:
     - front-end (optimized build)
     - api (optimized build)
@@ -349,7 +349,7 @@
     ## Development Workflow
 
     ### Local Development
-    1. Start services: `docker compose -f docker-compose.dev.yml up -d`
+    1. Start services: `make dev-up`
     2. Run migrations: `cd backend && npx sequelize-cli db:migrate`
     3. Access application: `http://localhost`
     4. Access Grafana: `http://localhost/grafana/`

@@ -7,12 +7,14 @@ import { UniqueConstraintException } from 'src/exceptions/uniqueContraint.except
 import { InvalidPasswordEmailException } from 'src/exceptions/InvalidPasswordEmail.exception';
 import { UserPayload } from '../interfaces/userPayload.interface';
 import { TokenService } from './token.service';
+import { EmailService } from 'src/email/email.service';
 
 @Injectable()
 export class AuthService {
 	constructor(
 		private usersService: UsersService,
 		private tokenService: TokenService,
+		private emailService: EmailService,
 	) {}
 
 	async register(body: createUserDto) {
@@ -21,9 +23,15 @@ export class AuthService {
 				...body,
 				password: await argon2.hash(body.password),
 			};
-			return await this.usersService.createUser(data);
-		} catch (err) {
-			if (err.name == 'SequelizeUniqueConstraintError') {
+			const user = await this.usersService.createUser(data);
+			await this.emailService.sendWelcomeEmail(user);
+
+			return user;
+		} catch (err: unknown) {
+			if (
+				err instanceof Error &&
+				err.name === 'SequelizeUniqueConstraintError'
+			) {
 				throw new UniqueConstraintException(
 					'Email already registered.',
 				);
@@ -57,7 +65,9 @@ export class AuthService {
 	}
 
 	async logout(token: string) {
-		const payload = await this.tokenService.getTokenPayload(token);
+		const payload = (await this.tokenService.getTokenPayload(
+			token,
+		)) as UserPayload;
 
 		return this.tokenService.deleteRefreshToken(payload.userId);
 	}

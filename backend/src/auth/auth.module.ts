@@ -8,6 +8,8 @@ import { AuthGuard } from './guards/auth.guard';
 import { jwtConstants } from 'src/constants';
 import { RedisModule } from 'src/redis/redis.module';
 import { GoogleAuthService } from './googleAuth.service';
+import { EmailModule } from 'src/email/email.module';
+import { RabbitmqModule } from 'src/rabbitmq/rabbitmq.module';
 
 @Module({
 	imports: [
@@ -18,6 +20,8 @@ import { GoogleAuthService } from './googleAuth.service';
 			signOptions: { expiresIn: '15m' },
 		}),
 		RedisModule,
+		EmailModule,
+		RabbitmqModule,
 	],
 	controllers: [AuthController],
 	providers: [AuthGuard, AuthService, TokenService, GoogleAuthService],

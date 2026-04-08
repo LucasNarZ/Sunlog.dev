@@ -1,0 +1,30 @@
+services:
+  front-end:
+    build:
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules
+
+  api:
+    build:
+      dockerfile: Dockerfile.dev
+    environment:
+      NODE_ENV: development
+      RABBITMQ_URL: ${RABBITMQ_URL}
+    volumes:
+      - ../backend:/app
+      - /app/node_modules
+
+  worker:
+    build:
+      dockerfile: Dockerfile.dev
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ../worker:/app
+      - /app/node_modules
+
+  nginx:
+    volumes:
+      - ./nginx.dev.conf:/etc/nginx/nginx.conf
