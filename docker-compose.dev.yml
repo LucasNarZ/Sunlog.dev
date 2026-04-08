@@ -13,6 +13,7 @@ services:
       - internal
     volumes:
       - ./frontend:/app
+      - /app/node_modules
 
   api:
     build:
@@ -26,6 +27,7 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - JWT_ACCESS_SECRET=${JWT_ACCESS_SECRET}
       - JWT_REFLESH_SECRET=${JWT_REFRESH_SECRET}
+      - RABBITMQ_URL=${RABBITMQ_URL}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - NODE_ENV=development
@@ -36,6 +38,8 @@ services:
       - internal
     volumes:
       - ./backend:/app
+      - /app/node_modules
+
 
   worker:
     build:
@@ -44,7 +48,7 @@ services:
     restart: unless-stopped
     environment:
       - PORT=3000
-      - NODE_ENV=production
+      - NODE_ENV=development
       - RABBITMQ_URL=${RABBITMQ_URL}
       - SMTP_HOST=${SMTP_HOST}
       - SMTP_PORT=${SMTP_PORT}
@@ -60,6 +64,7 @@ services:
       service: "worker"
     volumes:
       - ./worker:/app
+      - /app/node_modules
 
   rabbitmq:
     image: rabbitmq:3-management
