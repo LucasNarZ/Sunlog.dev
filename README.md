@@ -58,7 +58,7 @@ First, create your environment file based on the provided example.
 Start the development containers (database, redis, rabbitmq, etc.):
 
 ```bash
-docker compose -f docker-compose.dev.yml up --build -d
+make dev-up
 ```
 
 With the containers running, install backend dependencies and execute the database migrations:
@@ -119,8 +119,7 @@ This allows real-time insight into system health and performance.
 backend/    → Main API (NestJS)
 frontend/   → Web app (Next.js)
 worker/     → Background job processor
-infra/      → Terraform infrastructure
-grafana/    → Dashboards
+infra/      → Terraform, Docker Compose, NGINX, and observability assets
 scripts/    → Deployment and startup scripts
 ```
 

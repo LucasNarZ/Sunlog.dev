@@ -30,7 +30,7 @@ jobs:
 
       - name: Build images
         run: |
-          docker compose -f docker-compose.prod.yml build
+          docker compose --env-file .env -f infra/docker-compose.yml -f infra/docker-compose.prod.yml build
 
       - name: Push images to ECR
         uses: nick-invision/retry@v2
@@ -39,7 +39,7 @@ jobs:
           max_attempts: 3
           retry_wait_seconds: 30
           command: |
-            docker compose -f docker-compose.prod.yml push
+            docker compose --env-file .env -f infra/docker-compose.yml -f infra/docker-compose.prod.yml push
 
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.9.0

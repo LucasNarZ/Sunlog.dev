@@ -1,3 +1,5 @@
+name: sunlogdev
+
 networks:
   public:
   internal:
@@ -6,55 +8,42 @@ networks:
 services:
   front-end:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
+      context: ../frontend
     restart: unless-stopped
     networks:
       - internal
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
 
   api:
     build:
-      context: ./backend
-      dockerfile: Dockerfile.dev
+      context: ../backend
     restart: unless-stopped
     environment:
-      - PORT=3000
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - JWT_ACCESS_SECRET=${JWT_ACCESS_SECRET}
-      - JWT_REFLESH_SECRET=${JWT_REFRESH_SECRET}
-      - RABBITMQ_URL=${RABBITMQ_URL}
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-      - NODE_ENV=development
+      PORT: 3000
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
+      JWT_REFLESH_SECRET: ${JWT_REFRESH_SECRET}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
     depends_on:
       - postgres
       - redis
     networks:
       - internal
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
-
 
   worker:
     build:
-      context: ./worker
-      dockerfile: Dockerfile.dev
+      context: ../worker
     restart: unless-stopped
     environment:
-      - PORT=3000
-      - NODE_ENV=development
-      - RABBITMQ_URL=${RABBITMQ_URL}
-      - SMTP_HOST=${SMTP_HOST}
-      - SMTP_PORT=${SMTP_PORT}
-      - SMTP_USER=${SMTP_USER}
-      - SMTP_PASS=${SMTP_PASS}
-      - SES_FROM=${SES_FROM}
+      PORT: 3000
+      RABBITMQ_URL: ${RABBITMQ_URL}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      SES_FROM: ${SES_FROM}
     depends_on:
       - rabbitmq
     networks:
@@ -62,9 +51,6 @@ services:
     labels:
       logging: "promtail"
       service: "worker"
-    volumes:
-      - ./worker:/app
-      - /app/node_modules
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -86,9 +72,9 @@ services:
     image: postgres:16.3
     restart: unless-stopped
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres:/var/lib/postgresql/data
     ports:
@@ -132,10 +118,9 @@ services:
 
   grafana:
     image: grafana/grafana:latest
-    restart: unless-stopped
     environment:
-      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s/grafana/
-      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+      GF_SERVER_ROOT_URL: "%(protocol)s://%(domain)s/grafana/"
+      GF_SERVER_SERVE_FROM_SUB_PATH: "true"
     volumes:
       - ./grafana/provisioning:/etc/grafana/provisioning
       - ./grafana/dashboards:/etc/grafana/dashboards
@@ -153,8 +138,6 @@ services:
   nginx:
     image: nginx
     restart: unless-stopped
-    volumes:
-      - ./nginx.dev.conf:/etc/nginx/nginx.conf
     depends_on:
       - api
       - front-end
