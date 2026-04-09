@@ -5,28 +5,45 @@ on:
     branches:
       - main
 
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: "22"
+  AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
+  DEPLOY_HOST: ${{ vars.DEPLOY_HOST || '46.202.150.9' }}
+  DEPLOY_USER: ${{ vars.DEPLOY_USER || 'deploy' }}
+  APP_URL: ${{ vars.APP_URL || 'https://sunlog.dev' }}
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ vars.APP_URL || 'https://sunlog.dev' }}
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Create .env file
+        run: |
+          printf '%s\n' "${{ secrets.ENV_FILE }}" > .env
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Create .env file
-        run: |
-          echo "${{ secrets.ENV_FILE }}" > .env
 
       - name: Build images
         run: |
@@ -46,24 +63,18 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Add server to known_hosts
-        uses: nick-invision/retry@v2
-        with:
-          timeout_minutes: 1
-          max_attempts: 3
-          retry_wait_seconds: 5
-          command: |
-            mkdir -p ~/.ssh
-            ssh-keyscan -H -T 10 46.202.150.9 >> ~/.ssh/known_hosts 2>/dev/null || {
-              echo "ssh-keyscan failed, using fallback..."
-              cat > ~/.ssh/config << 'EOF'
-            Host 46.202.150.9
-                StrictHostKeyChecking no
-                UserKnownHostsFile=/dev/null
-                LogLevel ERROR
-            EOF
-              chmod 600 ~/.ssh/config
-            }
+      - name: Configure known_hosts
+        env:
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+        run: |
+          if [ -z "$SSH_KNOWN_HOSTS" ]; then
+            echo "SSH_KNOWN_HOSTS secret is required for host verification." >&2
+            exit 1
+          fi
+
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
 
       - name: Set deploy script permissions
         uses: nick-invision/retry@v2
@@ -74,7 +85,7 @@ jobs:
           command: |
             ssh -o ConnectTimeout=30 \
                 -o ServerAliveInterval=60 \
-                deploy@46.202.150.9 \
+                ${{ env.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} \
                 'chmod +x ./Sunlog.dev/scripts/deploy.sh'
 
       - name: Deploy to server
@@ -86,5 +97,11 @@ jobs:
           command: |
             ssh -o ConnectTimeout=30 \
                 -o ServerAliveInterval=60 \
-                deploy@46.202.150.9 \
+                ${{ env.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} \
                 './Sunlog.dev/scripts/deploy.sh'
+
+      - name: Verify frontend health
+        run: curl --fail --silent --show-error --location --retry 5 --retry-delay 10 ${{ env.APP_URL }}
+
+      - name: Verify API health
+        run: curl --fail --silent --show-error --location --retry 5 --retry-delay 10 ${{ env.APP_URL }}/api
