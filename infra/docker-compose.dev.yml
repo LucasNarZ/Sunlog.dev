@@ -26,5 +26,9 @@ services:
       - /app/node_modules
 
   nginx:
+    ports:
+      - "80:80"
+    networks:
+      - internal
     volumes:
       - ./nginx.dev.conf:/etc/nginx/nginx.conf
