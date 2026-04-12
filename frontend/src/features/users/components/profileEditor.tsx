@@ -1,9 +1,7 @@
 type ProfileEditorProps = {
-	user: any;
 	editedName: string;
 	editedBio: string;
 	editedProfileImgUrl: string;
-	previewImgUrl: string;
 	isSaving: boolean;
 	nameError: string;
 	urlError: string;
@@ -19,7 +17,6 @@ export const ProfileEditor = ({
 	editedName,
 	editedBio,
 	editedProfileImgUrl,
-	previewImgUrl,
 	isSaving,
 	nameError,
 	urlError,

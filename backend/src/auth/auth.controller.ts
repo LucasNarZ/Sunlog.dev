@@ -17,7 +17,6 @@ import { extractTokenFromCookie } from 'src/utils/jwt.util';
 import { AuthGuard } from './guards/auth.guard';
 import { LoginGoogleDto } from './dtos/loginGoogle.dto';
 import { GoogleAuthService } from './googleAuth.service';
-import { logger } from 'src/logger/logger';
 
 @Controller('auth')
 export class AuthController {
@@ -60,15 +59,19 @@ export class AuthController {
 
 	@UseGuards(AuthGuard)
 	@Delete('logout')
-	async logoutUser(
+	logoutUser(
 		@Req() req: Request,
 		@Res({ passthrough: true }) res: Response,
 	) {
 		const token = extractTokenFromCookie(req, 'access_token');
 
+		if (!token) {
+			throw new UnauthorizedException('Token not found.');
+		}
+
 		const isProduction = process.env.NODE_ENV === 'production';
 
-		this.authService.logout(token);
+		void this.authService.logout(token);
 
 		res.clearCookie('refresh_token', {
 			httpOnly: true,

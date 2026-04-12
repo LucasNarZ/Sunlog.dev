@@ -1,4 +1,4 @@
-import { OAuth2Client } from 'google-auth-library';
+import { OAuth2Client, TokenPayload } from 'google-auth-library';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { TokenService } from './token.service';
 import { UserPayload } from '../interfaces/userPayload.interface';
@@ -24,7 +24,7 @@ export class GoogleAuthService {
 	}
 
 	async loginWithGoogle(idToken: string) {
-		let payload;
+		let payload: TokenPayload | undefined;
 
 		try {
 			const ticket = await this.client.verifyIdToken({
@@ -37,6 +37,10 @@ export class GoogleAuthService {
 			logger.error('Error during token verification:');
 			logger.error(err);
 
+			throw new UnauthorizedException('Invalid Google token.');
+		}
+
+		if (!payload?.sub || !payload.email || !payload.name) {
 			throw new UnauthorizedException('Invalid Google token.');
 		}
 

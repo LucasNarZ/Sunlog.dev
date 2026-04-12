@@ -67,7 +67,7 @@ export class AuthService {
 	async logout(token: string) {
 		const payload = (await this.tokenService.getTokenPayload(
 			token,
-		)) as UserPayload;
+		));
 
 		return this.tokenService.deleteRefreshToken(payload.userId);
 	}

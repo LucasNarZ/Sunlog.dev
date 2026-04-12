@@ -1,7 +1,11 @@
 import Header from '@/components/Header';
 import { DevlogCard } from '@/features/devlogs/components/DevlogCard';
 import { fetchProjectDevlogs } from '@/features/devlogs/services/fetchProjectDevlogs';
+import { Devlog } from '@/features/devlogs/types/devlog';
 import { fetchProject } from '@/features/projects/services/fetchProject';
+import { Project } from '@/features/projects/types/project';
+import { isAxiosError } from 'axios';
+import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 
@@ -14,22 +18,29 @@ type PageProps = {
 
 export const dynamic = 'force-dynamic'
 
+type ProjectDetails = Project & {
+	user?: {
+		username?: string;
+		previewImgUrl?: string;
+	};
+};
+
 export default async function ProjectPage({ params }: PageProps) {
     const awaitedParams = await params;
     const projectPath = `${awaitedParams.username}/${awaitedParams.projectName}`;
 
-    let project;
+    let project: ProjectDetails;
     try {
-        project = await fetchProject(projectPath);
-    } catch (err: any) {
-        const status = err?.response?.status;
+        project = await fetchProject(projectPath) as ProjectDetails;
+    } catch (err: unknown) {
+		const status = isAxiosError(err) ? err.response?.status : undefined;
 
         if (status === 404) redirect("/not-found")
 
         throw err;
     }
 
-    let devlogs = [];
+	let devlogs: Devlog[] = [];
     try {
         devlogs = await fetchProjectDevlogs(project.id);
     } catch (err) {
@@ -70,10 +81,10 @@ export default async function ProjectPage({ params }: PageProps) {
                                     <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-200 via-purple-200 to-transparent" />
 
                                     <div className="space-y-6">
-                                        {devlogs.length > 0 ? (
-                                            devlogs.map((d: any, index: number) => (
-                                                <div
-                                                    key={d.id}
+											{devlogs.length > 0 ? (
+												devlogs.map((d: Devlog) => (
+													<div
+														key={d.id}
                                                     className="group relative pl-16 block"
                                                 >
                                                     <div className="absolute left-[18px] top-7 w-4 h-4 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 ring-4 ring-white shadow-lg group-hover:scale-125 transition-transform duration-200" />
@@ -127,14 +138,16 @@ export default async function ProjectPage({ params }: PageProps) {
                             <div className="border border-neutral-200 rounded-2xl p-6 bg-white shadow-sm">
                                 <div className="flex items-center gap-3 mb-4">
                                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-lg shadow-md">
-                                        <img
-                                            className="object-cover w-full h-full"
-                                            src={
-                                                project?.user?.previewImgUrl ||
-                                                'https://deepgrouplondon.com/wp-content/uploads/2019/06/person-placeholder-5.png'
-                                            }
-                                            alt="Profile"
-                                        />
+															<Image
+																className="object-cover w-full h-full rounded-full"
+																src={
+																	project?.user?.previewImgUrl ||
+																	'https://deepgrouplondon.com/wp-content/uploads/2019/06/person-placeholder-5.png'
+																}
+																alt="Profile"
+																width={48}
+																height={48}
+															/>
                                     </div>
                                     <div>
                                         <div className="text-xs text-neutral-500 font-medium uppercase tracking-wide">

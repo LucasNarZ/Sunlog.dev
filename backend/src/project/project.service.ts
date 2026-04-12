@@ -113,7 +113,9 @@ export class ProjectService {
 			);
 		}
 
-		await this.projectRepository.update(data, { where: { id } });
+		await this.projectRepository.update(data as Partial<Project>, {
+			where: { id },
+		});
 		return this.projectRepository.findByPk(id);
 	}
 

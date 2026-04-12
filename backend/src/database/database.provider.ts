@@ -9,15 +9,25 @@ import { logger } from 'src/logger/logger';
 import {
 	dbQueryTotal,
 	dbQueryDuration,
-	dbErrorsTotal,
 	dbConnections,
 	dbIdleConnections,
 } from 'src/metrics/metrics';
 
+type SequelizePool = {
+	size: number;
+	available: number;
+};
+
+type SequelizeWithPool = Sequelize & {
+	connectionManager: {
+		pool?: SequelizePool;
+	};
+};
+
 export const databaseProviders = [
 	{
 		provide: 'SEQUELIZE',
-		useFactory: async () => {
+		useFactory: () => {
 			const sequelize = new Sequelize({
 				dialect: 'postgres',
 				host: 'postgres',
@@ -59,7 +69,7 @@ export const databaseProviders = [
 			]);
 
 			setInterval(() => {
-				const pool = (sequelize.connectionManager as any).pool;
+				const pool = (sequelize as SequelizeWithPool).connectionManager.pool;
 				if (pool) {
 					dbConnections.set(pool.size);
 					dbIdleConnections.set(pool.available);

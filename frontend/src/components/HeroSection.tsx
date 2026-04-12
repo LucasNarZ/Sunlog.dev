@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import HeroCard from './HeroCard';
 import useMe from '@/features/users/hooks/useMe';
 
@@ -16,11 +17,13 @@ const HeroSection = () => {
                 <div className="max-w-5xl w-full h-40 bg-gray-100 animate-pulse rounded-xl" />
             ) : user && !error ? (
                 <div className="p-8 bg-white rounded-xl shadow max-w-5xl w-full text-center">
-                    <img
-                        src={user.profileImgUrl}
-                        alt={user.name}
-                        className="mx-auto rounded-full w-24 h-24 mb-4 object-cover"
-                    />
+					<Image
+						src={user.profileImgUrl}
+						alt={user.name}
+						width={96}
+						height={96}
+						className="mx-auto rounded-full w-24 h-24 mb-4 object-cover"
+					/>
                     <h2 className="text-2xl font-semibold mb-2">
                         Welcome back, {user.name}!
                     </h2>

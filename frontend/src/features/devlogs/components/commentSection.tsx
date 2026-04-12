@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import { apiClient } from '@/lib/apiClient';
 import useMe from '@/features/users/hooks/useMe';
@@ -31,26 +31,26 @@ const CommentsSection = ({ postId }: CommentsProps) => {
     );
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-    useEffect(() => {
-        fetchComments();
-    }, []);
+	const fetchComments = useCallback(async () => {
+		try {
+			const res = await apiClient.get(`post/${postId}/comments`);
+			const data: Comment[] = res.data;
+			setComments(buildCommentTree(data));
+		} catch (err) {
+			console.error(err);
+		}
+	}, [postId]);
 
-    useEffect(() => {
-        if (textareaRef.current) {
-            textareaRef.current.style.height = 'auto';
-            textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-        }
-    }, [newComment]);
+	useEffect(() => {
+		void fetchComments();
+	}, [fetchComments]);
 
-    const fetchComments = async () => {
-        try {
-            const res = await apiClient.get(`post/${postId}/comments`);
-            const data: Comment[] = res.data;
-            setComments(buildCommentTree(data));
-        } catch (err) {
-            console.error(err);
-        }
-    };
+	useEffect(() => {
+		if (textareaRef.current) {
+			textareaRef.current.style.height = 'auto';
+			textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+		}
+	}, [newComment]);
 
     const buildCommentTree = (flatComments: Comment[]): Comment[] => {
         const map = new Map<string, Comment>();
@@ -90,7 +90,7 @@ const CommentsSection = ({ postId }: CommentsProps) => {
 
             setNewComment('');
             setReplyTo(null);
-            fetchComments();
+			void fetchComments();
         } catch (err) {
             console.error(err);
             alert('Error');

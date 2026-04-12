@@ -3,16 +3,19 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { GlobalFilter } from './filters/globalFilter.filter';
 import helmet from 'helmet';
-import * as cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
+import { RequestHandler } from 'express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { logger } from './logger/logger';
 import { HttpMetricsInterceptor } from './interceptors/metrics.interceptor';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule, { logger });
+	const cookieParserMiddleware = cookieParser as unknown as () => RequestHandler;
+
 	app.setGlobalPrefix('api');
 	app.use(helmet());
-	app.use(cookieParser());
+	app.use(cookieParserMiddleware());
 	app.enableCors({
 		origin: ['https://sunlog.dev', 'http://localhost'],
 		credentials: true,
@@ -33,4 +36,4 @@ async function bootstrap() {
 	await app.listen(process.env.PORT ?? 3000);
 }
 
-bootstrap();
+void bootstrap();

@@ -45,11 +45,12 @@ const SignUp = () => {
 
     const onSubmit = async (data: SignUpFormData) => {
         setApiError('');
-        setIsSubmitting(true);
+		setIsSubmitting(true);
 
-        try {
-            const { repeatPassword: _, ...submitData } = data;
-            await apiClient.post('/auth/register', submitData);
+		try {
+			const { repeatPassword, ...submitData } = data;
+			void repeatPassword;
+			await apiClient.post('/auth/register', submitData);
             router.push('/sign-in');
         } catch (err: unknown) {
             if (isAxiosError(err)) {

@@ -13,6 +13,7 @@ import {
 import { useRouter } from 'next/navigation';
 import useUserProjects from '@/features/users/hooks/useUserProjects';
 import useMe from '@/features/users/hooks/useMe';
+import { Project } from '@/features/projects/types/project';
 
 function CreateDevlogEventPage() {
     const router = useRouter();
@@ -94,8 +95,8 @@ function CreateDevlogEventPage() {
                                 className={`p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 transition ${errors.projectId ? 'border-danger focus:ring-danger' : 'border-secondary focus:ring-primary'}`}
                             >
                                 <option value="">Select a project</option>
-                                {projects?.map((project: any) => (
-                                    <option key={project.id} value={project.id}>
+									{projects?.map((project: Project) => (
+										<option key={project.id} value={project.id}>
                                         {project.name.split('/').pop()}
                                     </option>
                                 ))}

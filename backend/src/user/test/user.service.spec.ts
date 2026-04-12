@@ -3,9 +3,16 @@ import { UsersService } from '../users.service';
 import { usersRepositoryToken } from 'src/constants';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 
+type MockUsersRepository = {
+	create: jest.Mock;
+	findOne: jest.Mock;
+	update: jest.Mock;
+	findAll: jest.Mock;
+};
+
 describe('UsersService', () => {
 	let service: UsersService;
-	let usersRepository: any;
+	let usersRepository: MockUsersRepository;
 
 	beforeEach(async () => {
 		usersRepository = {
@@ -36,10 +43,9 @@ describe('UsersService', () => {
 			usersRepository.create.mockResolvedValue(created);
 
 			await expect(service.createUser(dto)).resolves.toEqual(created);
-			expect(usersRepository.create).toHaveBeenCalledWith({
-				...dto,
-				slug: 'john_doe',
-			});
+			expect(usersRepository.create.mock.calls).toEqual([
+				[{ ...dto, slug: 'john_doe' }],
+			]);
 		});
 
 		it('should throw if slug is reserved', async () => {
@@ -56,13 +62,10 @@ describe('UsersService', () => {
 			const created = { ...dto, slug: 'alice' };
 			usersRepository.create.mockResolvedValue(created);
 
-			await expect(service.createUserGoogle(dto)).resolves.toEqual(
-				created,
-			);
-			expect(usersRepository.create).toHaveBeenCalledWith({
-				...dto,
-				slug: 'alice',
-			});
+			await expect(service.createUserGoogle(dto)).resolves.toEqual(created);
+			expect(usersRepository.create.mock.calls).toEqual([
+				[{ ...dto, slug: 'alice' }],
+			]);
 		});
 	});
 
@@ -71,12 +74,10 @@ describe('UsersService', () => {
 			const user = { id: '1', email: 'a@b.com' };
 			usersRepository.findOne.mockResolvedValue(user);
 
-			await expect(service.getUserByEmail('a@b.com')).resolves.toEqual(
-				user,
-			);
-			expect(usersRepository.findOne).toHaveBeenCalledWith({
-				where: { email: 'a@b.com' },
-			});
+			await expect(service.getUserByEmail('a@b.com')).resolves.toEqual(user);
+			expect(usersRepository.findOne.mock.calls).toEqual([
+				[{ where: { email: 'a@b.com' } }],
+			]);
 		});
 	});
 
@@ -86,9 +87,9 @@ describe('UsersService', () => {
 			usersRepository.findOne.mockResolvedValue(user);
 
 			await expect(service.findByGoogleId('123')).resolves.toEqual(user);
-			expect(usersRepository.findOne).toHaveBeenCalledWith({
-				where: { googleId: '123' },
-			});
+			expect(usersRepository.findOne.mock.calls).toEqual([
+				[{ where: { googleId: '123' } }],
+			]);
 		});
 	});
 
@@ -106,18 +107,22 @@ describe('UsersService', () => {
 			usersRepository.findOne.mockResolvedValue(user);
 
 			await expect(service.findLoggedUser('1')).resolves.toEqual(user);
-			expect(usersRepository.findOne).toHaveBeenCalledWith({
-				where: { id: '1' },
-				attributes: [
-					'id',
-					'name',
-					'slug',
-					'email',
-					'profileImgUrl',
-					'bio',
-					'followersNumber',
+			expect(usersRepository.findOne.mock.calls).toEqual([
+				[
+					{
+						where: { id: '1' },
+						attributes: [
+							'id',
+							'name',
+							'slug',
+							'email',
+							'profileImgUrl',
+							'bio',
+							'followersNumber',
+						],
+					},
 				],
-			});
+			]);
 		});
 	});
 
@@ -156,7 +161,7 @@ describe('UsersService', () => {
 			const result = await service.findUser('a', '2');
 			expect(result).toHaveProperty('projects');
 			expect(result).toHaveProperty('devlogs');
-			expect(result).not.toHaveProperty('email'); // public
+			expect(result).not.toHaveProperty('email');
 		});
 
 		it('should return full user if same userId', async () => {
@@ -186,7 +191,7 @@ describe('UsersService', () => {
 			const result = await service.findUser('a', '1');
 			expect(result).toHaveProperty('projects');
 			expect(result).toHaveProperty('devlogs');
-			expect(result).toHaveProperty('email'); // full
+			expect(result).toHaveProperty('email');
 		});
 	});
 
@@ -198,14 +203,16 @@ describe('UsersService', () => {
 				bio: 'sdasd',
 				profileImgUrl: 'asdasd',
 			});
-			expect(usersRepository.update).toHaveBeenCalledWith(
-				{
-					name: 'New',
-					bio: 'sdasd',
-					profileImgUrl: 'asdasd',
-				},
-				{ where: { id: '1' }, returning: true },
-			);
+			expect(usersRepository.update.mock.calls).toEqual([
+				[
+					{
+						name: 'New',
+						bio: 'sdasd',
+						profileImgUrl: 'asdasd',
+					},
+					{ where: { id: '1' }, returning: true },
+				],
+			]);
 		});
 	});
 
@@ -218,17 +225,20 @@ describe('UsersService', () => {
 			usersRepository.findAll.mockResolvedValue(trending);
 
 			await expect(service.getTrendingUsers()).resolves.toEqual(trending);
-			expect(usersRepository.findAll).toHaveBeenCalled();
+			expect(usersRepository.findAll.mock.calls).toHaveLength(1);
 		});
 	});
+
 	describe('linkGoogleAccount', () => {
 		it('should call update with correct params', async () => {
 			usersRepository.update.mockResolvedValue([1, [{ id: '1' }]]);
 			await service.linkGoogleAccount('1', 'google_123');
-			expect(usersRepository.update).toHaveBeenCalledWith(
-				{ googleId: 'google_123' },
-				{ where: { id: '1' }, returning: true },
-			);
+			expect(usersRepository.update.mock.calls).toEqual([
+				[
+					{ googleId: 'google_123' },
+					{ where: { id: '1' }, returning: true },
+				],
+			]);
 		});
 	});
 });

@@ -1,7 +1,6 @@
 'use client';
 
 import { Devlog } from '@/features/devlogs/types/devlog';
-import { apiClient } from '@/lib/apiClient';
 import { useState } from 'react';
 
 interface AdminPostCardProps {
@@ -10,13 +9,15 @@ interface AdminPostCardProps {
 }
 
 export default function AdminPostCard({
-    post,
-    onUpdateStatus,
+	post,
+	onUpdateStatus,
 }: AdminPostCardProps) {
-    const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(false);
 
-    async function updateStatus(newStatus: 'APPROVED' | 'REJECTED') {
-        setLoading(true);
+	async function updateStatus(newStatus: 'APPROVED' | 'REJECTED') {
+		void onUpdateStatus;
+		void newStatus;
+		setLoading(true);
         try {
             // await apiClient.patch(
             //     `admin/devlogEvents/${post.id}`,

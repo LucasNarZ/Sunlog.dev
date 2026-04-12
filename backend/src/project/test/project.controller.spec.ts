@@ -3,7 +3,6 @@ import { ProjectController } from '../project.controller';
 import { ProjectService } from '../project.service';
 import { AuthRequest } from 'src/interfaces/authRequest.interface';
 import { CreateProjectDto } from '../dtos/createProject.dto';
-import { LoggerService } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 
 describe('ProjectController', () => {
@@ -17,9 +16,6 @@ describe('ProjectController', () => {
 		deleteProject: jest.Mock;
 		getProjectDevlogs: jest.Mock;
 	};
-	let logger: {
-		log: jest.Mock;
-	};
 
 	beforeEach(async () => {
 		projectService = {
@@ -30,10 +26,6 @@ describe('ProjectController', () => {
 			updateProject: jest.fn(),
 			deleteProject: jest.fn(),
 			getProjectDevlogs: jest.fn(),
-		};
-
-		logger = {
-			log: jest.fn(),
 		};
 
 		const module: TestingModule = await Test.createTestingModule({

@@ -1,4 +1,3 @@
-import { DevlogEvent } from 'src/devlog-event/devlog-event.entity';
 import {
 	DataType,
 	Model,

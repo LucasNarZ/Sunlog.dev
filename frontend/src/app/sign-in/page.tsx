@@ -21,12 +21,11 @@ const SignIn = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
 
-    const {
-        register,
-        handleSubmit,
-        setError,
-        formState: { errors },
-    } = useForm<SignInFormData>({
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<SignInFormData>({
         resolver: zodResolver(signInSchema),
         mode: 'onBlur',
         defaultValues: {
@@ -42,7 +41,7 @@ const SignIn = () => {
         try {
             const response = await apiClient.post('/auth/login', data);
             if (response.status === 200) {
-                router.push("/");
+				router.push('/');
             }
         } catch (err: unknown) {
             if (isAxiosError(err)) {
@@ -118,8 +117,8 @@ const SignIn = () => {
                             <GoogleButton />
                         </div>
 
-                        <p className="text-center text-sm text-neutral-600">
-                            Don't have an account?{' '}
+						<p className="text-center text-sm text-neutral-600">
+							Don&apos;t have an account?{' '}
                             <Link
                                 href="/sign-up"
                                 className="font-semibold text-primary hover:text-primary/80 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded"

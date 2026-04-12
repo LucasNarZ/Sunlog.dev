@@ -7,8 +7,7 @@ interface ProjectCardProps {
 
 
 export function ProjectCard({ project }: ProjectCardProps) {
-    1;
-    return (
+	return (
         <Link
             key={project.id}
             href={`/${project.authorSlug}/${project.slug}`}

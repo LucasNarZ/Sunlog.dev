@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import * as nodemailer from 'nodemailer';
+import nodemailer, { Transporter } from 'nodemailer';
 
 @Injectable()
 export class EmailService {
-  private transporter;
+  private readonly transporter: Transporter;
 
   constructor() {
     this.transporter = nodemailer.createTransport({
@@ -17,7 +17,7 @@ export class EmailService {
     });
   }
 
-  async sendEmail(to: string, subject: string, html: string) {
+  async sendEmail(to: string, subject: string, html: string): Promise<void> {
     await this.transporter.sendMail({
       from: process.env.SES_FROM,
       to,

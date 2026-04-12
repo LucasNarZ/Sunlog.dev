@@ -6,6 +6,7 @@ import { createDevlogEventDto } from '../dtos/devlogEvent.dto';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { BadRequestException } from '@nestjs/common';
+import { Request } from 'express';
 
 interface TestRequest extends AuthRequest {
 	params: { postId: string };
@@ -13,7 +14,6 @@ interface TestRequest extends AuthRequest {
 
 describe('DevlogEventsController', () => {
 	let controller: DevlogEventsController;
-	let service: DevlogEventsService;
 
 	const mockDevlogEventsService = {
 		findDevlogEventsByTagAndCategory: jest.fn(),
@@ -48,7 +48,6 @@ describe('DevlogEventsController', () => {
 			.compile();
 
 		controller = module.get<DevlogEventsController>(DevlogEventsController);
-		service = module.get<DevlogEventsService>(DevlogEventsService);
 	});
 
 	it('should return filtered devlogEvents by tags and categories', async () => {
@@ -79,7 +78,7 @@ describe('DevlogEventsController', () => {
 	});
 
 	it('should return a post by id', async () => {
-		const req = { params: { id: '1' } } as any;
+		const req = { params: { devlogEventId: '1' } } as unknown as Request;
 		mockDevlogEventsService.findDevlogEvent.mockResolvedValue({ id: '1' });
 		await expect(controller.findPost(req)).resolves.toEqual({ id: '1' });
 	});
