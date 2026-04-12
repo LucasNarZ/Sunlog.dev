@@ -1,0 +1,15 @@
+services:
+  front-end:
+    build:
+      dockerfile: Dockerfile
+    image: ${AWS_ECR_PREFIX}/sunlog.dev/frontend:latest
+
+  api:
+    build:
+      dockerfile: Dockerfile
+    image: ${AWS_ECR_PREFIX}/sunlog.dev/api:latest
+
+  worker:
+    build:
+      dockerfile: Dockerfile
+    image: ${AWS_ECR_PREFIX}/sunlog.dev/worker:latest
