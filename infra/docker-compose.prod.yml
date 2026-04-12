@@ -36,6 +36,7 @@ services:
 
   nginx:
     networks:
+      internal: {}
       edge:
         aliases:
           - ${PROXY_UPSTREAM_NAME:-sunlogdev-nginx}
