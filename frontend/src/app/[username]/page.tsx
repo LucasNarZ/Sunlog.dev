@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Header from '@/components/Header';
 import useUserProfile from '@/features/users/hooks/useUserProfile';
 import { apiClient } from '@/lib/apiClient';
@@ -16,10 +17,10 @@ import useMe from '@/features/users/hooks/useMe';
 
 const User = () => {
     const router = useRouter();
-    const params = useParams();
-    const slug = params?.username as string;
-    const [user, errorUser, loading] = useUserProfile(slug);
-    const [me, errorMe, loadingMe] = useMe();
+	const params = useParams();
+	const slug = params?.username as string;
+	const [user, errorUser, loading] = useUserProfile(slug);
+	const [me] = useMe();
 
     const [isEditing, setIsEditing] = useState(false);
     const [editedName, setEditedName] = useState('');
@@ -117,26 +118,26 @@ const User = () => {
             <div className="w-full max-w-5xl mt-12 mb-12 px-6">
                 <div className="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-10 mb-10">
                     <div className="w-32 h-32 rounded-full shadow-md overflow-hidden bg-white">
-                        <img
-                            className="object-cover w-full h-full"
-                            src={
-                                previewImgUrl ||
-                                'https://deepgrouplondon.com/wp-content/uploads/2019/06/person-placeholder-5.png'
-                            }
-                            alt="Profile"
-                        />
+					<Image
+						className="object-cover w-full h-full"
+						src={
+							previewImgUrl ||
+							'https://deepgrouplondon.com/wp-content/uploads/2019/06/person-placeholder-5.png'
+						}
+						alt="Profile"
+						width={128}
+						height={128}
+					/>
                     </div>
 
                     {me?.id === user?.id ?
                         <div className="text-center md:text-left w-80">
                             {isEditing ? (
                                 <ProfileEditor
-                                    user={user}
-                                    editedName={editedName}
-                                    editedBio={editedBio}
-                                    editedProfileImgUrl={editedProfileImgUrl}
-                                    previewImgUrl={previewImgUrl}
-                                    isSaving={isSaving}
+															editedName={editedName}
+															editedBio={editedBio}
+															editedProfileImgUrl={editedProfileImgUrl}
+															isSaving={isSaving}
                                     nameError={nameError}
                                     urlError={urlError}
                                     saveError={saveError}
@@ -231,9 +232,9 @@ const User = () => {
                 </h3>
 
                 <div className="space-y-3">
-                    {user?.devlogs?.map((devlog: Devlog) => (
-                        <DevlogCard devlog={devlog} />
-                    ))}
+					{user?.devlogs?.map((devlog: Devlog) => (
+						<DevlogCard key={devlog.id} devlog={devlog} />
+					))}
 
                     {user?.devlogs?.length === 0 && (
                         <div className="text-gray-500">

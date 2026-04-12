@@ -14,6 +14,30 @@ import { fn, col, Op } from 'sequelize';
 import { Project } from 'src/project/project.entity';
 import { createUserGoogleDto } from './dtos/createUserGoogle.dto';
 
+type PlainDevlogEvent = {
+	id: string;
+	[key: string]: unknown;
+};
+
+type PlainProject = {
+	id: string;
+	name: string;
+	devlogEvents: PlainDevlogEvent[];
+	[key: string]: unknown;
+};
+
+type ProjectWithAuthorSlug = PlainProject & {
+	authorSlug: string;
+};
+
+type ProjectWithGet = Project & {
+	get(options: { plain: true }): PlainProject;
+};
+
+type UserWithProjects = User & {
+	projects: ProjectWithGet[];
+};
+
 @Injectable()
 export class UsersService {
 	constructor(
@@ -80,7 +104,7 @@ export class UsersService {
 	}
 
 	async findUser(slug: string, userId: string | undefined) {
-		const user = await this.usersRepository.findOne({
+		const user = (await this.usersRepository.findOne({
 			where: {
 				slug,
 			},
@@ -99,17 +123,19 @@ export class UsersService {
 					include: [{ model: DevlogEvent }],
 				},
 			],
-		});
+		})) as UserWithProjects | null;
 
 		if (!user) {
 			throw new NotFoundException('User does not exist.');
 		}
 		console.log(user);
 
-		const projectsWithAuthorSlug = user.projects.map((project) => ({
-			...project.get({ plain: true }),
-			authorSlug: user.slug,
-		}));
+		const projectsWithAuthorSlug: ProjectWithAuthorSlug[] = user.projects.map(
+			(project) => ({
+				...(project.get({ plain: true }) as unknown as PlainProject),
+				authorSlug: user.slug,
+			}),
+		);
 
 		const devlogs = projectsWithAuthorSlug.flatMap((project) =>
 			project.devlogEvents.map((devlog) => ({

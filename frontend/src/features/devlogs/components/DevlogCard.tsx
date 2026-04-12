@@ -143,7 +143,7 @@ export function DevlogCard({ devlog }: DevlogCardProps) {
                                         </svg>
                                     </div>
                                     <p className="text-neutral-500 font-medium">No content available</p>
-                                    <p className="text-sm text-neutral-400 mt-1">This devlog entry doesn't have any detailed content yet</p>
+										<p className="text-sm text-neutral-400 mt-1">This devlog entry doesn&apos;t have any detailed content yet</p>
                                 </div>
                             )}
                         </div>

@@ -1,9 +1,7 @@
 name: sunlogdev
 
 networks:
-  public:
   internal:
-    internal: true
 
 services:
   front-end:
@@ -81,7 +79,6 @@ services:
       - "5432:5432"
     networks:
       - internal
-      - public
 
   redis:
     image: redis:8.4
@@ -141,12 +138,12 @@ services:
     depends_on:
       - api
       - front-end
-    ports:
-      - "80:80"
-      - "443:443"
     networks:
-      - public
-      - internal
+      edge:
+        aliases:
+          - ${PROXY_UPSTREAM_NAME:-sunlogdev-nginx}
+      internal: {}
+
 
 volumes:
   postgres:

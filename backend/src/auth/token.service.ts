@@ -13,7 +13,7 @@ export class TokenService {
 		private jwtService: JwtService,
 	) {}
 
-	async generateAccessToken(payload: UserPayload) {
+	async generateAccessToken(payload: UserPayload): Promise<string> {
 		return await this.jwtService.signAsync(payload, {
 			expiresIn: '15m',
 			secret: jwtConstants.accessSecret,
@@ -36,7 +36,7 @@ export class TokenService {
 		return await this.redis.get(`refreshHash:${userId}`);
 	}
 
-	async getTokenPayload(token: string) {
+	async getTokenPayload(token: string): Promise<UserPayload> {
 		return await this.jwtService.verifyAsync(token, {
 			secret: jwtConstants.refreshSecret,
 			algorithms: ['HS256'],

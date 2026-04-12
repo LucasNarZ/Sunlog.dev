@@ -1,21 +1,16 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import {
-	devlogEventRepositoryToken,
-	usersRepositoryToken,
-} from 'src/constants';
-import { User } from 'src/user/user.entity';
+import { devlogEventRepositoryToken } from 'src/constants';
 import { DevlogEvent } from 'src/devlog-event/devlog-event.entity';
 
 @Injectable()
 export class AdminService {
 	constructor(
-		@Inject(usersRepositoryToken)
-		private usersRepository: typeof User,
 		@Inject(devlogEventRepositoryToken)
 		private postRepository: typeof DevlogEvent,
 	) {}
 
-	async getDevlogEventsByStatus(status: string) {
+	async getDevlogEventsByStatus(_status: string) {
+		void _status;
 		const devlogEvents = await this.postRepository.findAll();
 
 		if (!devlogEvents) {

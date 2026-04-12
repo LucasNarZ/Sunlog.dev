@@ -56,14 +56,16 @@ const UserButtons = () => {
                 onClick={() => setOpen((p) => !p)}
                 className="flex items-center gap-3 cursor-pointer hover:opacity-90 transition"
             >
-                <img
-                    src={
-                        userData?.profileImgUrl ||
-                        'https://deepgrouplondon.com/wp-content/uploads/2019/06/person-placeholder-5.png'
-                    }
-                    alt="Profile"
-                    className="w-10 h-10 rounded-full object-cover border border-gray-300 shadow"
-                />
+				<Image
+					src={
+						userData?.profileImgUrl ||
+						'https://deepgrouplondon.com/wp-content/uploads/2019/06/person-placeholder-5.png'
+					}
+					alt="Profile"
+					width={40}
+					height={40}
+					className="w-10 h-10 rounded-full object-cover border border-gray-300 shadow"
+				/>
                 <span className="text-sm font-semibold text-gray-700">
                     {userData?.name}
                 </span>

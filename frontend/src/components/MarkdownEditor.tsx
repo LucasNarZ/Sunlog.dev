@@ -1,25 +1,31 @@
 'use client';
 
-import { memo } from 'react';
 import { useIsMobile } from '@/features/devlogs/hooks/useIsMobile';
 import { useResizableWidth } from '@/features/devlogs/hooks/useResizableWidth';
 import ReactMarkdown from 'react-markdown';
-import { FieldErrors, UseFormRegister, UseFormWatch } from 'react-hook-form';
-import { CreateDevlogDTO } from '@/features/devlogs/schemas/createDevlog.schema';
+import {
+	FieldErrors,
+	FieldValues,
+	Path,
+	UseFormRegister,
+	UseFormWatch,
+} from 'react-hook-form';
 
-interface ContentErrors extends Pick<CreateDevlogDTO, 'content'> {}
+type MarkdownEditorValues = FieldValues & {
+	content?: string;
+};
 
-interface MarkdownEditorProps {
-	register: UseFormRegister<any>;
-	watch: UseFormWatch<any>;
-	errors: FieldErrors<ContentErrors>;
+interface MarkdownEditorProps<TFormValues extends MarkdownEditorValues> {
+	register: UseFormRegister<TFormValues>;
+	watch: UseFormWatch<TFormValues>;
+	errors: FieldErrors<TFormValues>;
 }
 
-export function MarkdownEditor({
+export function MarkdownEditor<TFormValues extends MarkdownEditorValues>({
 	register,
 	watch,
 	errors,
-}: MarkdownEditorProps) {
+}: MarkdownEditorProps<TFormValues>) {
 	const isMobile = useIsMobile();
 
 	const {
@@ -28,11 +34,7 @@ export function MarkdownEditor({
 		startResizing,
 	} = useResizableWidth(50);
 
-	const watchedContent = watch('content');
-
-	const Preview = memo(({ content }: { content: string }) => {
-		return <ReactMarkdown>{content}</ReactMarkdown>;
-	});
+	const watchedContent = watch('content' as Path<TFormValues>) ?? '';
 
 	return (
 		<div
@@ -48,13 +50,13 @@ export function MarkdownEditor({
 				</div>
 				<textarea
 					placeholder="Write your devlog entry content..."
-					{...register('content')}
+					{...register('content' as Path<TFormValues>)}
 					className="w-full h-full p-4 font-mono resize-none focus:outline-none focus:ring-2 focus:ring-primary"
 					spellCheck={false}
 				/>
 				{errors.content && (
 					<p className="text-danger text-sm p-2">
-						{errors.content.message}
+						{String(errors.content.message ?? '')}
 					</p>
 				)}
 			</div>
@@ -72,7 +74,7 @@ export function MarkdownEditor({
 					Preview
 				</div>
 				<div className="flex-1 overflow-y-auto p-6 prose max-w-none break-words">
-					<Preview content={watchedContent} />
+					<ReactMarkdown>{watchedContent}</ReactMarkdown>
 				</div>
 			</div>
 		</div>

@@ -9,6 +9,8 @@ import {
 	UnauthorizedException,
 	ConflictException,
 } from '@nestjs/common';
+import { User } from 'src/user/user.entity';
+import { col } from 'sequelize';
 
 describe('ProjectService', () => {
 	let service: ProjectService;
@@ -128,7 +130,7 @@ describe('ProjectService', () => {
 				attributes: ['name', 'id', 'description', 'readme'],
 				include: [
 					{
-						model: expect.anything(),
+						model: User,
 						attributes: [['name', 'username']],
 						required: true,
 						where: {
@@ -160,12 +162,12 @@ describe('ProjectService', () => {
 					'readme',
 					'stars',
 					'updatedAt',
-					[expect.anything(), 'authorSlug'],
+					[col('user.slug'), 'authorSlug'],
 				],
 
 				include: [
 					{
-						model: expect.anything(),
+						model: User,
 						required: true,
 						attributes: [],
 					},

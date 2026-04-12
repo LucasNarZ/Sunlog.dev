@@ -1,15 +1,11 @@
 import {
 	Controller,
-	Body,
 	Get,
-	Param,
-	Patch,
 	Query,
 	UseGuards,
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
-import { UpdatePostStatusDto } from './dtos/updatePostStatus.dto';
 import { AdminGuard } from 'src/auth/guards/admin.guard';
 
 @Controller('admin')

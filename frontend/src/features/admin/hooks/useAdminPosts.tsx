@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { apiClient } from '@/lib/apiClient';
 import { Devlog } from '@/features/devlogs/types/devlog';
 import { useRouter } from 'next/navigation';
+import { isAxiosError } from 'axios';
 
 export function useAdminDevlogEvents() {
     const router = useRouter();
@@ -9,12 +10,12 @@ export function useAdminDevlogEvents() {
     const [devlogEvents, setDevlogEvents] = useState<Devlog[]>([]);
     const [loading, setLoading] = useState(false);
 
-    const handleApiError = useCallback(
-        (err: any) => {
-            if (err.response?.status === 403) router.push('/');
-            else console.error(err);
-        },
-        [router],
+	const handleApiError = useCallback(
+		(err: unknown) => {
+			if (isAxiosError(err) && err.response?.status === 403) router.push('/');
+			else console.error(err);
+		},
+		[router],
     );
 
     const fetchDevlogEvents = useCallback(async () => {
@@ -27,8 +28,8 @@ export function useAdminDevlogEvents() {
                 },
             );
             setDevlogEvents(res.data as Devlog[]);
-        } catch (err: any) {
-            handleApiError(err);
+		} catch (err: unknown) {
+			handleApiError(err);
         } finally {
             setLoading(false);
         }

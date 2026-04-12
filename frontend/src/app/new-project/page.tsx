@@ -22,8 +22,8 @@ const Schema = z.object({
 export type CreateProjectDTO = z.infer<typeof Schema>;
 
 export default function CreateProjectPage() {
-    const router = useRouter();
-    const [user, error] = useMe();
+	const router = useRouter();
+	const [, error] = useMe();
 
     if (error) {
         router.push('/sign-in');

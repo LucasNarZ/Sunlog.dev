@@ -8,8 +8,6 @@ import {
 	Delete,
 	Req,
 	UseGuards,
-	LoggerService,
-	Inject,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { AuthRequest } from 'src/interfaces/authRequest.interface';
@@ -61,7 +59,7 @@ export class ProjectController {
 	async update(
 		@Req() req: AuthRequest,
 		@Param('id') id: string,
-		@Body() data: any,
+		@Body() data: Partial<CreateProjectDto>,
 	) {
 		const userId = req.user.userId;
 		return await this.projectService.updateProject(id, userId, data);

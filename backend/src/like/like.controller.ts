@@ -2,7 +2,6 @@ import {
 	Req,
 	Controller,
 	Get,
-	Body,
 	UseGuards,
 	Param,
 	BadRequestException,

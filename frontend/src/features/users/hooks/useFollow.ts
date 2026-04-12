@@ -1,5 +1,4 @@
 import { useEffect, useState, Dispatch, SetStateAction } from 'react';
-import { apiClient } from '@lib/apiClient';
 import { fetchFollow } from '@/features/users/services/fetchFollow';
 
 const useFollow = (

@@ -1,12 +1,20 @@
-import axios from 'axios';
+import axios, {
+	AxiosError,
+	AxiosResponse,
+	InternalAxiosRequestConfig,
+} from 'axios';
 
 const isServer = typeof window === 'undefined';
 
 let isRefreshing = false;
 let queue: Array<{
-	resolve: (value: any) => void;
-	reject: (reason?: any) => void;
+	resolve: (value: Promise<AxiosResponse>) => void;
+	reject: (reason?: unknown) => void;
 }> = [];
+
+type RetriableRequestConfig = InternalAxiosRequestConfig & {
+	_retry?: boolean;
+};
 
 export const apiClient = axios.create({
 	baseURL:
@@ -21,9 +29,9 @@ export const apiClient = axios.create({
 
 apiClient.interceptors.response.use(
 	(res) => res,
-	async (error) => {
+	async (error: AxiosError) => {
 		const status = error.response?.status;
-		const original = error.config;
+		const original = error.config as RetriableRequestConfig | undefined;
 
 		if (!original || !original.url) {
 			return Promise.reject(error);

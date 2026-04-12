@@ -1,5 +1,3 @@
-import { Devlog } from '@/features/devlogs/types/devlog';
-
 export interface Project {
 	createdAt: Date;
 	description: string;
@@ -8,6 +6,6 @@ export interface Project {
 	name: string;
 	authorSlug: string;
 	readme: string;
-	stars: int;
-	updatedAt: date;
+	stars: number;
+	updatedAt: Date;
 }

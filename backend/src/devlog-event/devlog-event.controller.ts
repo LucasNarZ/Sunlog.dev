@@ -4,7 +4,6 @@ import {
 	Get,
 	Post,
 	Body,
-	Patch,
 	UseGuards,
 	Param,
 	BadRequestException,
