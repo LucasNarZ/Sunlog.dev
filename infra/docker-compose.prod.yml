@@ -1,3 +1,7 @@
+networks:
+  edge:
+    external: true
+
 services:
   front-end:
     build:
@@ -31,6 +35,12 @@ services:
     restart: unless-stopped
 
   nginx:
+    networks:
+      edge:
+        aliases:
+          - ${PROXY_UPSTREAM_NAME:-sunlogdev-nginx}
+
     volumes:
       - ./nginx.prod.conf:/etc/nginx/nginx.conf
       - /etc/letsencrypt:/etc/letsencrypt:ro
+

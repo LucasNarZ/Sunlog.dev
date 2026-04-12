@@ -138,12 +138,6 @@ services:
     depends_on:
       - api
       - front-end
-    networks:
-      edge:
-        aliases:
-          - ${PROXY_UPSTREAM_NAME:-sunlogdev-nginx}
-      internal: {}
-
 
 volumes:
   postgres:
