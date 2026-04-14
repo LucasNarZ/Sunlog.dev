@@ -2,17 +2,14 @@ import { useEffect, useState } from 'react';
 import { fetchUserProjects } from '../services/fetchUserProjects';
 import { Project } from '@/features/projects/types/project';
 
-const useUserProjects = (
-	userId: string | undefined,
-): [Project[] | null, unknown, boolean] => {
+const useUserProjects = (): [Project[] | null, unknown, boolean] => {
 	const [error, setError] = useState<unknown>(null);
 	const [response, setResponse] = useState<Project[] | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
 	useEffect(() => {
 		(async () => {
-			if (!userId) return;
 			try {
-				const data = await fetchUserProjects(userId);
+				const data = await fetchUserProjects();
 				setResponse(data);
 			} catch (err) {
 				setError(err);
@@ -20,7 +17,7 @@ const useUserProjects = (
 				setLoading(false);
 			}
 		})();
-	}, [userId]);
+	}, []);
 
 	return [response, error, loading];
 };
