@@ -18,7 +18,7 @@ import { Project } from '@/features/projects/types/project';
 function CreateDevlogEventPage() {
     const router = useRouter();
     const [user, error] = useMe();
-    const [projects] = useUserProjects(user?.id);
+    const [projects] = useUserProjects();
 
     const {
         register,
@@ -40,6 +40,9 @@ function CreateDevlogEventPage() {
     }, [error, router]);
 
     const onSubmit = async (data: CreateDevlogDTO) => {
+        const selectedProject = projects?.find(
+            (project) => project.id === data.projectId,
+        );
         const post = {
             summary: data.summary.trim(),
             description: data?.description?.trim(),
@@ -51,7 +54,14 @@ function CreateDevlogEventPage() {
             withCredentials: true,
         });
         if ([200, 201].includes(response.status)) {
-            router.push(`/${user?.name}`);
+            if (selectedProject) {
+                router.push(
+                    `/${selectedProject.authorSlug}/${selectedProject.slug}`,
+                );
+                return;
+            }
+
+            router.push(`/${user?.slug}`);
         }
     };
 
@@ -95,8 +105,8 @@ function CreateDevlogEventPage() {
                                 className={`p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 transition ${errors.projectId ? 'border-danger focus:ring-danger' : 'border-secondary focus:ring-primary'}`}
                             >
                                 <option value="">Select a project</option>
-									{projects?.map((project: Project) => (
-										<option key={project.id} value={project.id}>
+                                {projects?.map((project: Project) => (
+                                    <option key={project.id} value={project.id}>
                                         {project.name.split('/').pop()}
                                     </option>
                                 ))}

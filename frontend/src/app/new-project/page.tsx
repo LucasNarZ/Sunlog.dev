@@ -22,8 +22,8 @@ const Schema = z.object({
 export type CreateProjectDTO = z.infer<typeof Schema>;
 
 export default function CreateProjectPage() {
-	const router = useRouter();
-	const [, error] = useMe();
+    const router = useRouter();
+    const [user, error] = useMe();
 
     if (error) {
         router.push('/sign-in');
@@ -50,7 +50,8 @@ export default function CreateProjectPage() {
             });
 
             if (res.status === 201) {
-                router.push(`/${project.name}`);
+                const { data } = res;
+                router.push(`/${user?.slug}/${data.slug}`);
             }
         } catch { }
     }

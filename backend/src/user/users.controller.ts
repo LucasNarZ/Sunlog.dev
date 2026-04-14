@@ -32,6 +32,17 @@ export class UsersController {
 		return user;
 	}
 
+	@UseGuards(AuthGuard)
+	@Get('me/projects')
+	async findLoggedUserProjects(@Req() req: AuthRequest) {
+		const id = req.user.userId;
+		if (!id) {
+			throw new UnauthorizedException('User is not logged');
+		}
+
+		return await this.usersService.findLoggedUserProjects(id);
+	}
+
 	@Get('trending')
 	async getTrendingUsers() {
 		return await this.usersService.getTrendingUsers();

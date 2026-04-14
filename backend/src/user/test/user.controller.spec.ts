@@ -9,6 +9,7 @@ import { updateUserDto } from '../dtos/updateUser.dto';
 
 type MockUsersService = {
 	findLoggedUser: jest.Mock;
+	findLoggedUserProjects: jest.Mock;
 	getTrendingUsers: jest.Mock;
 	findUser: jest.Mock;
 	updateUser: jest.Mock;
@@ -32,6 +33,7 @@ describe('UsersController', () => {
 	beforeEach(async () => {
 		usersService = {
 			findLoggedUser: jest.fn(),
+			findLoggedUserProjects: jest.fn(),
 			getTrendingUsers: jest.fn(),
 			findUser: jest.fn(),
 			updateUser: jest.fn(),
@@ -81,6 +83,27 @@ describe('UsersController', () => {
 
 			await expect(controller.getTrendingUsers()).resolves.toEqual(trending);
 			expect(usersService.getTrendingUsers.mock.calls).toHaveLength(1);
+		});
+	});
+
+	describe('findLoggedUserProjects', () => {
+		it('should return logged user projects', async () => {
+			const req = createAuthRequest('1');
+			const projects = [{ id: 'p1', name: 'Project 1' }];
+			usersService.findLoggedUserProjects.mockResolvedValue(projects);
+
+			await expect(controller.findLoggedUserProjects(req)).resolves.toEqual(
+				projects,
+			);
+			expect(usersService.findLoggedUserProjects.mock.calls).toEqual([
+				['1'],
+			]);
+		});
+
+		it('should throw UnauthorizedException if no userId', async () => {
+			await expect(
+				controller.findLoggedUserProjects(createAuthRequest()),
+			).rejects.toThrow(UnauthorizedException);
 		});
 	});
 
