@@ -37,18 +37,18 @@ export const databaseProviders = [
 				database: process.env.POSTGRES_DB,
 				benchmark: true,
 				logging: (sql, timing) => {
-					// Log normal
+					const queryType = sql.split(' ')[0].toUpperCase();
+					const modelMatch = sql.match(/FROM\s+"?(\w+)"?/i);
+					const model = modelMatch ? modelMatch[1] : 'unknown';
+
 					logger.log('Sequelize query', {
 						type: 'db',
-						query: sql,
+						queryType,
+						model,
 						duration: timing,
 					});
 
 					// Increment Prometheus metrics
-					const queryType = sql.split(' ')[0].toUpperCase(); // SELECT, INSERT, etc.
-					const modelMatch = sql.match(/FROM\s+"?(\w+)"?/i);
-					const model = modelMatch ? modelMatch[1] : 'unknown';
-
 					dbQueryTotal.inc({ model, type: queryType });
 					if (timing) {
 						dbQueryDuration.observe(

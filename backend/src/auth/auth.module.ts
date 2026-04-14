@@ -5,6 +5,7 @@ import { UsersModule } from 'src/user/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { TokenService } from './token.service';
 import { AuthGuard } from './guards/auth.guard';
+import { AdminGuard } from './guards/admin.guard';
 import { jwtConstants } from 'src/constants';
 import { RedisModule } from 'src/redis/redis.module';
 import { GoogleAuthService } from './googleAuth.service';
@@ -24,7 +25,7 @@ import { RabbitmqModule } from 'src/rabbitmq/rabbitmq.module';
 		RabbitmqModule,
 	],
 	controllers: [AuthController],
-	providers: [AuthGuard, AuthService, TokenService, GoogleAuthService],
-	exports: [AuthService],
+	providers: [AuthGuard, AdminGuard, AuthService, TokenService, GoogleAuthService],
+	exports: [AuthService, AuthGuard, AdminGuard],
 })
 export class AuthModule {}

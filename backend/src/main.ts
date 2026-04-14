@@ -18,7 +18,13 @@ async function bootstrap() {
 		origin: ['https://sunlog.dev', 'http://localhost'],
 		credentials: true,
 	});
-	app.useGlobalPipes(new ValidationPipe());
+	app.useGlobalPipes(
+		new ValidationPipe({
+			whitelist: true,
+			forbidNonWhitelisted: true,
+			transform: true,
+		}),
+	);
 	app.useGlobalFilters(new GlobalFilter());
 	app.useGlobalInterceptors(new HttpMetricsInterceptor());
 

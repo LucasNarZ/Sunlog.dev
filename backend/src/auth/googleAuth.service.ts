@@ -13,13 +13,8 @@ export class GoogleAuthService {
 		private readonly tokenService: TokenService,
 		private readonly userService: UsersService,
 	) {
-		const certsUrl = 'http://nginx/google-certs/';
-
 		this.client = new OAuth2Client({
 			clientId: process.env.GOOGLE_CLIENT_ID,
-			endpoints: {
-				oauth2FederatedSignonPemCertsUrl: certsUrl,
-			},
 		});
 	}
 
@@ -40,7 +35,12 @@ export class GoogleAuthService {
 			throw new UnauthorizedException('Invalid Google token.');
 		}
 
-		if (!payload?.sub || !payload.email || !payload.name) {
+		if (
+			!payload?.sub ||
+			!payload.email ||
+			!payload.name ||
+			payload.email_verified !== true
+		) {
 			throw new UnauthorizedException('Invalid Google token.');
 		}
 
