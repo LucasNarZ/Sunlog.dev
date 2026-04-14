@@ -13,7 +13,6 @@ async function bootstrap() {
 
 	app.setGlobalPrefix('api');
 	app.use(helmet());
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 	app.use(cookieParser());
 	app.enableCors({
 		origin: ['https://sunlog.dev', 'http://localhost'],
