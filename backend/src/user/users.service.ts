@@ -103,6 +103,25 @@ export class UsersService {
 		});
 	}
 
+	async findLoggedUserProjects(id: string) {
+		const user = (await this.usersRepository.findOne({
+			where: {
+				id,
+			},
+			attributes: ['slug'],
+			include: [{ model: Project }],
+		})) as UserWithProjects | null;
+
+		if (!user) {
+			throw new NotFoundException('User does not exist.');
+		}
+
+		return user.projects.map((project) => ({
+			...(project.get({ plain: true }) as unknown as PlainProject),
+			authorSlug: user.slug,
+		}));
+	}
+
 	async findUser(slug: string, userId: string | undefined) {
 		const user = (await this.usersRepository.findOne({
 			where: {
@@ -128,14 +147,12 @@ export class UsersService {
 		if (!user) {
 			throw new NotFoundException('User does not exist.');
 		}
-		console.log(user);
 
-		const projectsWithAuthorSlug: ProjectWithAuthorSlug[] = user.projects.map(
-			(project) => ({
+		const projectsWithAuthorSlug: ProjectWithAuthorSlug[] =
+			user.projects.map((project) => ({
 				...(project.get({ plain: true }) as unknown as PlainProject),
 				authorSlug: user.slug,
-			}),
-		);
+			}));
 
 		const devlogs = projectsWithAuthorSlug.flatMap((project) =>
 			project.devlogEvents.map((devlog) => ({

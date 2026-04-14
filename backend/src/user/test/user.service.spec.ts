@@ -126,6 +126,42 @@ describe('UsersService', () => {
 		});
 	});
 
+	describe('findLoggedUserProjects', () => {
+		it('should return logged user projects with authorSlug', async () => {
+			const mockUser = {
+				id: '1',
+				slug: 'john',
+				projects: [
+					{
+						get: () => ({
+							id: 'p1',
+							name: 'proj1',
+							devlogEvents: [],
+						}),
+					},
+				],
+			};
+			usersRepository.findOne.mockResolvedValue(mockUser);
+
+			await expect(service.findLoggedUserProjects('1')).resolves.toEqual([
+				{
+					id: 'p1',
+					name: 'proj1',
+					devlogEvents: [],
+					authorSlug: 'john',
+				},
+			]);
+		});
+
+		it('should throw NotFoundException if user not found', async () => {
+			usersRepository.findOne.mockResolvedValue(null);
+
+			await expect(service.findLoggedUserProjects('1')).rejects.toThrow(
+				NotFoundException,
+			);
+		});
+	});
+
 	describe('findUser', () => {
 		it('should throw NotFoundException if user not found', async () => {
 			usersRepository.findOne.mockResolvedValue(null);
