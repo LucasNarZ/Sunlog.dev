@@ -191,12 +191,23 @@ export class UsersService {
 	}
 
 	async updateUser(id: string, data: updateUserDto) {
-		return this.usersRepository.update(data, {
+		const updateData = {
+			name: data.name,
+			bio: data.bio,
+			profileImgUrl: data.profileImgUrl,
+		};
+
+		const [affected] = await this.usersRepository.update(updateData, {
 			where: {
 				id,
 			},
-			returning: true,
 		});
+
+		if (!affected) {
+			throw new NotFoundException('User does not exist.');
+		}
+
+		return this.findLoggedUser(id);
 	}
 
 	async getTrendingUsers() {

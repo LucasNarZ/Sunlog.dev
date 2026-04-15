@@ -26,7 +26,16 @@ export class AuthService {
 			const user = await this.usersService.createUser(data);
 			await this.emailService.sendWelcomeEmail(user);
 
-			return user;
+			return {
+				id: user.id,
+				name: user.name,
+				slug: user.slug,
+				email: user.email,
+				profileImgUrl: user.profileImgUrl,
+				bio: user.bio,
+				followersNumber: user.followersNumber,
+				createdAt: user.createdAt,
+			};
 		} catch (err: unknown) {
 			if (
 				err instanceof Error &&

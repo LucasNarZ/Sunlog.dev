@@ -54,16 +54,16 @@ export class AuthController {
 			sameSite: isProduction ? 'none' : 'lax',
 			maxAge: 15 * 60 * 1000,
 		});
-		return data;
+		return { message: 'Authenticated successfully.' };
 	}
 
 	@UseGuards(AuthGuard)
 	@Delete('logout')
-	logoutUser(
+	async logoutUser(
 		@Req() req: Request,
 		@Res({ passthrough: true }) res: Response,
 	) {
-		const token = extractTokenFromCookie(req, 'access_token');
+		const token = extractTokenFromCookie(req, 'refresh_token');
 
 		if (!token) {
 			throw new UnauthorizedException('Token not found.');
@@ -71,7 +71,7 @@ export class AuthController {
 
 		const isProduction = process.env.NODE_ENV === 'production';
 
-		void this.authService.logout(token);
+		await this.authService.logout(token);
 
 		res.clearCookie('refresh_token', {
 			httpOnly: true,
@@ -117,7 +117,7 @@ export class AuthController {
 			maxAge: 15 * 60 * 1000,
 		});
 
-		return data;
+		return { message: 'Tokens refreshed successfully.' };
 	}
 
 	@HttpCode(HttpStatus.OK)
@@ -144,6 +144,6 @@ export class AuthController {
 			sameSite: isProduction ? 'none' : 'lax',
 			maxAge: 15 * 60 * 1000,
 		});
-		return data;
+		return { message: 'Authenticated successfully.' };
 	}
 }

@@ -11,6 +11,7 @@ import {
 	projectRepositoryToken,
 } from 'src/constants';
 import { CreateProjectDto } from './dtos/createProject.dto';
+import { UpdateProjectDto } from './dtos/updateProject.dto';
 import { DevlogEvent } from 'src/devlog-event/devlog-event.entity';
 import { User } from 'src/user/user.entity';
 import { col } from 'sequelize';
@@ -38,7 +39,9 @@ export class ProjectService {
 		}
 
 		return await this.projectRepository.create({
-			...data,
+			name: data.name,
+			description: data.description,
+			readme: data.content,
 			slug: data.name.toLowerCase().replace(' ', '_'),
 			userId,
 		});
@@ -95,7 +98,7 @@ export class ProjectService {
 		});
 	}
 
-	async updateProject(id: string, userId: string, data: any) {
+	async updateProject(id: string, userId: string, data: UpdateProjectDto) {
 		const project = await this.projectRepository.findOne({
 			where: {
 				id,
@@ -113,7 +116,22 @@ export class ProjectService {
 			);
 		}
 
-		await this.projectRepository.update(data as Partial<Project>, {
+		const updateData: Partial<Project> = {};
+
+		if (typeof data.name === 'string') {
+			updateData.name = data.name;
+			updateData.slug = data.name.toLowerCase().replace(' ', '_');
+		}
+
+		if (typeof data.description === 'string') {
+			updateData.description = data.description;
+		}
+
+		if (typeof data.content === 'string') {
+			updateData.readme = data.content;
+		}
+
+		await this.projectRepository.update(updateData, {
 			where: { id },
 		});
 		return this.projectRepository.findByPk(id);

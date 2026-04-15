@@ -13,6 +13,7 @@ import { ProjectService } from './project.service';
 import { AuthRequest } from 'src/interfaces/authRequest.interface';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { CreateProjectDto } from './dtos/createProject.dto';
+import { UpdateProjectDto } from './dtos/updateProject.dto';
 
 @Controller('projects')
 export class ProjectController {
@@ -59,7 +60,7 @@ export class ProjectController {
 	async update(
 		@Req() req: AuthRequest,
 		@Param('id') id: string,
-		@Body() data: Partial<CreateProjectDto>,
+		@Body() data: UpdateProjectDto,
 	) {
 		const userId = req.user.userId;
 		return await this.projectService.updateProject(id, userId, data);
