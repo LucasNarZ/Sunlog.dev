@@ -65,6 +65,7 @@ describe('GoogleAuthService', () => {
 			sub: 'google_123',
 			email: 'test@example.com',
 			name: 'Test User',
+			email_verified: true,
 		};
 		const user = {
 			id: 'user_123',

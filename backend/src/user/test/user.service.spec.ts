@@ -246,7 +246,7 @@ describe('UsersService', () => {
 						bio: 'sdasd',
 						profileImgUrl: 'asdasd',
 					},
-					{ where: { id: '1' }, returning: true },
+					{ where: { id: '1' } },
 				],
 			]);
 		});

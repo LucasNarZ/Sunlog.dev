@@ -191,9 +191,12 @@ describe('ProjectService', () => {
 			await expect(
 				service.updateProject(id, userId, data),
 			).resolves.toEqual(updatedProject);
-			expect(projectRepository.update).toHaveBeenCalledWith(data, {
+			expect(projectRepository.update).toHaveBeenCalledWith(
+				{ ...data, slug: 'updated_project' },
+				{
 				where: { id },
-			});
+				},
+			);
 			expect(projectRepository.findByPk).toHaveBeenCalledWith(id);
 		});
 
