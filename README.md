@@ -1,131 +1,148 @@
 # Sunlog.dev
 
-A full-stack platform where developers can create projects, share development updates (devlogs), and interact with other users through comments, likes, and follows.
+Sunlog.dev is a full-stack platform for developers to publish projects, share devlog updates, and interact through comments, likes, follows, and moderation tools.
 
-This system is designed with **scalability, observability, and production-ready architecture** in mind.
+The repository is organized as a multi-service application with a Next.js frontend, a NestJS API, a NestJS worker, PostgreSQL, Redis, RabbitMQ, NGINX, and an observability stack.
 
----
+## What It Includes
 
-## ✨ Features
+- User sign-up, sign-in, Google OAuth, and authenticated sessions
+- User profiles and follow relationships
+- Project creation and project-specific devlogs
+- Comments and likes on devlog content
+- Admin moderation for post status updates
+- Background email/notification processing through RabbitMQ
+- Metrics, dashboards, and container log aggregation for local and production environments
 
-### Core Features
+## Stack
 
-* User authentication (including Google OAuth)
-* User profiles
-* Create and manage projects
-* Publish devlogs linked to projects
-* Comment on posts
-* Like posts
-* Follow other users
-* Admin area for moderation
-* Email and notification processing in background jobs
+| Area | Technology |
+| --- | --- |
+| Frontend | Next.js, React, TypeScript, MUI, Tailwind CSS |
+| API | NestJS, Sequelize, PostgreSQL, Redis, JWT, Google OAuth |
+| Worker | NestJS, RabbitMQ, Nodemailer |
+| Infrastructure | Docker Compose, NGINX |
+| Observability | Prometheus, Grafana, Loki, Promtail |
 
-### Technical Highlights
+## Repository Layout
 
-* REST API built with **NestJS**
-* Frontend built with **Next.js**
-* Asynchronous processing with **RabbitMQ**
-* Caching layer with **Redis**
-* Background worker service
-* PostgreSQL (via migrations and structured schema)
+```text
+backend/   NestJS REST API, database models, migrations, and tests
+frontend/  Next.js web application
+worker/    NestJS background worker for queued jobs
+infra/     Docker Compose, NGINX, Prometheus, Grafana, and logging config
+docs/      Architecture, code pattern, and testing documentation
+scripts/   Operational scripts
+```
 
----
+## Prerequisites
 
-## 🏗 Architecture Overview
+- Node.js and npm
+- Docker and Docker Compose
+- Make
 
-The system is divided into multiple services:
+## Configuration
 
-* **Frontend** – Next.js application (SSR-ready)
-* **Backend API** – Main REST API (NestJS)
-* **Worker** – Background job processor (emails, async tasks)
-* **Redis** – Caching layer
-* **RabbitMQ** – Message broker for async communication
-* **NGINX** – Reverse proxy (production)
-* **Monitoring Stack**
+Create a local environment file from the example before starting the stack:
 
-  * Prometheus (metrics)
-  * Grafana (dashboards)
-  * Loki + Promtail (logs)
+```bash
+cp .env.example .env
+```
 
----
+Fill in the required values in `.env`, including PostgreSQL, Redis, RabbitMQ, JWT, Google OAuth, and SMTP settings. The Docker Compose commands load this file with `--env-file .env`.
 
-## 🐳 Running Locally (Development)
+## Quick Start
 
-Make sure you have **Node.js** and **npm** installed.
+Install dependencies for all services:
 
-First, create your environment file based on the provided example.
+```bash
+npm run install-all
+```
 
-Start the development containers (database, redis, rabbitmq, etc.):
+Start the development stack:
 
 ```bash
 make dev-up
 ```
 
-With the containers running, install backend dependencies and execute the database migrations:
+Run database migrations from the backend service:
 
 ```bash
 cd backend
-npm install
 npx sequelize-cli db:migrate
-cd ..
 ```
 
-Services will be available:
+Open the local services:
 
-* Frontend: [http://localhost](http://localhost)
-* Backend API: [http://localhost/api](http://localhost:3001/api)
-* Grafana: [http://localhost/grafana/](http://localhost/grafana/)
+| Service | URL |
+| --- | --- |
+| Frontend | `http://localhost` |
+| Backend API | `http://localhost/api` |
+| API docs | `http://localhost/api/docs` |
+| Grafana | `http://localhost/grafana/` |
 
----
-
-## 🧪 Testing
-
-Backend include automated tests.
-
-Run inside each service folder:
+Stop the development stack:
 
 ```bash
-npm install
+make dev-down
+```
+
+Follow container logs:
+
+```bash
+make dev-logs
+```
+
+## Development Commands
+
+Root-level commands:
+
+```bash
+npm run install-all
+npm run start:dev
 npm run test
+npm run test:build
 ```
 
----
+Service-level commands:
 
-## 📊 Observability
+| Service | Command | Purpose |
+| --- | --- | --- |
+| `frontend` | `npm run dev` | Start Next.js on port `3000` |
+| `frontend` | `npm run build` | Build the web app |
+| `frontend` | `npm run lint` | Run ESLint |
+| `backend` | `npm run start:dev` | Start the API in watch mode |
+| `backend` | `npm run test` | Run API unit tests |
+| `backend` | `npm run test:e2e` | Run API e2e tests |
+| `worker` | `npm run start:dev` | Start the worker in watch mode |
+| `worker` | `npm run test` | Run worker tests |
 
-The platform includes built-in monitoring and logging:
+## Architecture
 
-* **Prometheus** collects application and database metrics
-* **Grafana** provides dashboards for HTTP and DB metrics
-* **Loki** aggregates logs from all services
+Requests enter through NGINX. Frontend traffic is proxied to the Next.js service, API traffic under `/api/` is proxied to the NestJS backend, and Grafana is served under `/grafana/`.
 
-This allows real-time insight into system health and performance.
+The backend owns the REST API, validation, authentication, database access, Redis integration, RabbitMQ publishing, logging, metrics, and Swagger documentation. The worker consumes RabbitMQ jobs and handles asynchronous email/notification work. PostgreSQL stores application data, Redis supports cache/session-related infrastructure, and Prometheus/Grafana/Loki/Promtail provide metrics and logs.
 
----
+For deeper details, see:
 
-## 🔒 Security
+- [`docs/architecture.md`](docs/architecture.md)
+- [`docs/code-patterns.md`](docs/code-patterns.md)
+- [`docs/testing-patterns.md`](docs/testing-patterns.md)
 
-* JWT-based authentication
-* OAuth login with Google
-* Route protection via guards and decorators
-* Centralized error handling and validation
-* Indexed database queries for performance and abuse mitigation
+## Production Helpers
 
----
+The Makefile includes production-oriented Docker Compose helpers:
 
-## 📁 Project Structure
-
+```bash
+make prod-build
+make prod-up
+make prod-logs
+make prod-down
+make prod-pull
 ```
-backend/    → Main API (NestJS)
-frontend/   → Web app (Next.js)
-worker/     → Background job processor
-infra/      → Terraform, Docker Compose, NGINX, and observability assets
-scripts/    → Deployment and startup scripts
-```
 
----
+These commands use `infra/docker-compose.yml` with `infra/docker-compose.prod.yml` and the root `.env` file.
 
-## 📜 License
+## License
 
-This project is licensed under the terms of the MIT License.
-
+The root package declares this project under the ISC license.
